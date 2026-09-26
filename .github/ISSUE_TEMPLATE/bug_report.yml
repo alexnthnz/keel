@@ -1,0 +1,36 @@
+name: Bug report
+description: Something in keel doesn't work as described.
+labels: [bug]
+body:
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: What you did, what you expected, and what happened instead.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: "1. Run …\n2. Ask the lead to …\n3. See …"
+    validations:
+      required: true
+  - type: input
+    id: keel-version
+    attributes:
+      label: keel version
+      description: From `claude plugin list`.
+    validations:
+      required: true
+  - type: input
+    id: claude-version
+    attributes:
+      label: Claude Code version
+      description: From `claude --version`.
+    validations:
+      required: true
+  - type: input
+    id: os
+    attributes:
+      label: Operating system

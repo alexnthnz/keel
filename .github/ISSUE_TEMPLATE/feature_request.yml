@@ -1,0 +1,26 @@
+name: Feature request
+description: Suggest a change to keel's skills, playbooks, agents or hooks.
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: The problem
+      description: What are you trying to do, and where does keel get in the way?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Your proposal
+    validations:
+      required: true
+  - type: dropdown
+    id: upstream
+    attributes:
+      label: Does this also apply to pstack?
+      description: Changes to pstack's method may belong upstream as well.
+      options:
+        - "No, it is specific to keel or Claude Code"
+        - "Yes, it would help pstack too"
+        - "Not sure"

@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Report a security problem
+    url: https://github.com/alexnthnz/keel/security/advisories/new
+    about: Please report vulnerabilities privately, not in a public issue.
+  - name: pstack (upstream)
+    url: https://github.com/cursor/plugins/tree/main/pstack
+    about: keel is adapted from pstack by Lauren Tan. Method and wording changes may belong there too.
