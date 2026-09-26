@@ -1,0 +1,26 @@
+{
+  "description": "keel hooks: the git guard (denies force-push except a lease onto your own branch, reset --hard, clean -f, whole-tree discards, and history rewrites; AI attribution trailers only with KEEL_BLOCK_AI_TRAILERS=1) and the lead reminder that keeps the keel:lead method sticky across turns.",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/hooks/git-guard.py\""
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "sh \"${CLAUDE_PLUGIN_ROOT}/hooks/lead-reminder.sh\""
+          }
+        ]
+      }
+    ]
+  }
+}

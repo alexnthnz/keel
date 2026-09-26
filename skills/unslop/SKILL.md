@@ -6,6 +6,8 @@ disable-model-invocation: true
 
 # Unslop
 
+> Adapted from [humanizer](https://github.com/blader/humanizer) by Siqi Chen (MIT), by way of pstack. humanizer builds on Wikipedia's "Signs of AI writing" guide. See [THIRD_PARTY_NOTICES.md](../../THIRD_PARTY_NOTICES.md).
+
 Edit text to remove AI patterns.
 
 ## Process

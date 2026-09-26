@@ -1,5 +1,7 @@
 # Code Quality Review
 
+> Adapted from Cursor's `thermo-nuclear-code-quality-review` skill in [cursor-team-kit](https://github.com/cursor/plugins/tree/main/cursor-team-kit) (MIT, Copyright (c) 2026 Cursor), by way of pstack. See [THIRD_PARTY_NOTICES.md](../../../THIRD_PARTY_NOTICES.md).
+
 Each reviewer applies this code-quality lens in addition to the rubric. It is a strict standard focused on implementation quality, maintainability, abstraction quality, and codebase health.
 
 Above all, be ambitious about code structure. Do not merely identify local cleanup. Actively search for "code judo" moves, restructurings that preserve behavior while making the implementation dramatically simpler, smaller, more direct, and more elegant.

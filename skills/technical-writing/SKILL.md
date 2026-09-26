@@ -1,6 +1,6 @@
 ---
 name: technical-writing
-description: "Layered technical-writing standard: Diátaxis structure, Google developer style sentences, STE instruction rules, Global English syntax. Use for /technical-writing or when writing or reviewing docs, RFCs, readmes, PR descriptions, or commit messages."
+description: "Layered technical-writing standard: Diátaxis structure, Google developer style sentences, STE instruction rules, Global English syntax. Use for /keel:technical-writing or when writing or reviewing docs, RFCs, readmes, PR descriptions, or commit messages."
 disable-model-invocation: true
 ---
 
@@ -22,10 +22,12 @@ Don't invent jargon. Use the words a developer would say out loud: "move", "dele
 
 The layers decide what a document says and how much each sentence carries. A doc can obey all of them and still read machine-written: every sentence clipped short, no view anywhere, nothing specific.
 
-- Mix sentence lengths on purpose. Short sentences land a point. Longer ones that take their time carry a fact with its condition or consequence.
+- Mix sentence lengths on purpose. A short sentence lands a point. A longer one can carry a fact together with its condition or its consequence.
 - One thought per sentence does not mean one length per sentence. Split the sentence that carries two thoughts. Keep the long sentence that carries one.
 - Have a view where the mode allows it. Explanation weighs trade-offs, so say what you make of them instead of listing pros and cons. Reference stays dry.
 - Be specific over sterile. Not "schema changes can cause issues" but "a column rename fails the build".
+
+This section adapts the rhythm advice in humanizer by Siqi Chen (MIT), by way of pstack. See THIRD_PARTY_NOTICES.md.
 
 ## Pick the mode first (Diátaxis)
 
@@ -38,17 +40,17 @@ One document, one mode. Two questions pick it: does the content inform action (d
 
 Use the compass on a whole document or on one sentence.
 
-**Tutorial: learning by doing.** You are the teacher. The learner's success is your job, not theirs. Open by saying what the learner will build, not what they will "learn". Every step produces a visible result, early and often. Tell them what they should see: the expected output, the prompt change, the log line. Cut explanation to one clause and a link. Teaching pauses break the lesson. Stay concrete. Write as "we", in commands: "First, do x. Now, do y."
+**Tutorial: learning by doing.** You are the teacher. The learner's success is your job, not theirs. Open by saying what the learner will build, not what they will "learn". Each step should show the learner something working. Tell them what they should see: the expected output, the prompt change, the log line. Cut explanation to one clause and a link. Teaching pauses break the lesson. Stay concrete. Write as "we" and give one command per step.
 
-**How-to: steps to a goal.** Solve a problem a person has, not an operation the machine can perform. Assume competence. Skip teaching. Action only: no digressions, no background, no completeness for its own sake. Link those instead. Allow forks and judgment: "If you want x, do y." Name the guide by the task: "How to calibrate the radar array", not "Radar array calibration".
+**How-to: steps to a goal.** Solve a problem a person has, not an operation the machine can perform. Assume competence. Skip teaching. Action only: no digressions, no background, no completeness for its own sake. Link those instead. Allow for choices the reader has to make, and say which option fits which situation. Name the guide after the task the reader wants done ("How to rotate the signing key"), not after the component ("Signing keys").
 
-**Reference: facts for lookup.** Describe. Only describe. No instruction, no persuasion, no opinion. Be dry, complete, and sure. State facts, options, limits, and errors with no hedging. Mirror the structure of the thing described, so code and docs can be navigated together. Put material where readers expect it. Generate from code where possible, so it stays true.
+**Reference: facts for lookup.** State what is there and nothing else: no instructions, no persuasion, no opinion. Be dry, complete, and sure. State facts, options, limits, and errors with no hedging. Mirror the structure of the thing described, so code and docs can be navigated together. Put material where readers expect it. Generate from code where possible, so it stays true.
 
-**Explanation: understanding and why.** One bounded topic, readable away from the product. Each title should tolerate an implicit "About..." in front. Anchor on a real why question. Give context: design decisions, history, constraints, alternatives. Opinion is allowed here and nowhere else.
+**Explanation: understanding and why.** One bounded topic, readable away from the product. A good explanation title still reads naturally with "About" in front of it. Anchor on a real why question. Give context: design decisions, history, constraints, alternatives. Opinion is allowed here and nowhere else.
 
 Don't mix modes: no reference tables inside a tutorial, no tutorial hand-holding inside reference, no arguing inside a how-to. Split and link instead.
 
-Source: diataxis.fr, fetched 2026-07-18.
+The four modes follow the Diátaxis framework by Daniele Procida (<https://diataxis.fr>, CC BY-SA 4.0), summarized here in keel's own words.
 
 ## Write sentences to the reader (Google developer style)
 
@@ -64,7 +66,7 @@ Source: diataxis.fr, fetched 2026-07-18.
 - Numbered lists for sequences, bullets for everything else. Introduce a list with a complete sentence. Keep items parallel.
 - Code goes in code font. UI elements go in bold. Use serial commas. Drop "etc." and say up front that a list is partial.
 
-Source: developers.google.com/style, fetched 2026-07-18.
+Adapted and condensed from the Google developer documentation style guide (<https://developers.google.com/style>) by Google, licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Some of the guide's examples are kept.
 
 ## Make statements load one at a time (STE rules)
 
@@ -77,7 +79,7 @@ Source: developers.google.com/style, fetched 2026-07-18.
 - Write procedures as direct commands, never as narration and never in the passive: "Install the component", not "the component must be installed".
 - Avoid "-ing" words where you can. They take too many grammatical jobs and breed misreadings.
 
-Source: asd-ste100.org (Issue 9, 2025), fetched 2026-07-18. The numbered rules and dictionary live in the spec PDF. The principles above are the transferable core.
+Based on ASD Simplified Technical English (ASD-STE100, Issue 9, 2025, <https://www.asd-ste100.org>), paraphrased. The numbered rules and dictionary live in the specification.
 
 ## Leave no sentence open to two readings (Global English)
 
@@ -94,7 +96,7 @@ Source: asd-ste100.org (Issue 9, 2025), fetched 2026-07-18. The numbered rules a
 - Call each thing by one name, everywhere. A doc that says "the gate", "the ratchet", and "the budget check" for one thing teaches three things. Rewording an unchanged sentence between edits costs the same way. Don't churn what didn't change.
 - Skip idioms, colloquialisms, Latin abbreviations, and metaphors. A non-native reader, a translator, and an agent all parse plain constructions best.
 
-Source: Kohl, The Global English Style Guide (SAS Press). Guideline text fetched from the Internet Archive and the SAS sample chapter, 2026-07-18.
+Based on John R. Kohl, *The Global English Style Guide: Writing Clear, Translatable Documentation for a Global Market* (SAS Institute, 2008), paraphrased.
 
 ## Voice and repo specifics
 

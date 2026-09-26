@@ -1,0 +1,23 @@
+{
+  "name": "keel",
+  "version": "0.2.1",
+  "description": "Engineering loop for Claude Code: the main session leads, ponytail builds, critic reviews. Adapted from pstack by Lauren Tan.",
+  "author": {
+    "name": "alexnthnz",
+    "url": "https://github.com/alexnthnz"
+  },
+  "license": "MIT",
+  "keywords": [
+    "keel",
+    "lead",
+    "ponytail",
+    "critic",
+    "workflow",
+    "principles",
+    "subagents",
+    "code-review",
+    "unslop"
+  ],
+  "homepage": "https://github.com/alexnthnz/keel",
+  "repository": "https://github.com/alexnthnz/keel"
+}

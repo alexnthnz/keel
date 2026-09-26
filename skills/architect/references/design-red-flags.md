@@ -1,5 +1,7 @@
 # Design red flags
 
+> These red flags follow John Ousterhout, *A Philosophy of Software Design* (Yaknyam Press, 2018), paraphrased.
+
 Screen every candidate before synthesis. A red flag is a reason to revise or reject the shape.
 
 ## Shallow module

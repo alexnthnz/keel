@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 # Interrogate
 
-Spawn one reviewer per configured model to adversarially review code changes. Each model gets the same prompt and rubric. The adversarial signal comes from model diversity, not assigned personas.
+Run one `keel:critic` reviewer per configured model to adversarially review code changes, plus the `codex` lane when it is configured. Each model gets the same prompt and rubric. The adversarial signal comes from model diversity, not assigned personas.
 
 The deliverable is a synthesized verdict. Do NOT auto-apply changes.
 
@@ -33,20 +33,30 @@ Write one clear paragraph. If you're unsure about the intent, ask the user befor
 
 ## Step 3, Spawn Reviewers
 
-Launch all reviewers in a single message using the Task tool. Use the `interrogate reviewers` line in `~/.cursor/rules/pstack-models.mdc`, one reviewer per entry, extending or shrinking the Reviewer A/B/C labels below to the configured entry count. If the rule or that line is missing, use the table defaults.
+Launch all reviewers at once. Claude reviewers are Agent calls in a single message. The `codex` reviewer is a Bash command started in the same message. Read `${CLAUDE_CONFIG_DIR:-$HOME/.claude}/keel-models.md` if it exists; use the role's line, else the default. The role line is `interrogate reviewers`, one reviewer per entry, extending or shrinking the Reviewer A/B/C/D labels below to the configured entry count.
 
-| Subagent | Default model |
-|----------|---------------|
-| Reviewer A | `claude-opus-5-5-max` |
-| Reviewer B | `gpt-5.6-sol-max` |
-| Reviewer C | `grok-4.7-xhigh-fast` |
+| Reviewer | Default model | Runs as |
+|----------|---------------|---------|
+| Reviewer A | `opus` | `keel:critic` subagent |
+| Reviewer B | `fable` | `keel:critic` subagent |
+| Reviewer C | `sonnet` | `keel:critic` subagent |
+| Reviewer D | `codex` | Bash, OpenAI Codex CLI |
 
-For each reviewer:
-- `subagent_type`: `generalPurpose`
-- `model`: the configured `interrogate reviewers` entry, or the table default with no configured line. For an `auto` or `inherit-parent` entry, omit `model` so that reviewer runs on the parent model.
-- `readonly`: `true`
+For each Claude reviewer:
+- `subagent_type`: `keel:critic`
+- `model`: the configured `interrogate reviewers` entry, or the table default with no configured line. For an `inherit`, `inherit-parent`, or `auto` entry, omit `model` so that reviewer runs on the parent model.
+- The prompt opens with "Read-only: do not edit files. Lens: correctness, through the interrogate rubric and code-quality lens below. Use the brief's severity scale."
 
-If the Task tool rejects a configured entry, run that reviewer on the table default of its family and say so. Families go by prefix: `claude-*`, `gpt-*`, and `grok-*`. With no family match, use Reviewer A's default. If it rejects a table default, check the valid slugs in the Task tool's error message, pick the closest equivalent (prefer the highest-reasoning tier of the same family), spawn with it, and open a separate PR to update the default table. Do not block the review on the slug issue. Never treat an alias entry as a rejected slug or apply either fallback to it.
+If the Agent tool rejects a configured entry, run that reviewer on Reviewer A's default and say so. If it rejects a table default, omit `model` for that reviewer, say so, and open a separate PR to update the default table. Do not block the review on the model issue. Never treat an alias entry as a rejected model or apply either fallback to it.
+
+The `codex` entry is a cross-vendor lane, not a subagent. Run `command -v codex` first. If it fails, skip the lane and name it as skipped in the Reviewers list. Otherwise write the filled template below to a file and run Codex read-only from the repository root, in the background so it runs alongside the subagents:
+
+```bash
+codex exec --sandbox read-only --ephemeral --cd "$(git rev-parse --show-toplevel)" \
+  --output-last-message "$tmp/codex-review.md" - < "$tmp/reviewer-brief.md"
+```
+
+`$tmp` is a scratch directory you create for the run. The brief goes in on stdin because `codex exec review --base <branch>` refuses a custom prompt, and every reviewer gets the same brief. When the command finishes, read `$tmp/codex-review.md` and treat it like any other reviewer's output.
 
 Read `references/reviewer-prompt.md` and fill in the template with:
 1. The stated intent

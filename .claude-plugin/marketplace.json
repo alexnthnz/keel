@@ -1,0 +1,23 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "keel",
+  "description": "keel: an engineering loop for Claude Code, adapted from pstack by Lauren Tan.",
+  "owner": {
+    "name": "alexnthnz",
+    "url": "https://github.com/alexnthnz"
+  },
+  "plugins": [
+    {
+      "name": "keel",
+      "description": "Engineering loop for Claude Code: the main session leads, ponytail builds, critic reviews. Adapted from pstack by Lauren Tan.",
+      "source": "./",
+      "version": "0.2.1",
+      "author": {
+        "name": "alexnthnz"
+      },
+      "license": "MIT",
+      "category": "development"
+    }
+  ],
+  "metadata": {}
+}
