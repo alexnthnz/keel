@@ -16,6 +16,8 @@ so a good change keeps that work recognizable and credited.
 
    ```bash
    claude plugin validate .
+   python3 codex/scripts/validate-package.py
+   sh -n codex/hooks/lead-reminder.sh
    python3 -m py_compile hooks/git-guard.py
    (cd skills/lead/scripts && bun install --frozen-lockfile && bun test orch watch-pr)
    ```

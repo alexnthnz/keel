@@ -19,6 +19,12 @@ jobs:
       - name: Validate the plugin
         run: npx --yes @anthropic-ai/claude-code@2 plugin validate .
 
+      - name: Validate the Codex package
+        run: |
+          python3 codex/scripts/validate-package.py
+          sh -n codex/hooks/lead-reminder.sh
+          echo '{}' | sh codex/hooks/lead-reminder.sh | python3 -m json.tool > /dev/null
+
       - name: Check the hooks
         run: |
           python3 -m py_compile hooks/git-guard.py

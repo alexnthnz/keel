@@ -1,20 +1,22 @@
 # keel
 
-keel is an engineering loop for [Claude Code](https://code.claude.com). The main session you talk to is the lead, `ponytail` builds, and `critic` reviews.
+keel is an engineering loop for [Claude Code](https://code.claude.com) and Codex. The main session you talk to is the lead, `ponytail` builds, and `critic` reviews.
 
 > **keel is adapted from [pstack](https://github.com/cursor/plugins/tree/main/pstack) by Lauren Tan ([poteto](https://x.com/poteto)).**
-> pstack's method, skills, playbooks, principles and writing are hers, released under the MIT license, apart from material pstack itself adapted from others, which [THIRD_PARTY_NOTICES.md](./THIRD_PARTY_NOTICES.md) credits. keel ports them from Cursor to Claude Code and reorganizes the agents around them, so the credit for how keel works belongs to pstack first. keel is an independent project and is not affiliated with or endorsed by Lauren Tan, Cursor or Anthropic. See [credits and license](#credits-and-license).
+> pstack's method, skills, playbooks, principles and writing are hers, released under the MIT license, apart from material pstack itself adapted from others, which [THIRD_PARTY_NOTICES.md](./THIRD_PARTY_NOTICES.md) credits. keel ports them from Cursor to Claude Code and Codex and reorganizes the agents around them, so the credit for how keel works belongs to pstack first. keel is an independent project and is not affiliated with or endorsed by Lauren Tan, Cursor, Anthropic or OpenAI. See [credits and license](#credits-and-license).
 > In this README, lowercase passages are pstack's original text, lightly adapted. Sentence-case passages are keel's.
 
 ## what it is
 
-- **The lead** is the main Claude session. For real engineering work it loads the [`lead`](./skills/lead/SKILL.md) skill, pstack's `poteto-mode`: it routes the task to one of 23 playbooks, owns the design, plan, review and verification, and lands the result. Small asks it just does.
-- **ponytail** ([`keel:ponytail`](./agents/ponytail.md)), pstack's `poteto-agent`, owns one slice or pull request end to end: build, test, prove it on the real artifact, commit. It runs on the lead's model, may spawn its own helpers, and merges its own pull request only under autopilot or when its brief says to land it.
-- **critic** ([`keel:critic`](./agents/critic.md)), generalized from pstack's comment-review persona, Comment Sicko, is the read-only reviewer. It reviews a diff through one lens: comments by default, or correctness, security, simplicity, tests or user impact.
+- **The lead** is the main session. For real engineering work it loads the [Claude Code](./skills/lead/SKILL.md) or [Codex](./codex/skills/lead/SKILL.md) lead skill, routes the task to one of 23 playbooks, and owns the design, plan, review and verification. Small asks it just does.
+- **ponytail** ([Claude agent](./agents/ponytail.md)) owns one slice or pull request end to end: build, test, prove it on the real artifact, commit. In Codex, the lead gives that brief to a worker. A ponytail owner merges only under autopilot or when its brief says to land it.
+- **critic** ([Claude agent](./agents/critic.md)), generalized from pstack's comment-review persona, Comment Sicko, reviews a diff through one lens: comments by default, or correctness, security, simplicity, tests or user impact. Codex gives the same brief to an independent reviewer.
 
 keel keeps 46 of pstack's 47 skills (its 23 principles are among them) and all 23 playbooks. [Differences from pstack](#differences-from-pstack) lists what changed.
 
 ## install
+
+### Claude Code
 
 keel needs Claude Code, `git`, the GitHub CLI `gh` (signed in), `python3` for the git guard and `bun` for the playbook scripts. Optional: the Codex CLI for the cross-model review lane, `tmux` for driving interactive terminal apps, and Graphite (`gt`) for the Orchestrate playbook's stacks.
 
@@ -27,12 +29,27 @@ To try it for one session without installing, clone the repository and run `clau
 
 Skills run as `/keel:<name>`, and the agents are `keel:ponytail` and `keel:critic`. The main session loads `lead` on its own when a task needs it, or you type `/keel:lead`. The other keel skills are user-invoked, so `lead` reads them by path when a step needs one.
 
-keel ships two hooks:
+### Codex
+
+Codex needs its CLI with plugin support, `git`, and `bun` for Keel's playbook scripts. Playbooks that use GitHub also need the GitHub CLI `gh` signed in. Add the keel marketplace, then install the plugin:
+
+```bash
+codex plugin marketplace add alexnthnz/keel
+codex plugin add keel@keel
+```
+
+Start a new Codex session after installation. Ask for nontrivial engineering work or invoke `$keel:lead` directly. The Codex lead reads the same playbooks and principles from the installed plugin. It delegates scoped work to Codex workers and uses independent reviewers with keel's critic brief. Codex does not install Claude Code's named agents or model aliases.
+
+Codex asks you to review the lead reminder in `/hooks` before it runs. The Codex plugin does not load Claude Code's Git guard. That guard still has shell-parsing cases to resolve before it can serve as a Codex safety check.
+
+For Claude Code, keel ships two hooks:
 
 - [`hooks/git-guard.py`](./hooks/git-guard.py), adapted from Matt Pocock's [git guardrails](https://github.com/mattpocock/skills) (MIT), blocks force-pushes, `reset --hard`, `clean -f`, discarding the whole working tree and history rewrites. One exception: `--force-with-lease` onto a branch that is not `main`, `master`, `trunk`, `develop` or `release*`, so an owner can publish its own rebased branch. Set `KEEL_BLOCK_AI_TRAILERS=1` to also block commits whose message carries an AI attribution trailer.
 - [`hooks/lead-reminder.sh`](./hooks/lead-reminder.sh) re-injects one line on every prompt, as pstack's sticky reminder does in Cursor: a new task that needs rigor loads `keel:lead`. Set `KEEL_REMINDER=off` to silence it.
 
 ## get started
+
+For Claude Code:
 
 1. Run [`/keel:setup`](./skills/setup/SKILL.md) to choose models. It writes `keel-models.md` in the active Claude config directory, `${CLAUDE_CONFIG_DIR:-$HOME/.claude}`, so each profile keeps its own.
 2. Give the main session real engineering work, or start with [`/keel:lead`](./skills/lead/SKILL.md). Once entered, lead mode stays on across turns.
@@ -57,6 +74,8 @@ Claude Code subagents take a model alias, not a vendor slug. keel's defaults:
 `codex` is not a subagent: `interrogate` runs `codex exec --sandbox read-only` from bash with the same brief as the other reviewers, and skips that lane when the Codex CLI is not installed.
 
 ## usage
+
+The examples below use Claude Code slash commands. In Codex, use `$keel:lead` or give the lead a nontrivial engineering task.
 
 use [`/keel:lead`](./skills/lead/SKILL.md) at the start of a task. it reads your request, picks from a set of playbooks, and runs the other skills as the steps need them.
 

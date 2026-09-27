@@ -1,0 +1,28 @@
+{
+  "name": "keel",
+  "version": "0.3.0",
+  "description": "Engineering loop for Codex: the lead coordinates, ponytail builds, and critic reviews. Adapted from pstack by Lauren Tan.",
+  "author": {
+    "name": "alexnthnz",
+    "url": "https://github.com/alexnthnz"
+  },
+  "license": "MIT",
+  "keywords": [
+    "keel",
+    "engineering",
+    "code-review",
+    "subagents"
+  ],
+  "homepage": "https://github.com/alexnthnz/keel",
+  "repository": "https://github.com/alexnthnz/keel",
+  "skills": "./codex/skills/",
+  "hooks": "./codex/hooks/hooks.json",
+  "interface": {
+    "displayName": "Keel",
+    "shortDescription": "Engineering workflow for Codex",
+    "longDescription": "Use Keel's lead method, playbooks, and independent review to carry engineering work through verification.",
+    "developerName": "alexnthnz",
+    "category": "Developer Tools",
+    "websiteURL": "https://github.com/alexnthnz/keel"
+  }
+}
