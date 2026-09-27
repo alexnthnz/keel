@@ -1,6 +1,6 @@
 {
   "name": "keel",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Engineering loop for Claude Code and Codex: the main session leads, ponytail builds, critic reviews. Adapted from pstack by Lauren Tan.",
   "author": {
     "name": "alexnthnz",

@@ -1,6 +1,6 @@
 {
   "name": "keel",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Engineering loop for Codex: the lead coordinates, ponytail builds, and critic reviews. Adapted from pstack by Lauren Tan.",
   "author": {
     "name": "alexnthnz",
