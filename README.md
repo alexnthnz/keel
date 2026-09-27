@@ -40,11 +40,11 @@ codex plugin add keel@keel
 
 Start a new Codex session after installation. Ask for nontrivial engineering work or invoke `$keel:lead` directly. The Codex lead reads the same playbooks and principles from the installed plugin. It delegates scoped work to Codex workers and uses independent reviewers with keel's critic brief. Codex does not install Claude Code's named agents or model aliases.
 
-Codex asks you to review the lead reminder in `/hooks` before it runs. The Codex plugin does not load Claude Code's Git guard. That guard still has shell-parsing cases to resolve before it can serve as a Codex safety check.
+Codex asks you to review the lead reminder in `/hooks` before it runs. The Codex plugin does not load Claude Code's Git guard. That guard is a best-effort check of the command text, so do not rely on it as a Codex safety check.
 
 For Claude Code, keel ships two hooks:
 
-- [`hooks/git-guard.py`](./hooks/git-guard.py), adapted from Matt Pocock's [git guardrails](https://github.com/mattpocock/skills) (MIT), blocks force-pushes, `reset --hard`, `clean -f`, discarding the whole working tree and history rewrites. One exception: `--force-with-lease` onto a branch that is not `main`, `master`, `trunk`, `develop` or `release*`, so an owner can publish its own rebased branch. Set `KEEL_BLOCK_AI_TRAILERS=1` to also block commits whose message carries an AI attribution trailer.
+- [`hooks/git-guard.py`](./hooks/git-guard.py), adapted from Matt Pocock's [git guardrails](https://github.com/mattpocock/skills) (MIT), blocks force-pushes, `reset --hard`, `clean -f`, discarding the whole working tree and history rewrites. One exception: `--force-with-lease` onto a branch that is not `main`, `master`, `trunk`, `develop` or `release*`, so an owner can publish its own rebased branch. The guard finds these commands inside the string of `bash -c` or another shell's `-c`, `eval`, subshells, `$(...)`, and backticks. It finds them after launchers such as `sudo`, `xargs`, or `timeout`, and through a full path such as `/usr/bin/git`. It skips quoted text and heredoc bodies, so a commit message that mentions `git push --force` still runs. An unquoted mention such as `echo git reset --hard` is blocked. It reads the command text and does not parse the shell, so it is a best-effort check. A git alias, a script file, or a flag inside quotes still gets past it. Set `KEEL_BLOCK_AI_TRAILERS=1` to also block commits whose message carries an AI attribution trailer.
 - [`hooks/lead-reminder.sh`](./hooks/lead-reminder.sh) re-injects one line on every prompt, as pstack's sticky reminder does in Cursor: a new task that needs rigor loads `keel:lead`. Set `KEEL_REMINDER=off` to silence it.
 
 ## get started

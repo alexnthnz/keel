@@ -32,21 +32,12 @@ def deny(msg):
                                              "permissionDecision": "deny", "permissionDecisionReason": msg}}))
     sys.exit(0)
 
-def leading(seg):
-    s = seg.strip()
-    s = re.sub(r"^(sudo\s+|env\s+\S+=\S+\s+|\w+=\S+\s+)*", "", s)
-    return re.sub(r"^\$\(\s*", "", s)
-
 # Attribution trailers: inspected on segments that ARE a `git commit` (raw, quotes intact, since the trailer
 # lives inside the -m message). Commands that merely mention the trailer (tests, docs) start with something else.
 if os.environ.get("KEEL_BLOCK_AI_TRAILERS", "").lower() in ("1", "true", "on", "yes"):
     # Check the raw command, heredoc bodies included: a commit message often arrives through one.
     if re.search(r"(^|[\s;&|(])git\s+(-C\s+\S+\s+)?commit\b", cmd) and re.search(r"Co-authored-by:\s*(Codex|Claude)|Generated with \[?(Codex|Claude Code)", cmd, re.I):
         deny("commit message carries an AI attribution trailer; commit again without it (KEEL_BLOCK_AI_TRAILERS is on)")
-
-# drop quoted strings: a git command's dangerous flags are never inside quotes, but prose about them often is
-text = re.sub(r"'[^'\n]*'", "''", text)
-text = re.sub(r'"[^"\n]*"', '""', text)
 
 PROTECTED = re.compile(r"^(main|master|trunk|develop|release([/-].*)?)$")
 FORCE_BLOCKED = "force-push is blocked; add a commit instead. Only --force-with-lease onto your own non-main branch is allowed"
@@ -85,13 +76,28 @@ RULES = [
     (r"filter-(branch|repo)\b", "history rewriting is blocked in agent sessions; the human does this deliberately"),
 ]
 
-for seg in re.split(r"\n|;|&&|\|\||\|", text):
-    s = seg.strip()
-    s = re.sub(r"^(sudo\s+|env\s+\S+=\S+\s+|\w+=\S+\s+)*", "", s)
-    s = re.sub(r"^\$\(\s*", "", s)
-    if not re.match(r"git\s", s):
-        continue
-    args = s[4:]
+RUNS_AS_CODE = r"(?<![\w-])(?:\w*sh\s+(?:-\w+\s+)*-\w*c|eval)\s+"
+QUOTED = re.compile(rf"""\\.|({RUNS_AS_CODE})?(?:'([^'\n]*)'|"((?:\\.|[^"\\\n])*)")""")
+SUBSTITUTION = re.compile(r"\$\(([^)]*)\)|`([^`]*)`")
+SEPARATORS = re.compile(r"[\n;&|(){}`]")
+GIT = re.compile(r"(?:^|\s)(?:\S*/)?git\s+(.*)")
+
+def git_args(text) -> list[str]:
+    nested = []
+
+    def blank_prose_collect_code(quoted):
+        runs_as_code, single, double = quoted.groups()
+        if runs_as_code:
+            nested.append(single if single is not None else re.sub(r'\\([\\"$`])', r"\1", double))
+        elif double:
+            nested.extend(a or b for a, b in SUBSTITUTION.findall(re.sub(r"\\.", "", double)))
+        return "''"
+
+    unquoted = QUOTED.sub(blank_prose_collect_code, text.replace("\\\n", " "))
+    found = [m.group(1) for seg in SEPARATORS.split(unquoted) if (m := GIT.search(seg))]
+    return found + [args for code in nested for args in git_args(code)]
+
+for args in git_args(text):
     reason = push_violation(args)
     if reason:
         deny(reason)
