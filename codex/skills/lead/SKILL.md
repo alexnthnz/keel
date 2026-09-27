@@ -36,10 +36,13 @@ The installed plugin must include the root `skills/` and `agents/` directories. 
 | `Explore` or read-only research agent | Use Codex's explorer where available, with a specific codebase question. |
 | `isolation: "worktree"` | Check the intended repository and existing attached worktrees first. Use Codex's managed worktree tool only when it targets that repository; otherwise use a permitted explicit Git worktree. Pass the exact path to the writer. An agent call alone does not create isolation. |
 | Claude model aliases or `~/.claude/keel-models.md` | Inherit the Codex task's model by default. Use a supported model override only when the user or project specifies one; do not copy Claude aliases. |
+| Claude transcript paths, `CLAUDE_SESSION_ID`, or a newest-JSONL fallback | Use Codex evidence tied to the exact session or candidate agent and project being audited. Never substitute the newest Claude transcript for a Codex run. If the host cannot provide that run's transcript, mark transcript-dependent verification inconclusive. |
 | `/simplify` | Review the diff directly for reuse, simplification, and regressions, or use a supported equivalent. Never claim `/simplify` ran when it did not. |
 | `/loop`, `/bg`, `claude --bg`, `claude agents`, or `claude attach` | Use available Codex waiting or scheduling facilities only when the task and permissions allow them. Keep a bounded check loop otherwise. Do not claim Claude's background supervision or create a separate user chat as a substitute. |
 
 Pass agents the resolved installed plugin paths for any Keel files they need. Their briefs must not rely on the current repository, `${CLAUDE_SKILL_DIR}`, or Claude's local cache to locate the method.
+
+This transcript rule applies to `show-me-your-work`, Eval, Session pickup, and any history lookup. Use a transcript supplied by the host or explicitly identified by the user, and confirm its run and project before using it as evidence. A user-requested pickup may read a named Claude transcript as that prior run's history. Do not infer current-run identity from a file's recency, and do not search other projects' history to fill an evidence gap.
 
 Keel's `interrogate` skill launches `codex exec` as a cross-vendor reviewer from Claude. **Inside Codex, do not launch another `codex exec` for that lane.** Use independent read-only reviewer agents and the skill's rubric instead. Report the reviewer count and whether distinct models were actually used; do not call a same-model panel multi-model review.
 
