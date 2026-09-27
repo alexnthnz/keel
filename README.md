@@ -40,7 +40,13 @@ codex plugin add keel@keel
 
 Start a new Codex session after installation. Ask for nontrivial engineering work or invoke `$keel:lead` directly. The Codex lead reads the same playbooks and principles from the installed plugin. It delegates scoped work to Codex workers and uses independent reviewers with keel's critic brief. Codex does not install Claude Code's named agents or model aliases.
 
-Codex's workspace-write sandbox blocks network access and blocks writes outside the workspace and temporary directories. The lead therefore asks you to approve two kinds of command: the first run of keel's playbook scripts, which installs their dependencies into the plugin, and each `watch-pr` run, which calls GitHub. The Orchestrate and multi-phase plan playbooks keep their state in `~/.codex/keel-store/`. To let the lead write there, start or resume Codex with `--add-dir ~/.codex/keel-store`, or add the directory's absolute path to `sandbox_workspace_write.writable_roots` in `~/.codex/config.toml`. Otherwise the lead keeps that state in a temporary directory.
+Codex's workspace-write sandbox blocks the network, allows writes only in the workspace and temporary directories, and keeps the repository's `.git` read-only. The lead asks you to approve each command that needs more:
+
+- Network calls, such as `git fetch`, `git push`, `gh`, and each `watch-pr` run.
+- Writes outside the workspace, such as the first run of keel's playbook scripts, which installs their dependencies into the plugin.
+- Git writes, such as commits and `git worktree add`.
+
+To allow git writes for a whole session, start or resume Codex with `--add-dir` and the repository's `.git` directory. Sandboxed commands can then also change that repository's Git config and hooks. The Orchestrate and multi-phase plan playbooks keep their state in `keel-store/` in your Codex home (`~/.codex` by default). To let the lead write there, add `--add-dir "${CODEX_HOME:-$HOME/.codex}/keel-store"`, or add that directory's absolute path to `sandbox_workspace_write.writable_roots` in the home's `config.toml`. Otherwise the lead keeps that state in a temporary directory.
 
 Codex asks you to review the lead reminder in `/hooks` before it runs. The Codex plugin does not load Claude Code's Git guard. That guard still has shell-parsing cases to resolve before it can serve as a Codex safety check.
 
