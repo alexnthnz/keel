@@ -18,10 +18,17 @@ REMINDER_HOOKS = {
 }
 
 
+def reject_duplicate_keys(pairs: list[tuple[str, object]]) -> dict:
+    keys = [key for key, _ in pairs]
+    if duplicates := sorted({key for key in keys if keys.count(key) > 1}):
+        raise ValueError(f"duplicate keys {duplicates}")
+    return dict(pairs)
+
+
 def read_json(path: str, errors: list[str]) -> dict:
     try:
-        value = json.loads((ROOT / path).read_text(encoding="utf-8"))
-    except (OSError, UnicodeError, json.JSONDecodeError) as exc:
+        value = json.loads((ROOT / path).read_text(encoding="utf-8"), object_pairs_hook=reject_duplicate_keys)
+    except (OSError, ValueError) as exc:
         errors.append(f"{path}: {exc}")
         return {}
     if not isinstance(value, dict):
