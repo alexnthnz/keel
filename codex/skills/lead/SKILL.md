@@ -54,4 +54,6 @@ Keel's `interrogate` skill launches `codex exec` as a cross-vendor reviewer from
 
 Apply system, user, and project instructions before Keel's `Autonomy`, `Subagents`, and playbook action steps. A playbook or agent brief does not grant permission. Prepare local, reviewable work first. Treat pushes, PR or issue creation and updates, comments, ticket changes, messages outside the task, merges, deployments, publishing, production dependencies, and destructive actions as approval-bound whenever active instructions require it. Authorization already given in this task counts; pass the same boundary to every agent.
 
+Before any force push, including `--force-with-lease`, write the destination branch into the command, as in `git push --force-with-lease origin <branch>`. Never force-push to `main`, `master`, `trunk`, `develop`, a `release*` branch, the repository's default branch, or a branch that another person or agent pushes to.
+
 Read [Opening a PR](../../../skills/lead/playbooks/opening-a-pr.md) for its review and writing method when relevant. Perform its external actions only within the user's authorized scope. If a source step needs an unavailable Codex capability, preserve its purpose with a supported equivalent or report the exact gap. Do not mark an unrun step complete.
