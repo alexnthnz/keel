@@ -9,7 +9,9 @@ from pathlib import Path
 ROOT = Path(sys.argv[1]).resolve() if len(sys.argv) == 2 else Path(__file__).resolve().parents[2]
 CODEX_SKILLS = "./codex/skills/"
 CODEX_HOOKS = "./codex/hooks/hooks.json"
-REMINDER_COMMAND = 'sh "${PLUGIN_ROOT}/codex/hooks/lead-reminder.sh"'
+REMINDER_HOOKS = {
+    "UserPromptSubmit": [{"hooks": [{"type": "command", "command": 'sh "${PLUGIN_ROOT}/codex/hooks/lead-reminder.sh"'}]}],
+}
 
 
 def read_json(path: str, errors: list[str]) -> dict:
@@ -59,20 +61,8 @@ def main() -> int:
 
     if codex.get("hooks") != CODEX_HOOKS:
         errors.append(f".codex-plugin/plugin.json: hooks must be {CODEX_HOOKS}")
-    hooks = read_json("codex/hooks/hooks.json", errors)
-    hook_events = hooks.get("hooks")
-    if not isinstance(hook_events, dict) or set(hook_events) != {"UserPromptSubmit"}:
-        errors.append("codex/hooks/hooks.json: expected only a UserPromptSubmit reminder")
-    else:
-        handlers = [
-            (handler.get("type"), handler.get("command"))
-            for group in hook_events["UserPromptSubmit"]
-            if isinstance(group, dict)
-            for handler in group.get("hooks", [])
-            if isinstance(handler, dict)
-        ] if isinstance(hook_events["UserPromptSubmit"], list) else []
-        if handlers != [("command", REMINDER_COMMAND)]:
-            errors.append("codex/hooks/hooks.json: expected only the Keel lead reminder command")
+    if read_json("codex/hooks/hooks.json", errors).get("hooks") != REMINDER_HOOKS:
+        errors.append(f"codex/hooks/hooks.json: \"hooks\" must be exactly {json.dumps(REMINDER_HOOKS)}")
     if not (ROOT / "codex/hooks/lead-reminder.sh").is_file():
         errors.append("codex/hooks/lead-reminder.sh: missing")
 
