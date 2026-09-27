@@ -29,8 +29,7 @@ jobs:
         run: |
           python3 -m py_compile hooks/git-guard.py
           sh -n hooks/lead-reminder.sh
-          echo '{"tool_input":{"command":"git push --force origin main"},"cwd":"."}' | python3 hooks/git-guard.py | grep -q '"deny"'
-          test -z "$(echo '{"tool_input":{"command":"git status"},"cwd":"."}' | python3 hooks/git-guard.py)"
+          python3 hooks/test_git_guard.py
           echo '{}' | sh hooks/lead-reminder.sh | python3 -m json.tool > /dev/null
 
       - name: Test the playbook scripts
