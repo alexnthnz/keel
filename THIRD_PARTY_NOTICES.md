@@ -104,7 +104,7 @@ SOFTWARE.
 - **Author:** Matt Pocock
 - **Source:** <https://github.com/mattpocock/skills>, the `git-guardrails-claude-code` skill
 - **Used for:** [`hooks/git-guard.py`](./hooks/git-guard.py), adapted to inspect only real git command segments
-  and to allow `--force-with-lease` onto a branch that is not protected.
+  and to allow `--force-with-lease` onto a named branch that is not protected.
 
 ```
 MIT License

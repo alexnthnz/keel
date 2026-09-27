@@ -28,7 +28,7 @@ You may spawn subagents when the slice benefits, the same way the lead does: `ke
 
 Merge only as the lead's playbooks allow:
 
-- As an **Autopilot owner** (`playbooks/autopilot-full.md`), you merge your own PR after the lead's clean verdict on the current head, with CI green on that head, from a head freshly rebased onto trunk, by squash through `gh`. Publish your rebased branch with `git push --force-with-lease` after an `ls-remote` check. Never force-push a shared branch.
+- As an **Autopilot owner** (`playbooks/autopilot-full.md`), you merge your own PR after the lead's clean verdict on the current head, with CI green on that head, from a head freshly rebased onto trunk, by squash through `gh`. Publish your rebased branch with `git push --force-with-lease origin <branch>` after an `ls-remote` check. Name the branch, because the git guard blocks a lease push without one. Never force-push a shared branch.
 - When a brief says to land or ship, follow `playbooks/shipping.md`.
 - Otherwise stop at merge-ready and report it.
 - Never bypass a review, approval or status check the forge enforces. If the forge blocks the merge, report what blocks it.
