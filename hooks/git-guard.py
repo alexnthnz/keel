@@ -163,7 +163,7 @@ def after_c(word):
     return word[word.index("c") + 1:] if word[:1] == "-" and word[1:2] != "-" and "c" in word else None
 
 def shell_command(args):
-    attached, j = None, 0
+    has_c, j = False, 0
     while j < len(args):
         a = args[j]
         j += 1
@@ -172,16 +172,13 @@ def shell_command(args):
         if a in ("--rcfile", "--init-file"):
             j += 1
         elif a[:1] in "-+" and len(a) > 1:
-            if (text := after_c(a)) is not None:
-                attached = text
+            has_c = has_c or after_c(a) is not None
             if a[1:].isalpha():
                 j += a.count("o") + a.count("O")
         else:
             j -= 1
             break
-    if attached is None:
-        return None
-    return args[j] if j < len(args) else attached
+    return args[j] if has_c and j < len(args) else None
 
 def su_command(args):
     for j, a in enumerate(args):
@@ -219,7 +216,7 @@ def git_invocations(src):
 GLOBAL_OPTS_WITH_VALUE = {"-C", "-c", "--git-dir", "--work-tree", "--namespace", "--config-env", "--super-prefix"}
 # The options the rules read: each entry lists its spellings, canonical name last, and ends in "=" when it takes a value.
 OPTIONS = {
-    "push": ["-f --force", "--mirror", "--all", "--branches", "--tags", "--force-with-lease", "--force-if-includes",
+    "push": ["-f --force", "-d --delete", "--mirror", "--all", "--branches", "--tags", "--force-with-lease", "--force-if-includes",
              "--repo=", "-o --push-option=", "--receive-pack=", "--exec="],
     "reset": ["--hard"],
     "clean": ["-f --force", "-e --exclude="],
@@ -263,10 +260,11 @@ PROTECTED = re.compile(r"main|master|trunk|develop|release.*")
 BRANCH = re.compile(r"[\w.-]+(/[\w.-]+)*")
 FORCE_BLOCKED = ("force-push is blocked; add a commit instead. Only --force-with-lease onto a named branch that is not "
                  "protected is allowed, as in git push --force-with-lease origin <branch>")
+DELETE_BLOCKED = "deleting a protected branch on the remote is blocked; the human does this deliberately"
 WHOLE_TREE = {".", "./", ":/", "*"}
 DISCARD = "discarding the whole working tree is blocked; restore specific paths"
 HISTORY = "history rewriting is blocked in agent sessions; the human does this deliberately"
-TRAILER = re.compile(r"Co-authored-by:\s*(Codex|Claude)|Generated with \[?(Codex|Claude Code)", re.I)
+TRAILER = re.compile(r"Co-authored-by\s*[:=]\s*(Codex|Claude)|Generated with \[?(Codex|Claude Code)", re.I)
 block_trailers = os.environ.get("KEEL_BLOCK_AI_TRAILERS", "").lower() in ("1", "true", "on", "yes")
 
 def named_branch(dest):
@@ -276,10 +274,13 @@ def named_branch(dest):
 def push_rule(git):
     if git.opts & {"--force", "--mirror"} or any(p.startswith("+") for p in git.operands):
         return FORCE_BLOCKED
-    if not git.opts & {"--force-with-lease", "--force-if-includes"}:
-        return None
     refspecs = git.operands if "--repo" in git.opts else git.operands[1:]
     dests = [r.split(":")[-1].removeprefix("refs/heads/") for r in refspecs]
+    deleted = dests if "--delete" in git.opts else [d for r, d in zip(refspecs, dests) if r.startswith(":")]
+    if any(PROTECTED.fullmatch(d) for d in deleted):
+        return DELETE_BLOCKED
+    if not git.opts & {"--force-with-lease", "--force-if-includes"}:
+        return None
     if git.opts & {"--all", "--branches", "--tags"} or not dests or not all(map(named_branch, dests)):
         return FORCE_BLOCKED
     return None

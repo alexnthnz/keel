@@ -1,5 +1,5 @@
 {
-  "description": "keel hooks: the git guard (denies force-push, reset --hard, clean -f, whole-tree discards, filter-branch, and filter-repo, and allows a lease onto a named branch that is not protected; AI attribution trailers only with KEEL_BLOCK_AI_TRAILERS=1) and the lead reminder that keeps the keel:lead method sticky across turns.",
+  "description": "keel hooks: the git guard (denies force-push, protected-branch deletion on the remote, reset --hard, clean -f, whole-tree discards, filter-branch, and filter-repo, and allows a lease onto a named branch that is not protected; AI attribution trailers only with KEEL_BLOCK_AI_TRAILERS=1) and the lead reminder that keeps the keel:lead method sticky across turns.",
   "hooks": {
     "PreToolUse": [
       {
