@@ -1,8 +1,11 @@
 #!/usr/bin/env python3
 """Check that the Codex package still points at the intended Keel files."""
 
+from __future__ import annotations
+
 import json
 import re
+import subprocess
 import sys
 from pathlib import Path
 
@@ -37,15 +40,26 @@ def read_json(path: str, errors: list[str]) -> dict:
     return value
 
 
+def tracked_paths() -> set[Path] | None:
+    try:
+        listed = subprocess.run(["git", "-C", str(ROOT), "ls-files", "-z"], capture_output=True, check=True).stdout
+    except (OSError, subprocess.CalledProcessError):
+        return None
+    files = {ROOT / name for name in listed.decode().split("\0") if name}
+    return files | {parent for path in files for parent in path.parents}
+
+
 def adapter_link_errors() -> list[str]:
     adapter = ROOT / ADAPTER
+    tracked = tracked_paths()
     errors = []
     for target in MARKDOWN_LINK.findall(adapter.read_text(encoding="utf-8")):
         if URL_SCHEME.match(target):
             continue
         resolved = (adapter.parent / target.partition("#")[0]).resolve()
-        if not resolved.is_relative_to(ROOT) or not resolved.exists():
-            errors.append(f"{ADAPTER}: link {target} does not resolve to a file or directory in the package")
+        found = resolved in tracked if tracked is not None else resolved.exists()
+        if not resolved.is_relative_to(ROOT) or not found:
+            errors.append(f"{ADAPTER}: link {target} does not resolve to a tracked file or directory in the package")
     return errors
 
 
