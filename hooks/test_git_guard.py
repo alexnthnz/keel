@@ -5,6 +5,7 @@ GUARD = os.path.join(os.path.dirname(os.path.abspath(__file__)), "git-guard.py")
 
 FORCE, RESET, CLEAN = "force-push", "destructive reset", "git clean"
 DISCARD, HISTORY, TRAILER = "whole working tree", "history rewriting", "attribution trailer"
+DELETE = "deleting a protected branch"
 
 DENIED = {
     FORCE: [
@@ -87,7 +88,6 @@ DENIED = {
         "bash -euo pipefail -c 'git reset --hard'",
         "bash -ce 'git reset --hard'",
         "bash -c -- 'git reset --hard'",
-        "bash -c'git reset --hard'",
         "bash -c $'git reset --hard'",
         "su -c 'git reset --hard'",
         "su root -c 'git reset --hard'",
@@ -111,6 +111,18 @@ DENIED = {
         "git checkout --force main",
         "git switch -f main",
         "git switch --discard-changes main",
+    ],
+    DELETE: [
+        "git push origin --delete main",
+        "git push origin -d main",
+        "git push origin :main",
+        "git push origin :refs/heads/main",
+        "git push origin --delete master",
+        "git push origin -d trunk",
+        "git push origin :develop",
+        "git push origin --delete release/1.0",
+        "git push --delete origin my-branch main",
+        'bash -c "git push origin --delete main"',
     ],
     HISTORY: [
         "git filter-branch --tree-filter 'rm -f secrets' HEAD",
@@ -149,6 +161,9 @@ ALLOWED = [
     "git switch -c feature",
     "git clean -e fixtures -n",
     "git push origin my-branch",
+    "git push origin --delete fix/x",
+    "git push origin -d my-branch",
+    "git push origin :fix/x",
     "git push --force-with-lease origin my-branch",
     "git push --force-with-lease origin HEAD:my-branch",
     "git push --force-with-lease origin refs/heads/my-branch",
@@ -162,6 +177,7 @@ TRAILER_COMMITS = [
     "git commit -m \"$(cat <<'EOF'\nfix: x\n\nCo-authored-by: Claude <noreply@anthropic.com>\nEOF\n)\"",
     "git commit -F - <<'EOF'\nfix: x\n\nGenerated with Claude Code\nEOF",
     'git commit -F <(printf "Co-authored-by: Claude")',
+    "git commit -m 'fix: x' --trailer 'Co-authored-by=Claude <noreply@anthropic.com>'",
 ]
 
 TRAILER_MENTIONS = [
@@ -185,40 +201,49 @@ def tearDownModule():
     REPOS.cleanup()
 
 
-def decision(command, cwd=None, **env):
+def hook_output(command, cwd=None, **env):
     cwd = cwd or REPO_ON_MY_BRANCH
     base = {k: v for k, v in os.environ.items() if k != "KEEL_BLOCK_AI_TRAILERS"}
-    out = subprocess.run([sys.executable, GUARD], input=json.dumps({"tool_input": {"command": command}, "cwd": cwd}),
-                         capture_output=True, text=True, cwd=cwd, env={**base, **env}, check=True).stdout
-    return json.loads(out)["hookSpecificOutput"]["permissionDecisionReason"] if out.strip() else "allow"
+    return subprocess.run([sys.executable, GUARD], input=json.dumps({"tool_input": {"command": command}, "cwd": cwd}),
+                          capture_output=True, text=True, cwd=cwd, env={**base, **env}, check=True).stdout
 
 
 class GitGuardTest(unittest.TestCase):
+    def assertDenied(self, command, reason, **kwargs):
+        out = hook_output(command, **kwargs)
+        self.assertNotEqual(out, "", "the hook allowed the command")
+        decision = json.loads(out)["hookSpecificOutput"]
+        self.assertEqual((decision["hookEventName"], decision["permissionDecision"]), ("PreToolUse", "deny"))
+        self.assertIn(reason, decision["permissionDecisionReason"])
+
+    def assertAllowed(self, command, **kwargs):
+        self.assertEqual(hook_output(command, **kwargs), "")
+
     def test_denies_destructive_git_with_its_reason(self):
         for reason, commands in DENIED.items():
             for command in commands:
                 with self.subTest(command=command):
-                    self.assertIn(reason, decision(command))
+                    self.assertDenied(command, reason)
 
     def test_lease_onto_head_is_denied_from_a_checkout_on_my_branch(self):
         for command in ("git push --force-with-lease", "git push --force-with-lease origin HEAD",
                         "cd ../main && git push --force-with-lease origin HEAD"):
             with self.subTest(command=command):
-                self.assertIn(FORCE, decision(command, cwd=REPO_ON_MY_BRANCH))
+                self.assertDenied(command, FORCE, cwd=REPO_ON_MY_BRANCH)
 
     def test_allows_safe_git_and_prose_that_mentions_it(self):
         for command in ALLOWED:
             with self.subTest(command=command):
-                self.assertEqual(decision(command), "allow")
+                self.assertAllowed(command)
 
     def test_blocks_ai_trailer_only_when_opted_in(self):
         for command in TRAILER_COMMITS:
             with self.subTest(command=command):
-                self.assertEqual(decision(command), "allow")
-                self.assertIn(TRAILER, decision(command, KEEL_BLOCK_AI_TRAILERS="1"))
+                self.assertAllowed(command)
+                self.assertDenied(command, TRAILER, KEEL_BLOCK_AI_TRAILERS="1")
         for command in TRAILER_MENTIONS:
             with self.subTest(command=command):
-                self.assertEqual(decision(command, KEEL_BLOCK_AI_TRAILERS="1"), "allow")
+                self.assertAllowed(command, KEEL_BLOCK_AI_TRAILERS="1")
 
 
 if __name__ == "__main__":
