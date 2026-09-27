@@ -13,7 +13,9 @@ This file lives at `<plugin root>/codex/skills/lead/SKILL.md`. Resolve every pat
 
 1. Read [Keel's lead skill](../../../skills/lead/SKILL.md) in full when entering lead mode. Use its playbook routing and principle triggers.
 2. Read only the [matched playbook](../../../skills/lead/playbooks/) and its relevant references. Track its steps with the available planning tool or a concise checklist. Mark an inapplicable step with a reason.
-3. Follow the lead skill's direct triggers as well as playbook calls. Read each triggered Keel skill at `../../../skills/<name>/SKILL.md` in full before applying it. Read a principle's leaf skill before citing that principle. Resolve a playbook's own links relative to that playbook.
+3. Follow the lead skill's direct triggers as well as playbook calls. Read each triggered Keel skill at `../../../skills/<name>/SKILL.md` in full before applying it. Read a principle's leaf skill before citing that principle.
+
+Keel's source writes `${CLAUDE_SKILL_DIR}` for the installed directory of the skill you are reading. For the lead skill, that directory is [`../../../skills/lead`](../../../skills/lead/). Resolve a bare `playbooks/`, `scripts/`, or `references/` path from that directory, even inside a playbook. For example, `scripts/watch-pr/watch-pr` in a playbook is [`../../../skills/lead/scripts/watch-pr/watch-pr`](../../../skills/lead/scripts/watch-pr/watch-pr). Resolve an explicit relative link, such as `../references/bugbot-triage.md`, from the file that contains it.
 
 The installed plugin must include the root `skills/` and `agents/` directories. If a referenced file is missing, report the packaging failure; do not substitute a file from the user's machine. Keel's source owns the engineering method. This adapter owns Codex tool translation and permissions wherever the source assumes Claude Code.
 
