@@ -2,12 +2,16 @@
 """Check that the Codex package still points at the intended Keel files."""
 
 import json
+import re
 import sys
 from pathlib import Path
 
 
 ROOT = Path(sys.argv[1]).resolve() if len(sys.argv) == 2 else Path(__file__).resolve().parents[2]
 CODEX_SKILLS = "./codex/skills/"
+ADAPTER = "codex/skills/lead/SKILL.md"
+MARKDOWN_LINK = re.compile(r"\]\(([^)\s]+)")
+URL_SCHEME = re.compile(r"[A-Za-z][A-Za-z0-9+.-]*:")
 CODEX_HOOKS = "./codex/hooks/hooks.json"
 REMINDER_HOOKS = {
     "UserPromptSubmit": [{"hooks": [{"type": "command", "command": 'sh "${PLUGIN_ROOT}/codex/hooks/lead-reminder.sh"'}]}],
@@ -24,6 +28,18 @@ def read_json(path: str, errors: list[str]) -> dict:
         errors.append(f"{path}: expected a JSON object")
         return {}
     return value
+
+
+def adapter_link_errors() -> list[str]:
+    adapter = ROOT / ADAPTER
+    errors = []
+    for target in MARKDOWN_LINK.findall(adapter.read_text(encoding="utf-8")):
+        if URL_SCHEME.match(target):
+            continue
+        resolved = (adapter.parent / target.partition("#")[0]).resolve()
+        if not resolved.is_relative_to(ROOT) or not resolved.exists():
+            errors.append(f"{ADAPTER}: link {target} does not resolve to a file or directory in the package")
+    return errors
 
 
 def main() -> int:
@@ -56,8 +72,10 @@ def main() -> int:
 
     if codex.get("skills") != CODEX_SKILLS:
         errors.append(f".codex-plugin/plugin.json: skills must be {CODEX_SKILLS}")
-    elif not (ROOT / "codex/skills/lead/SKILL.md").is_file():
-        errors.append("codex/skills/lead/SKILL.md: missing")
+    elif not (ROOT / ADAPTER).is_file():
+        errors.append(f"{ADAPTER}: missing")
+    else:
+        errors += adapter_link_errors()
 
     if codex.get("hooks") != CODEX_HOOKS:
         errors.append(f".codex-plugin/plugin.json: hooks must be {CODEX_HOOKS}")
