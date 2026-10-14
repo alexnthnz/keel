@@ -76,6 +76,7 @@ The Claude Code column shows the port's names. The rename table above maps them 
 | `control-cli` | Drive the CLI or TUI directly through Bash, with tmux for interactive TUIs |
 | `control-ui` | `anthropic-skills:chrome-browser`, `anthropic-skills:built-in-browser`, or `anthropic-skills:computer-use` when available, else Playwright via Bash |
 | `create-skill` | `anthropic-skills:skill-creator` when available, else the Authoring a skill playbook |
+| `/visualize` charts, Mermaid diagrams, and generated images (ketchup's visuals) | A small box diagram or a text chart in a fenced code block, or a screenshot or recording that already exists, linked by its path. ketchup stays read-only and posts nothing, so it publishes no Artifact |
 | Cursor's built-in `/babysit` | Dropped. pstack's Babysit playbook is the only one |
 | `/goal` | The objective becomes the first todo item and is re-read at each `/loop` tick. The multi-phase plan template also names `/goal` where a Claude Code build has it, because `check-plan.mjs` requires that marker |
 | `/loop` in dynamic mode, cloud-sleeper wake chain | `/loop` with no interval (self-paced), or `/loop 30m <prompt>` for audit ticks |
