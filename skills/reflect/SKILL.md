@@ -26,7 +26,7 @@ That covers the session (`<session-id>.jsonl`, one event per line) and its subag
 
 One message, three Agent calls, `subagent_type: general-purpose`. Reviewers need MCP access to look up the tickets, chat threads, and observability traces the transcript references. Claude Code subagents inherit the parent's MCP tools, so they have it.
 
-Each reviewer and the synthesizer name a role line in `${CLAUDE_CONFIG_DIR:-$HOME/.claude}/keel-models.md` and a default. Read `${CLAUDE_CONFIG_DIR:-$HOME/.claude}/keel-models.md` if it exists; use the role's line, else the default. Pass that value as the Agent call's `model`. Omit `model` when the value is `inherit`, `inherit-parent`, or `auto`. If the Agent tool rejects a value, use the default and say so. If it rejects the default, omit `model` and say so.
+Each reviewer and the synthesizer name a role line in `${CLAUDE_CONFIG_DIR:-$HOME/.claude}/keel-models.md` and a default. Read `${CLAUDE_CONFIG_DIR:-$HOME/.claude}/keel-models.md` if it exists; use the role's line, else the default. Pass that value as the Agent call's `model`. Omit `model` when the value is `inherit`, `inherit-parent`, or `auto`. If the Agent tool rejects a value, use the default and say so. If it rejects the default, omit `model` and say so. Pick each subagent's effort for the job, per the Subagents section of the **lead** skill.
 
 | Lens | Role line | Default `model` | Prompt template |
 |---|---|---|---|

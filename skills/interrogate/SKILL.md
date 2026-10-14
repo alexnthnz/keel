@@ -46,7 +46,7 @@ codex exec --sandbox read-only --ephemeral --cd "$(git rev-parse --show-toplevel
 
 `$tmp` is a scratch directory you create for the run. The brief goes in on stdin because `codex exec review --base <branch>` refuses a custom prompt, and every reviewer gets the same brief. When the command finishes, read `$tmp/codex-review.md` and treat it like any other reviewer's output.
 
-Read `references/reviewer-prompt.md` and fill in the same template for every reviewer with the stated intent, the diff or file contents, the rubric from `references/rubric.md`, and the code-quality lens from `references/code-quality-review.md`.
+Read `references/reviewer-prompt.md` and fill in the same template for every reviewer with the stated intent, the diff or file contents, the rubric from `references/rubric.md`, and the code-quality lens from `references/code-quality-review.md`. Pick each subagent's effort for the job, per the Subagents section of the **lead** skill.
 
 ## Step 4, Synthesize
 

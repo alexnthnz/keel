@@ -8,7 +8,7 @@ disable-model-invocation: true
 
 Investigate the motivation and intent behind code. The companion `how` skill answers what the code does and how it works. `why` answers what forces led to its shape.
 
-Each spawn below names a role line in `${CLAUDE_CONFIG_DIR:-$HOME/.claude}/keel-models.md` and a default. Read `${CLAUDE_CONFIG_DIR:-$HOME/.claude}/keel-models.md` if it exists; use the role's line, else the default. Pass that value as the Agent call's `model`. Omit `model` when the value is `inherit`, `inherit-parent`, or `auto`. If the Agent tool rejects a value, use the default and say so. If it rejects the default, omit `model` and say so.
+Each spawn below names a role line in `${CLAUDE_CONFIG_DIR:-$HOME/.claude}/keel-models.md` and a default. Read `${CLAUDE_CONFIG_DIR:-$HOME/.claude}/keel-models.md` if it exists; use the role's line, else the default. Pass that value as the Agent call's `model`. Omit `model` when the value is `inherit`, `inherit-parent`, or `auto`. If the Agent tool rejects a value, use the default and say so. If it rejects the default, omit `model` and say so. Pick each subagent's effort for the job, per the Subagents section of the **lead** skill.
 
 Every spawn is `general-purpose`. Claude Code subagents inherit the parent's MCP tools, which the MCP-backed investigators and the synthesizer's citation spot-checks need. Investigators still shouldn't write anything, so every prompt says "read-only: do not edit files or change external state."
 

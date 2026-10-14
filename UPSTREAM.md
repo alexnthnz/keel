@@ -69,7 +69,7 @@ The Claude Code column shows the port's names. The rename table above maps them 
 | Panels (arena runners, architect runners, arena cross-judge pool) | `opus, fable, sonnet`. "Different family" becomes "a different model from the parent" |
 | interrogate reviewers | `opus, fable, sonnet, codex`. `codex` runs `codex exec --sandbox read-only` from Bash with the shared reviewer brief, and is skipped when `command -v codex` fails |
 | `inherit-parent`, `auto` | Kept, plus `inherit`. All omit `model` |
-| Effort suffixes and the budget step | Removed |
+| Effort suffixes (`-max`, `-xhigh`, `-medium`), the budget step, and fast mode | The Agent tool's `effort` parameter (`low`, `medium`, `high`, `xhigh`, or `max`), per the lead skill's Match the effort to the job rule. keel has no budget step, so a role's usual work omits `effort`. The Agent tool has no per-subagent fast flag, so fast mode is dropped |
 | Model family prefixes (`claude-*`, `gpt-*`, `grok-*`) | The aliases `opus`, `sonnet`, `haiku`, `fable`, plus `codex` |
 | `~/.cursor/rules/pstack-models.mdc` (always applied) | `~/.claude/pstack-models.md`, a plain file. Each skill says "Read `~/.claude/pstack-models.md` if it exists; use the role's line, else the default." |
 | `deslop` from `cursor-team-kit` | Claude Code's built-in `/simplify`, plus pstack's `unslop` for prose |

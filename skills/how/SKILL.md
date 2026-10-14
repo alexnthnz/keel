@@ -8,7 +8,7 @@ disable-model-invocation: true
 
 Explore the codebase to answer "how does X work?" questions. Produce architectural explanations at the level of a senior engineer onboarding onto a subsystem, enough to build a working mental model, not so much that it reads like annotated source code.
 
-Every spawn is a read-only subagent whose prompt opens with "Read-only: do not edit files." Explorers use `subagent_type: "Explore"` and the `how explorer` line (default `sonnet`), and every explainer uses `subagent_type: "general-purpose"` and the `how explainer` line (default `opus`). Read `${CLAUDE_CONFIG_DIR:-$HOME/.claude}/keel-models.md` if it exists; use the role's line, else the default. Pass that value as the Agent call's `model`. Omit `model` when the value is `inherit`, `inherit-parent`, or `auto`. If the Agent tool rejects a value, use the default and say so. If it rejects the default, omit `model` and say so.
+Every spawn is a read-only subagent whose prompt opens with "Read-only: do not edit files." Explorers use `subagent_type: "Explore"` and the `how explorer` line (default `sonnet`), and every explainer uses `subagent_type: "general-purpose"` and the `how explainer` line (default `opus`). Read `${CLAUDE_CONFIG_DIR:-$HOME/.claude}/keel-models.md` if it exists; use the role's line, else the default. Pass that value as the Agent call's `model`. Omit `model` when the value is `inherit`, `inherit-parent`, or `auto`. If the Agent tool rejects a value, use the default and say so. If it rejects the default, omit `model` and say so. Pick each subagent's effort for the job, per the Subagents section of the **lead** skill.
 
 ## 1. Assess complexity
 
