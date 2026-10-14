@@ -78,8 +78,7 @@ The Claude Code column shows the port's names. The rename table above maps them 
 | `create-skill` | `anthropic-skills:skill-creator` when available, else the Authoring a skill playbook |
 | `/visualize` charts, Mermaid diagrams, and generated images (ketchup's visuals) | A small box diagram or a text chart in a fenced code block, or a screenshot or recording that already exists, linked by its path. ketchup stays read-only and posts nothing, so it publishes no Artifact |
 | Cursor's built-in `/babysit` | Dropped. pstack's Babysit playbook is the only one |
-| `/goal` | The objective becomes the first todo item and is re-read at each `/loop` tick. The multi-phase plan template also names `/goal` where a Claude Code build has it, because `check-plan.mjs` requires that marker |
-| `/loop` in dynamic mode, cloud-sleeper wake chain | `/loop` with no interval (self-paced), or `/loop 30m <prompt>` for audit ticks |
+| `/loop` in dynamic mode, cloud-sleeper wake chain | `/loop` with no interval (self-paced), or `/loop 1h <tick prompt>` for an audit tick. The multi-phase plan template keeps the literal `/loop 1h`, because `check-plan.mjs` requires it |
 | Cursor cloud agent, `environment: "cloud"`, `cloud_base_branch` | A background subagent with `isolation: "worktree"`, or a separate `claude --worktree` session |
 | Origin forge and `origin pr ...` | `gh` only |
 | Bugbot | Automated PR review bots (Bugbot, Claude Code review, CodeRabbit, etc.). `references/bugbot-triage.md` keeps its filename |
@@ -101,8 +100,11 @@ The Claude Code column shows the port's names. The rename table above maps them 
 `skills/lead/scripts/` is unchanged apart from the package name. Its Cursor-specific parts:
 
 - `worktree-audit.sh` reads chat transcripts from `~/.cursor/projects/<slug>/agent-transcripts`, so its `LAST_CHAT` column is always `-` on Claude Code. The Worktree cleanup playbook tells the agent to scan `${CLAUDE_CONFIG_DIR:-$HOME/.claude}/projects/` itself and to treat every `safe` row as `verify-recent-chat` until that scan clears it.
+- `worktree-audit.sh` fills its PR column from `origin pr list` when the Origin CLI can read the repository, and from `gh` otherwise. keel uses `gh` only, so without Origin installed the script takes the `gh` path.
+- `orch frontier set` takes `--forge origin` for Origin. keel's Orchestrate playbook calls it without the flag, so it reads PR chains through `gh`.
+- `watch-pr` treats a completed `Code Review Gate` check run whose conclusion is `ACTION_REQUIRED` as the owner-approval gate. That check name comes from Cursor's own review setup.
 - `watch-pr/github.ts` counts review passes only for Bugbot, detected by the author `bugbot` or the `cursor` app with `CURSOR_AUTOMATION_ID` markers. Other review bots show no pass count. The Babysit playbook counts their passes from review history.
-- `check-plan.mjs` requires the literal markers `/goal` and `git show origin/main:` in a plan's Program checklist. The plan template keeps both.
+- `check-plan.mjs` requires the literal markers `git show origin/main:` and `/loop 1h` in a plan's Program checklist. The plan template keeps both.
 - The package was named `@cursor-skill/poteto-mode-tools`; keel renamed it `keel-lead-tools`.
 
 ## Sync with upstream
