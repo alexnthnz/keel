@@ -84,6 +84,8 @@ The Claude Code column shows the port's names. The rename table above maps them 
 | Bugbot | Automated PR review bots (Bugbot, Claude Code review, CodeRabbit, etc.). `references/bugbot-triage.md` keeps its filename |
 | The agent's store (path in the system prompt) | `~/.claude/pstack-store/<project-slug>/`, exported as `ORCH_STORE` for `orch` |
 | `agent-transcripts/` under `~/.cursor/projects/<slug>/` | `~/.claude/projects/<cwd-slug>/<session-id>.jsonl`, one event per line, subagents under `<session-id>/subagents/`. `<cwd-slug>` replaces every non-alphanumeric character of the path with `-` |
+| Cursor Projects, a coordinator thread whose cloud subagents keep working with the laptop closed | A background session started with `claude --bg`, whose subagents work in their own worktrees |
+| A Custom Mode (picking `/poteto-mode` from the `/` menu with Option+Enter) | Dropped. The lead skill stays on across turns by its own rule |
 | Cursor restart | Session restart or context compaction |
 | Cursor as the product the user runs | Claude Code |
 | `pstack/skills/...` monorepo paths, `git show origin/main:pstack/...` | The installed plugin's own files, `<pstack>/skills/...` |
