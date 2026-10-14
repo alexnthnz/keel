@@ -6,7 +6,12 @@ keel is a fork of pstack by Lauren Tan (poteto), MIT. keel first made its own Cl
 - Base: `cursor/plugins@12d587d`, pstack 0.15.5.
 - The first commit in this repository is an unmodified copy of `pstack/` at the base. Everything after it is keel.
 
-Removed as Cursor-only or pstack branding: `.cursor-plugin/`, `assets/` (pstack's logo), `docs/guide/images/` (pstack's illustrations), `automations/benny/` and `skills/make-bot-ui/`. On an upstream sync, drop them again.
+Removed as Cursor-only or pstack branding: `.cursor-plugin/`, `assets/` (pstack's logo), `docs/guide/images/` (pstack's illustrations), `automations/benny/` and `skills/make-bot-ui/`. Two later upstream additions are removed too:
+
+- `plugin.json` at the root, the Agent Plugins v1 manifest. Claude Code reads `.claude-plugin/plugin.json`, and `codex/scripts/validate-package.py` rejects a root manifest.
+- `skills/poteto-help/`, a help skill about pstack in Cursor. keel's README and guide cover the same ground.
+
+`bin/upstream-diff.sh --apply` skips all of these on every sync.
 
 Every change after the first commit applies two tables and nothing else. The translation table turns Cursor into Claude Code. The rename table then turns pstack into keel. **Re-apply both on every upstream sync, translation first, then rename.** poteto's content, voice, rules, and structure stay as they are.
 
@@ -36,7 +41,7 @@ keel additions with no upstream counterpart: `hooks/git-guard.py` (adapted from 
 Kept on purpose:
 
 - "pstack" and "poteto" where they credit or describe upstream: the README, `THIRD_PARTY_NOTICES.md`, the guide's credit line, source notes in a few skills and agents, and this file.
-- The upstream `pstack/` path in `bin/upstream-diff.sh`.
+- The upstream `pstack/` path and the upstream file names in `bin/upstream-diff.sh`, which turns them into keel's.
 - The bun scripts' code under `skills/lead/scripts/`, apart from the package name (now `keel-lead-tools` in `package.json` and `bun.lock`) and the install-key file name in `bootstrap.ts`.
 
 ## Translation table
@@ -101,37 +106,33 @@ The Claude Code column shows the port's names. The rename table above maps them 
 
 ## Sync with upstream
 
-1. See what changed since the base.
+A sync applies upstream's diff to keel rather than merging an import. The repository squash-merges every PR, so an import commit on a sync branch never reaches `main`, and the next `git merge` would fall back to the first import as its merge base. A 3-way apply needs only the base blobs, and the script copies in any that keel's history lacks.
+
+1. See what changed since the base. `KEEP=1` keeps the clone and prints its path, so you can read full diffs and reuse it.
 
    ```bash
-   bin/upstream-diff.sh            # stat of pstack/ from 12d587d to upstream main
-   KEEP=1 bin/upstream-diff.sh     # same, and keep the clone to read full diffs
+   KEEP=1 bin/upstream-diff.sh
    ```
 
-2. Import the new upstream tree on a branch from the unmodified import, so the upstream change lands as one reviewable commit.
+2. Apply the change on a branch from `main`. With `--apply`, the script diffs `pstack/` from the base to the upstream ref, moves renamed paths per the rename table, skips the removed paths, copies any missing base blobs into this repository, and runs `git apply --3way`. `CLONE=<dir>` reuses the kept clone. The ref must be one `git fetch` accepts: a branch, a tag, or a full SHA.
 
    ```bash
-   git switch -c upstream-sync "$(git rev-list --max-parents=0 HEAD)"
-   rsync -a --delete --exclude .git <clone>/pstack/ ./
-   git add -A
-   git commit -m "chore: import pstack <version> from cursor/plugins@<sha>"
+   git switch -c sync/pstack-<version> origin/main
+   CLONE=<kept clone> bin/upstream-diff.sh --apply <full upstream SHA>
    ```
 
-3. Merge it into keel and resolve every conflict by re-applying the translation table, then the rename table, to the new upstream text. Git's rename detection carries upstream edits under `skills/poteto-mode/`, `skills/setup-pstack/`, and the two agents over to their keel paths. Move a new upstream file under an old path by hand.
+   Files that apply cleanly come out staged. A conflict leaves markers in the file, a `U <path>` line in the output, and exit status 1. If the output says `does not exist in index`, the apply wrote nothing, because the diff changes a file keel lacks. Add its path to the rename table and the script's `awk` program, or to the script's `removed` list, then run the script again.
 
-   ```bash
-   git switch main
-   git merge upstream-sync
-   ```
+3. Resolve every conflict by re-applying the translation table, then the rename table, to the new upstream text, and `git add` the file. A new upstream file under a renamed directory already lands at its keel path.
 
-4. Re-apply both tables to files the merge did not conflict on. Start from the two residual scans, which should print only the lines listed as deliberate.
+4. Re-apply both tables to the upstream lines that applied cleanly. Start from the two residual scans, which should print only the lines listed as deliberate.
 
    ```bash
    grep -rnIE 'Task tool|generalPurpose|AskQuestion\b|\.cursor/|cursor-team-kit|deslop|grok|gpt-5\.6|claude-opus-5-5|is_background|readonly:|origin pr|/goal' skills agents README.md
    grep -rnIE 'poteto-mode|poteto-agent|comment-sicko|setup-pstack|pstack-models|/pstack:|pstack:(poteto|comment)|~/\.claude/' skills agents docs README.md
    ```
 
-5. Validate, then update `base` in `bin/upstream-diff.sh`, the base and import commits above, and keel's version in both manifests.
+5. Validate, then record the new base: `base` in `bin/upstream-diff.sh`, the base line at the top of this file, and the source lines in `README.md` and `THIRD_PARTY_NOTICES.md`. Bump keel's version in a separate release commit.
 
    ```bash
    claude plugin validate .
