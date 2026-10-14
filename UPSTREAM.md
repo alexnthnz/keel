@@ -131,8 +131,8 @@ A sync applies upstream's diff to keel rather than merging an import. The reposi
 4. Re-apply both tables to the upstream lines that applied cleanly. Start from the two residual scans, which should print only the lines listed as deliberate.
 
    ```bash
-   grep -rnIE 'Task tool|generalPurpose|AskQuestion\b|\.cursor/|cursor-team-kit|deslop|grok|gpt-5\.6|claude-opus-5-5|is_background|readonly:|origin pr|/goal' skills agents README.md
-   grep -rnIE 'poteto-mode|poteto-agent|comment-sicko|setup-pstack|pstack-models|/pstack:|pstack:(poteto|comment)|~/\.claude/' skills agents docs README.md
+   grep -rnIE --exclude-dir=node_modules 'Task tool|generalPurpose|AskQuestion\b|\.cursor/|cursor-team-kit|deslop|grok|gpt-5\.6|claude-opus-5-5|is_background|readonly:|origin pr|/goal' skills agents README.md
+   grep -rnIE --exclude-dir=node_modules 'poteto-mode|poteto-agent|comment-sicko|setup-pstack|pstack-models|/pstack:|pstack:(poteto|comment)|~/\.claude/' skills agents docs README.md
    ```
 
 5. Validate, then record the new base: `base` in `bin/upstream-diff.sh`, the base line at the top of this file, and the source lines in `README.md` and `THIRD_PARTY_NOTICES.md`. Bump keel's version in a separate release commit.
