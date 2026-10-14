@@ -3,15 +3,10 @@
 keel is a fork of pstack by Lauren Tan (poteto), MIT. keel first made its own Claude Code port of pstack (the translation table below), then renamed and reorganized it (the rename table).
 
 - Upstream: <https://github.com/cursor/plugins>, directory `pstack/`.
-- Base: `cursor/plugins@12d587d`, pstack 0.15.5.
-- The first commit in this repository is an unmodified copy of `pstack/` at the base. Everything after it is keel.
+- Base: `cursor/plugins@ce649c0`, pstack 0.15.23. This is the last upstream commit synced into keel.
+- The first commit in this repository is an unmodified copy of `pstack/` at `cursor/plugins@12d587d`, pstack 0.15.5. Everything after it is keel, including the syncs that applied later upstream changes.
 
-Removed as Cursor-only or pstack branding: `.cursor-plugin/`, `assets/` (pstack's logo), `docs/guide/images/` (pstack's illustrations), `automations/benny/` and `skills/make-bot-ui/`. Two later upstream additions are removed too:
-
-- `plugin.json` at the root, the Agent Plugins v1 manifest. Claude Code reads `.claude-plugin/plugin.json`, and `codex/scripts/validate-package.py` rejects a root manifest.
-- `skills/poteto-help/`, a help skill about pstack in Cursor. keel's README and guide cover the same ground.
-
-`bin/upstream-diff.sh --apply` skips all of these on every sync.
+Removed as Cursor-only or pstack branding: `.cursor-plugin/`, `assets/` (pstack's logo), `docs/guide/images/` (pstack's illustrations), `automations/benny/`, `skills/make-bot-ui/`, `skills/poteto-help/`, and the root `plugin.json`. `bin/upstream-diff.sh --apply` skips all of them on every sync. [Not ported](#not-ported) gives the reasons.
 
 Every change after the first commit applies two tables and nothing else. The translation table turns Cursor into Claude Code. The rename table then turns pstack into keel. **Re-apply both on every upstream sync, translation first, then rename.** poteto's content, voice, rules, and structure stay as they are.
 
@@ -61,11 +56,12 @@ The Claude Code column shows the port's names. The rename table above maps them 
 | Frontmatter `mode`, `reminder`, `icon`, `color` | Removed. The `reminder` text moved into the poteto-mode body as the stay-on rule |
 | `/poteto-mode`, `/how`, and other pstack slash references | `/pstack:poteto-mode`, `/pstack:how`, and so on |
 | pstack skill invocation | pstack skills set `disable-model-invocation`, so the Skill tool refuses them. Agents read `<pstack>/skills/<name>/SKILL.md` instead. poteto-mode names the directory through `${CLAUDE_SKILL_DIR}` |
-| `claude-opus-5-5-max` (synthesizers, explainers, reflect reviewers) | `opus` |
-| `claude-opus-5-5-max` (judgment, prose, hardest tasks) | `inherit` in keel (the port used `opus`) |
+| `claude-opus-5-5-xhigh`, `-max` before pstack 0.15.15 (synthesizers, explainers, reflect reviewers) | `opus` |
+| `claude-opus-5-5-xhigh`, `-max` before pstack 0.15.15 (judgment, prose, hardest tasks) | `inherit` in keel (the port used `opus`) |
 | `grok-4.7-xhigh-fast` (code delegates) | `inherit` in keel (the port used `sonnet`) |
-| `grok-4.7-xhigh-fast` (explorers, investigators, swarm workers) | `sonnet` |
-| `gpt-5.6-sol-max` (reflect tooling) | `sonnet` |
+| `grok-4.7-xhigh-fast` (explorers, investigators, swarm workers, reflect tooling) | `sonnet` |
+| `gpt-5.6-sol-max` (reflect tooling before pstack 0.15.15) | `sonnet` |
+| Family fallbacks for a refused slug, with `cursor-grok-*` and `composer-*` in the grok family | Dropped. Each skill names its own fallback for a rejected model |
 | Panels (arena runners, architect runners, arena cross-judge pool) | `opus, fable, sonnet`. "Different family" becomes "a different model from the parent" |
 | interrogate reviewers | `opus, fable, sonnet, codex`. `codex` runs `codex exec --sandbox read-only` from Bash with the shared reviewer brief, and is skipped when `command -v codex` fails |
 | `inherit-parent`, `auto` | Kept, plus `inherit`. All omit `model` |
@@ -95,7 +91,9 @@ The Claude Code column shows the port's names. The rename table above maps them 
 
 - `automations/benny/` runs on Cursor automations and Slack. Removed.
 - `skills/make-bot-ui/` drives Cursor's bot routines (`update_state`, `SendToUser`, `api2.cursor.sh`). Removed.
-- `docs/guide/` got a light pass only: install, the model file, `/simplify`, `/loop`, and `.claude/skills/` paths. Its `/name` examples keep upstream spelling under a note that they run as `/keel:name`.
+- `skills/poteto-help/` answers questions about pstack in Cursor. keel's README and guide cover the same ground. Removed.
+- `plugin.json` at the root is the Agent Plugins v1 manifest. Claude Code reads `.claude-plugin/plugin.json`, and `codex/scripts/validate-package.py` rejects a root manifest. Removed.
+- `docs/guide/` got a light pass only: install, the model file, `/simplify`, `/loop`, background sessions for cloud agents and Cursor Projects, and `.claude/skills/` paths. Its sections on Custom Modes, `/poteto-help`, `/make-bot-ui`, the benny automation pack, and the reasoning budget are cut. Its `/name` examples keep upstream spelling under a note that they run as `/keel:name`.
 
 ## Scripts left as upstream wrote them
 
@@ -145,4 +143,4 @@ A sync applies upstream's diff to keel rather than merging an import. The reposi
    claude --plugin-dir . plugin details keel
    ```
 
-Deliberate residual-scan hits. The first scan prints the model mapping table and the differences list in `README.md`, the `/goal` line in the multi-phase plan template, and the Cursor-path lines inside the unported scripts. The second prints the credit line in `README.md` and the `poteto-mode` names inside the bun scripts under `skills/lead/scripts/`.
+Deliberate residual-scan hits. The first scan prints the model mapping table and the differences list in `README.md`, the credit line in `skills/interrogate/references/code-quality-review.md`, and the Origin and Cursor-path lines in `skills/lead/scripts/worktree-audit.sh`. The second prints the differences list and the make-it-yours line in `README.md`.

@@ -10,7 +10,7 @@
 #        BASE=<commit> bin/upstream-diff.sh ...        diff from another upstream commit
 set -euo pipefail
 
-base="${BASE:-12d587dfb20741cafc376c42c696c5f6e2a64487}"
+base="${BASE:-ce649c03ac3b75b6ae80cbd15b7e2c536caedb5a}"
 removed=(.cursor-plugin assets docs/guide/images automations/benny skills/make-bot-ui skills/poteto-help plugin.json)
 apply=
 if [ "${1:-}" = --apply ]; then
