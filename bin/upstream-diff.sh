@@ -1,13 +1,4 @@
 #!/usr/bin/env bash
-# Show how upstream pstack changed since keel's base commit, or apply that
-# change to this checkout. Sparse, blob-less clone of cursor/plugins into a
-# temp dir, then a diff of pstack/ between the base commit and upstream.
-#
-# Usage: bin/upstream-diff.sh [upstream-ref]           log and stat (default ref: main)
-#        bin/upstream-diff.sh --apply [upstream-ref]   3-way apply onto this checkout
-#        KEEP=1 bin/upstream-diff.sh ...               keep the clone to read full diffs
-#        CLONE=<dir> bin/upstream-diff.sh ...          reuse a kept clone
-#        BASE=<commit> bin/upstream-diff.sh ...        diff from another upstream commit
 set -euo pipefail
 
 base="${BASE:-ce649c03ac3b75b6ae80cbd15b7e2c536caedb5a}"
@@ -64,7 +55,8 @@ if [ ! -s "$patch" ]; then
 fi
 
 # A 3-way apply merges against the base blob named in each index line.
-# keel's history holds only the blobs of its own base, so copy in the rest.
+# keel's history holds the upstream blobs of its first import
+# (cursor/plugins@12d587d), not the current base's, so copy in the missing ones.
 awk '/^index / { split($2, ids, /\.\./); if (ids[1] !~ /^0+$/) print ids[1] }' "$patch" |
 	while read -r blob; do
 		git -C "$root" cat-file -e "$blob" 2>/dev/null ||

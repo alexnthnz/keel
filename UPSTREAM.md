@@ -111,20 +111,20 @@ The Claude Code column shows the port's names. The rename table above maps them 
 
 A sync applies upstream's diff to keel rather than merging an import. The repository squash-merges every PR, so an import commit on a sync branch never reaches `main`, and the next `git merge` would fall back to the first import as its merge base. A 3-way apply needs only the base blobs, and the script copies in any that keel's history lacks.
 
-1. See what changed since the base. `KEEP=1` keeps the clone and prints its path, so you can read full diffs and reuse it.
+1. See what changed since the base. The script lists upstream's commits and a diff stat for `pstack/`, from the base to upstream's `main` or to the ref you pass. `KEEP=1` keeps the clone and prints its path, so you can read full diffs and reuse it. `BASE=<commit>` diffs from another upstream commit instead of the base, here and with `--apply`.
 
    ```bash
    KEEP=1 bin/upstream-diff.sh
    ```
 
-2. Apply the change on a branch from `main`. With `--apply`, the script diffs `pstack/` from the base to the upstream ref, moves renamed paths per the rename table, skips the removed paths, copies any missing base blobs into this repository, and runs `git apply --3way`. `CLONE=<dir>` reuses the kept clone. The ref must be one `git fetch` accepts: a branch, a tag, or a full SHA.
+2. Apply the change on a branch from `main`. With `--apply`, the script diffs `pstack/` from the base to the upstream ref (`main` unless you pass one), moves renamed paths per the rename table, skips the removed paths, copies any missing base blobs into this repository, and runs `git apply --3way`. `CLONE=<dir>` reuses the kept clone. The ref must be one `git fetch` accepts: a branch, a tag, or a full SHA.
 
    ```bash
    git switch -c sync/pstack-<version> origin/main
    CLONE=<kept clone> bin/upstream-diff.sh --apply <full upstream SHA>
    ```
 
-   Files that apply cleanly come out staged. A conflict leaves markers in the file, a `U <path>` line in the output, and exit status 1. If the output says `does not exist in index`, the apply wrote nothing, because the diff changes a file keel lacks. Add its path to the rename table and the script's `awk` program, or to the script's `removed` list, then run the script again.
+   When upstream changed nothing outside the removed paths, the script prints `nothing to apply` and exits 0. Files that apply cleanly come out staged. A conflict leaves markers in the file, a `U <path>` line in the output, and exit status 1. If the output says `does not exist in index`, the apply wrote nothing, because the diff changes a file keel lacks. Add its path to the rename table and the script's `awk` program, or to the script's `removed` list, then run the script again.
 
 3. Resolve every conflict by re-applying the translation table, then the rename table, to the new upstream text, and `git add` the file. A new upstream file under a renamed directory already lands at its keel path.
 
