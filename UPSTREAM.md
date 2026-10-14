@@ -79,8 +79,8 @@ The Claude Code column shows the port's names. The rename table above maps them 
 | `/visualize` charts, Mermaid diagrams, and generated images (ketchup's visuals) | A small box diagram or a text chart in a fenced code block, or a screenshot or recording that already exists, linked by its path. ketchup stays read-only and posts nothing, so it publishes no Artifact |
 | Cursor's built-in `/babysit` | Dropped. pstack's Babysit playbook is the only one |
 | `/loop` in dynamic mode, cloud-sleeper wake chain | `/loop` with no interval (self-paced), or `/loop 1h <tick prompt>` for an audit tick. The multi-phase plan template keeps the literal `/loop 1h`, because `check-plan.mjs` requires it |
-| Cursor cloud agent, `environment: "cloud"`, `cloud_base_branch` | A background subagent with `isolation: "worktree"`, or a separate `claude --worktree` session |
-| Origin forge and `origin pr ...` | `gh` only |
+| Cursor cloud agent, `environment: "cloud"`, `cloud_base_branch` | A background subagent with `isolation: "worktree"`, or a separate `claude --worktree` session. "Assume the VM dies" becomes "assume the session dies" |
+| Origin forge, `origin pr ...`, and the run's built-in PR tool | `gh` only |
 | Bugbot | Automated PR review bots (Bugbot, Claude Code review, CodeRabbit, etc.). `references/bugbot-triage.md` keeps its filename |
 | The agent's store (path in the system prompt) | `~/.claude/pstack-store/<project-slug>/`, exported as `ORCH_STORE` for `orch` |
 | `agent-transcripts/` under `~/.cursor/projects/<slug>/` | `~/.claude/projects/<cwd-slug>/<session-id>.jsonl`, one event per line, subagents under `<session-id>/subagents/`. `<cwd-slug>` replaces every non-alphanumeric character of the path with `-` |
