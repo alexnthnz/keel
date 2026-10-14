@@ -3,10 +3,10 @@
 keel is a fork of pstack by Lauren Tan (poteto), MIT. keel first made its own Claude Code port of pstack (the translation table below), then renamed and reorganized it (the rename table).
 
 - Upstream: <https://github.com/cursor/plugins>, directory `pstack/`.
-- Base: `cursor/plugins@12d587d`, pstack 0.15.5.
-- The first commit in this repository is an unmodified copy of `pstack/` at the base. Everything after it is keel.
+- Base: `cursor/plugins@ce649c0`, pstack 0.15.23. This is the last upstream commit synced into keel.
+- The first commit in this repository is an unmodified copy of `pstack/` at `cursor/plugins@12d587d`, pstack 0.15.5. Everything after it is keel, including the syncs that applied later upstream changes.
 
-Removed as Cursor-only or pstack branding: `.cursor-plugin/`, `assets/` (pstack's logo), `docs/guide/images/` (pstack's illustrations), `automations/benny/` and `skills/make-bot-ui/`. On an upstream sync, drop them again.
+Removed as Cursor-only or pstack branding: `.cursor-plugin/`, `assets/` (pstack's logo), `docs/guide/images/` (pstack's illustrations), `automations/benny/`, `skills/make-bot-ui/`, `skills/poteto-help/`, and the root `plugin.json`. `bin/upstream-diff.sh --apply` skips all of them on every sync. [Not ported](#not-ported) gives the reasons.
 
 Every change after the first commit applies two tables and nothing else. The translation table turns Cursor into Claude Code. The rename table then turns pstack into keel. **Re-apply both on every upstream sync, translation first, then rename.** poteto's content, voice, rules, and structure stay as they are.
 
@@ -36,7 +36,7 @@ keel additions with no upstream counterpart: `hooks/git-guard.py` (adapted from 
 Kept on purpose:
 
 - "pstack" and "poteto" where they credit or describe upstream: the README, `THIRD_PARTY_NOTICES.md`, the guide's credit line, source notes in a few skills and agents, and this file.
-- The upstream `pstack/` path in `bin/upstream-diff.sh`.
+- The upstream `pstack/` path and the upstream file names in `bin/upstream-diff.sh`, which turns them into keel's.
 - The bun scripts' code under `skills/lead/scripts/`, apart from the package name (now `keel-lead-tools` in `package.json` and `bun.lock`) and the install-key file name in `bootstrap.ts`.
 
 ## Translation table
@@ -56,29 +56,32 @@ The Claude Code column shows the port's names. The rename table above maps them 
 | Frontmatter `mode`, `reminder`, `icon`, `color` | Removed. The `reminder` text moved into the poteto-mode body as the stay-on rule |
 | `/poteto-mode`, `/how`, and other pstack slash references | `/pstack:poteto-mode`, `/pstack:how`, and so on |
 | pstack skill invocation | pstack skills set `disable-model-invocation`, so the Skill tool refuses them. Agents read `<pstack>/skills/<name>/SKILL.md` instead. poteto-mode names the directory through `${CLAUDE_SKILL_DIR}` |
-| `claude-opus-5-5-max` (synthesizers, explainers, reflect reviewers) | `opus` |
-| `claude-opus-5-5-max` (judgment, prose, hardest tasks) | `inherit` in keel (the port used `opus`) |
+| `claude-opus-5-5-xhigh`, `-max` before pstack 0.15.15 (synthesizers, explainers, reflect reviewers) | `opus` |
+| `claude-opus-5-5-xhigh`, `-max` before pstack 0.15.15 (judgment, prose, hardest tasks) | `inherit` in keel (the port used `opus`) |
 | `grok-4.7-xhigh-fast` (code delegates) | `inherit` in keel (the port used `sonnet`) |
-| `grok-4.7-xhigh-fast` (explorers, investigators, swarm workers) | `sonnet` |
-| `gpt-5.6-sol-max` (reflect tooling) | `sonnet` |
+| `grok-4.7-xhigh-fast` (explorers, investigators, swarm workers, reflect tooling) | `sonnet` |
+| `gpt-5.6-sol-max` (reflect tooling before pstack 0.15.15) | `sonnet` |
+| Family fallbacks for a refused slug, with `cursor-grok-*` and `composer-*` in the grok family | Dropped. Each skill names its own fallback for a rejected model |
 | Panels (arena runners, architect runners, arena cross-judge pool) | `opus, fable, sonnet`. "Different family" becomes "a different model from the parent" |
 | interrogate reviewers | `opus, fable, sonnet, codex`. `codex` runs `codex exec --sandbox read-only` from Bash with the shared reviewer brief, and is skipped when `command -v codex` fails |
 | `inherit-parent`, `auto` | Kept, plus `inherit`. All omit `model` |
-| Effort suffixes and the budget step | Removed |
+| Effort suffixes (`-max`, `-xhigh`, `-medium`), the budget step, and fast mode | The Agent tool's `effort` parameter (`low`, `medium`, `high`, `xhigh`, or `max`), per the lead skill's Match the effort to the job rule. keel has no budget step, so a role's usual work omits `effort`. The Agent tool has no per-subagent fast flag, so fast mode is dropped |
 | Model family prefixes (`claude-*`, `gpt-*`, `grok-*`) | The aliases `opus`, `sonnet`, `haiku`, `fable`, plus `codex` |
 | `~/.cursor/rules/pstack-models.mdc` (always applied) | `~/.claude/pstack-models.md`, a plain file. Each skill says "Read `~/.claude/pstack-models.md` if it exists; use the role's line, else the default." |
 | `deslop` from `cursor-team-kit` | Claude Code's built-in `/simplify`, plus pstack's `unslop` for prose |
 | `control-cli` | Drive the CLI or TUI directly through Bash, with tmux for interactive TUIs |
 | `control-ui` | `anthropic-skills:chrome-browser`, `anthropic-skills:built-in-browser`, or `anthropic-skills:computer-use` when available, else Playwright via Bash |
 | `create-skill` | `anthropic-skills:skill-creator` when available, else the Authoring a skill playbook |
+| `/visualize` charts, Mermaid diagrams, and generated images (ketchup's visuals) | A small box diagram or a text chart in a fenced code block, or a screenshot or recording that already exists, linked by its path. ketchup stays read-only and posts nothing, so it publishes no Artifact |
 | Cursor's built-in `/babysit` | Dropped. pstack's Babysit playbook is the only one |
-| `/goal` | The objective becomes the first todo item and is re-read at each `/loop` tick. The multi-phase plan template also names `/goal` where a Claude Code build has it, because `check-plan.mjs` requires that marker |
-| `/loop` in dynamic mode, cloud-sleeper wake chain | `/loop` with no interval (self-paced), or `/loop 30m <prompt>` for audit ticks |
-| Cursor cloud agent, `environment: "cloud"`, `cloud_base_branch` | A background subagent with `isolation: "worktree"`, or a separate `claude --worktree` session |
-| Origin forge and `origin pr ...` | `gh` only |
+| `/loop` in dynamic mode, cloud-sleeper wake chain | `/loop` with no interval (self-paced), or `/loop 1h <tick prompt>` for an audit tick. The multi-phase plan template keeps the literal `/loop 1h`, because `check-plan.mjs` requires it |
+| Cursor cloud agent, `environment: "cloud"`, `cloud_base_branch` | A background subagent with `isolation: "worktree"`, or a separate `claude --worktree` session. "Assume the VM dies" becomes "assume the session dies" |
+| Origin forge, `origin pr ...`, and the run's built-in PR tool | `gh` only |
 | Bugbot | Automated PR review bots (Bugbot, Claude Code review, CodeRabbit, etc.). `references/bugbot-triage.md` keeps its filename |
-| The agent's store (path in the system prompt) | `~/.claude/pstack-store/<project-slug>/`, exported as `ORCH_STORE` for `orch` |
+| The agent's store (path in the system prompt) | `~/.claude/pstack-store/<project-slug>/`, exported as `ORCH_STORE` for `orch`. `<project-slug>` is the directory name of the repository's main checkout, so every worktree of the repository resolves the same slug. Print it with `basename "$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")"` |
 | `agent-transcripts/` under `~/.cursor/projects/<slug>/` | `~/.claude/projects/<cwd-slug>/<session-id>.jsonl`, one event per line, subagents under `<session-id>/subagents/`. `<cwd-slug>` replaces every non-alphanumeric character of the path with `-` |
+| Cursor Projects, a coordinator thread whose cloud subagents keep working with the laptop closed | A background session started with `claude --bg`, whose subagents work in their own worktrees |
+| A Custom Mode (picking `/poteto-mode` from the `/` menu with Option+Enter) | Dropped. The lead skill stays on across turns by its own rule |
 | Cursor restart | Session restart or context compaction |
 | Cursor as the product the user runs | Claude Code |
 | `pstack/skills/...` monorepo paths, `git show origin/main:pstack/...` | The installed plugin's own files, `<pstack>/skills/...` |
@@ -88,50 +91,51 @@ The Claude Code column shows the port's names. The rename table above maps them 
 
 - `automations/benny/` runs on Cursor automations and Slack. Removed.
 - `skills/make-bot-ui/` drives Cursor's bot routines (`update_state`, `SendToUser`, `api2.cursor.sh`). Removed.
-- `docs/guide/` got a light pass only: install, the model file, `/simplify`, `/loop`, and `.claude/skills/` paths. Its `/name` examples keep upstream spelling under a note that they run as `/keel:name`.
+- `skills/poteto-help/` answers questions about pstack in Cursor. keel's README and guide cover the same ground. Removed.
+- `plugin.json` at the root is the Agent Plugins v1 manifest. Claude Code reads `.claude-plugin/plugin.json`, and `codex/scripts/validate-package.py` rejects a root manifest. Removed.
+- `docs/guide/` got a light pass only: install, the model file, `/simplify`, `/loop`, background sessions for cloud agents and Cursor Projects, and `.claude/skills/` paths. Its sections on Custom Modes, `/poteto-help`, `/make-bot-ui`, the benny automation pack, and the reasoning budget are cut. Its `/name` examples keep upstream spelling under a note that they run as `/keel:name`.
 
 ## Scripts left as upstream wrote them
 
 `skills/lead/scripts/` is unchanged apart from the package name. Its Cursor-specific parts:
 
 - `worktree-audit.sh` reads chat transcripts from `~/.cursor/projects/<slug>/agent-transcripts`, so its `LAST_CHAT` column is always `-` on Claude Code. The Worktree cleanup playbook tells the agent to scan `${CLAUDE_CONFIG_DIR:-$HOME/.claude}/projects/` itself and to treat every `safe` row as `verify-recent-chat` until that scan clears it.
+- `worktree-audit.sh` fills its PR column from `origin pr list` when the Origin CLI can read the repository, and from `gh` otherwise. keel uses `gh` only, so without Origin installed the script takes the `gh` path.
+- `orch frontier set` takes `--forge origin` for Origin. keel's Orchestrate playbook calls it without the flag, so it reads PR chains through `gh`.
+- `watch-pr` treats a completed `Code Review Gate` check run whose conclusion is `ACTION_REQUIRED` as the owner-approval gate. That check name comes from Cursor's own review setup.
 - `watch-pr/github.ts` counts review passes only for Bugbot, detected by the author `bugbot` or the `cursor` app with `CURSOR_AUTOMATION_ID` markers. Other review bots show no pass count. The Babysit playbook counts their passes from review history.
-- `check-plan.mjs` requires the literal markers `/goal` and `git show origin/main:` in a plan's Program checklist. The plan template keeps both.
+- `check-plan.mjs` requires the literal markers `git show origin/main:` and `/loop 1h` in a plan's Program checklist. The plan template keeps both.
 - The package was named `@cursor-skill/poteto-mode-tools`; keel renamed it `keel-lead-tools`.
 
 ## Sync with upstream
 
-1. See what changed since the base.
+A sync applies upstream's diff to keel rather than merging an import. The repository squash-merges every PR, so an import commit on a sync branch never reaches `main`, and the next `git merge` would fall back to the first import as its merge base. A 3-way apply needs only the base blobs, and the script copies in any that keel's history lacks.
+
+1. See what changed since the base. The script lists upstream's commits and a diff stat for `pstack/`, from the base to upstream's `main` or to the ref you pass. `KEEP=1` keeps the clone and prints its path, so you can read full diffs and reuse it. `BASE=<commit>` diffs from another upstream commit instead of the base, here and with `--apply`.
 
    ```bash
-   bin/upstream-diff.sh            # stat of pstack/ from 12d587d to upstream main
-   KEEP=1 bin/upstream-diff.sh     # same, and keep the clone to read full diffs
+   KEEP=1 bin/upstream-diff.sh
    ```
 
-2. Import the new upstream tree on a branch from the unmodified import, so the upstream change lands as one reviewable commit.
+2. Apply the change on a branch from `main`. With `--apply`, the script diffs `pstack/` from the base to the upstream ref (`main` unless you pass one), moves renamed paths per the rename table, skips the removed paths, copies any missing base blobs into this repository, and runs `git apply --3way`. `CLONE=<dir>` reuses the kept clone. The ref must be one `git fetch` accepts: a branch, a tag, or a full SHA.
 
    ```bash
-   git switch -c upstream-sync "$(git rev-list --max-parents=0 HEAD)"
-   rsync -a --delete --exclude .git <clone>/pstack/ ./
-   git add -A
-   git commit -m "chore: import pstack <version> from cursor/plugins@<sha>"
+   git switch -c sync/pstack-<version> origin/main
+   CLONE=<kept clone> bin/upstream-diff.sh --apply <full upstream SHA>
    ```
 
-3. Merge it into keel and resolve every conflict by re-applying the translation table, then the rename table, to the new upstream text. Git's rename detection carries upstream edits under `skills/poteto-mode/`, `skills/setup-pstack/`, and the two agents over to their keel paths. Move a new upstream file under an old path by hand.
+   When upstream changed nothing outside the removed paths, the script prints `nothing to apply` and exits 0. Files that apply cleanly come out staged. A conflict leaves markers in the file, a `U <path>` line in the output, and exit status 1. If the output says `does not exist in index`, the apply wrote nothing, because the diff changes a file keel lacks. Add its path to the rename table and the script's `awk` program, or to the script's `removed` list, then run the script again.
+
+3. Resolve every conflict by re-applying the translation table, then the rename table, to the new upstream text, and `git add` the file. A new upstream file under a renamed directory already lands at its keel path.
+
+4. Re-apply both tables to the upstream lines that applied cleanly. Start from the two residual scans, which should print only the lines listed as deliberate.
 
    ```bash
-   git switch main
-   git merge upstream-sync
+   grep -rnIE --exclude-dir=node_modules 'Task tool|generalPurpose|AskQuestion\b|\.cursor/|cursor-team-kit|deslop|grok|gpt-5\.6|claude-opus-5-5|is_background|readonly:|origin pr|/goal' skills agents README.md
+   grep -rnIE --exclude-dir=node_modules 'poteto-mode|poteto-agent|comment-sicko|setup-pstack|pstack-models|/pstack:|pstack:(poteto|comment)|~/\.claude/' skills agents docs README.md
    ```
 
-4. Re-apply both tables to files the merge did not conflict on. Start from the two residual scans, which should print only the lines listed as deliberate.
-
-   ```bash
-   grep -rnIE 'Task tool|generalPurpose|AskQuestion\b|\.cursor/|cursor-team-kit|deslop|grok|gpt-5\.6|claude-opus-5-5|is_background|readonly:|origin pr|/goal' skills agents README.md
-   grep -rnIE 'poteto-mode|poteto-agent|comment-sicko|setup-pstack|pstack-models|/pstack:|pstack:(poteto|comment)|~/\.claude/' skills agents docs README.md
-   ```
-
-5. Validate, then update `base` in `bin/upstream-diff.sh`, the base and import commits above, and keel's version in both manifests.
+5. Validate, then record the new base: `base` in `bin/upstream-diff.sh`, the base line at the top of this file, and the source lines in `README.md` and `THIRD_PARTY_NOTICES.md`. Bump keel's version in a separate release commit.
 
    ```bash
    claude plugin validate .
@@ -139,4 +143,4 @@ The Claude Code column shows the port's names. The rename table above maps them 
    claude --plugin-dir . plugin details keel
    ```
 
-Deliberate residual-scan hits. The first scan prints the model mapping table and the differences list in `README.md`, the `/goal` line in the multi-phase plan template, and the Cursor-path lines inside the unported scripts. The second prints the credit line in `README.md` and the `poteto-mode` names inside the bun scripts under `skills/lead/scripts/`.
+Deliberate residual-scan hits. The first scan prints the model mapping table and the differences list in `README.md`, the credit line in `skills/interrogate/references/code-quality-review.md`, and the Origin and Cursor-path lines in `skills/lead/scripts/worktree-audit.sh`. The second prints the differences list and the make-it-yours line in `README.md`.

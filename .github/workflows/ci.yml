@@ -36,4 +36,4 @@ jobs:
         working-directory: skills/lead/scripts
         run: |
           bun install --frozen-lockfile
-          bun test orch watch-pr
+          bun run test
