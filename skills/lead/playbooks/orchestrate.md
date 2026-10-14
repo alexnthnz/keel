@@ -20,7 +20,7 @@ Depth stays at coordinator, track, worker. Author the track decomposition per pr
 
 #### Store layout
 
-Create `${CLAUDE_CONFIG_DIR:-$HOME/.claude}/keel-store/<project-slug>/` and export it as `ORCH_STORE` (or pass `--store <dir>`) for every `orch` call. Every file has exactly one writer. Owners publish facts, readers aggregate at read time. Use `bun scripts/orch/orch.ts` for bookkeeping, written below as `orch`, while its canonical plain TSV and JSON stay readable without the CLI.
+Create `${CLAUDE_CONFIG_DIR:-$HOME/.claude}/keel-store/<project-slug>/`, with `<project-slug>` as [UPSTREAM.md](../../../UPSTREAM.md) defines it, and export it as `ORCH_STORE` (or pass `--store <dir>`) for every `orch` call. Every file has exactly one writer. Owners publish facts, readers aggregate at read time. Use `bun scripts/orch/orch.ts` for bookkeeping, written below as `orch`, while its canonical plain TSV and JSON stay readable without the CLI.
 
 - `preferences.md` is the standing-orders register: numbered lines, one constraint each (model policy, stack shape and count, verification bar, forbidden paths, escalation policy). Paste it verbatim into every spawn and every resume. Directives decay across resumes, and each dropped one costs a human turn. When you catch yourself restating an instruction, append the line before you act (principle-encode-lessons-in-structure).
 - `overview.md` is the durable PR and issue DB. Append. Never rewrite wholesale per event.
