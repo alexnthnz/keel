@@ -58,6 +58,10 @@ git -C "$clone" diff --binary --full-index --no-renames --no-prefix --relative=p
 		}
 		{ print }
 	' >"$patch"
+if [ ! -s "$patch" ]; then
+	echo "nothing to apply"
+	exit 0
+fi
 
 # A 3-way apply merges against the base blob named in each index line.
 # keel's history holds only the blobs of its own base, so copy in the rest.
