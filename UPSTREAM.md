@@ -92,7 +92,7 @@ The Claude Code column shows the port's names. The rename table above maps them 
 - `automations/benny/` runs on Cursor automations and Slack. Removed.
 - `skills/make-bot-ui/` drives Cursor's bot routines (`update_state`, `SendToUser`, `api2.cursor.sh`). Removed.
 - `skills/poteto-help/` answers questions about pstack in Cursor. keel's README and guide cover the same ground. Removed.
-- `skills/statechart/` draws TLA+ models as charts. It brings about 7,700 lines of scripts and needs a TLA+ toolchain, and it only pays off once a project uses formal verification. Deferred, not rejected. Remove `skills/statechart` from the `removed` list in `bin/upstream-diff.sh` to take it in a later sync, and add its README row and guide section then.
+- `skills/statechart/` draws TLA+ models as charts. It brings about 7,300 lines of scripts and needs a TLA+ toolchain, and it only pays off once a project uses formal verification. Deferred, not rejected. Upstream added it in cursor/plugins@eb4db2b, before the current base, so no sync brings it in. To take it, run `git -C <kept clone> archive <base> pstack/skills/statechart | tar -x --strip-components=1` from the repository root, apply both tables to the new `skills/statechart/`, and remove `skills/statechart` from the `removed` list in `bin/upstream-diff.sh`. Add its README row and guide section in the same PR.
 - `docs/harness/` explains how to run pstack's Cursor names inside Claude Code. keel translates the text itself, so the doc does not apply. The README and guide lines that describe pstack's own Claude Code install, its generated `harness/pstack/` tree, or `~/.claude/rules/pstack-models.md` are left out for the same reason. keel's install and model-file text stays as it is.
 - `plugin.json` at the root is the Agent Plugins v1 manifest. Claude Code reads `.claude-plugin/plugin.json`, and `codex/scripts/validate-package.py` rejects a root manifest. Removed.
 - `docs/guide/` got a light pass only: install, the model file, `/simplify`, `/loop`, background sessions for cloud agents and Cursor Projects, and `.claude/skills/` paths. Its sections on Custom Modes, `/poteto-help`, `/make-bot-ui`, the benny automation pack, and the reasoning budget are cut. Its `/name` examples keep upstream spelling under a note that they run as `/keel:name`. The `/ketchup` passages in guides 07 and 10 are keel's own, written to match keel's read-only ketchup. A sync keeps them and drops the ketchup passages upstream adds to those guides. A guide section on `/statechart` and the lines about pstack's own Claude Code install stay out too, per the bullets above.
@@ -137,7 +137,7 @@ A sync applies upstream's diff to keel rather than merging an import. The reposi
    grep -rnIE --exclude-dir=node_modules 'poteto-mode|poteto-agent|comment-sicko|setup-pstack|pstack-models|/pstack:|pstack:(poteto|comment)|~/\.claude/' skills agents docs README.md
    ```
 
-5. Validate, then record the new base: `base` in `bin/upstream-diff.sh`, the base line at the top of this file, and the source lines in `README.md` and `THIRD_PARTY_NOTICES.md`. Bump keel's version in a separate release commit.
+5. Validate, then record the new base: `base` in `bin/upstream-diff.sh`, the base line at the top of this file, and the source lines in `README.md` and `THIRD_PARTY_NOTICES.md`. Update the count of pstack's skills that keel keeps, near the top of `README.md`, because the docs check skips counts of pstack's skills. Bump keel's version in a separate release commit.
 
    ```bash
    claude plugin validate .
