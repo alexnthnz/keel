@@ -31,7 +31,7 @@ Every change after the first commit applies two tables and nothing else. The tra
 
 Every `~/.claude/...` path keel writes uses `${CLAUDE_CONFIG_DIR:-$HOME/.claude}`, so each Claude Code profile keeps its own model file, store, and transcripts. Project paths such as `.claude/skills/` stay as they are.
 
-keel additions with no upstream counterpart: `hooks/git-guard.py` (adapted from Matt Pocock's MIT-licensed git guardrails), `hooks/lead-reminder.sh`, `hooks/hooks.json`, `THIRD_PARTY_NOTICES.md`, `ROADMAP.md` and `bin/upstream-diff.sh`.
+keel additions with no upstream counterpart: `hooks/git-guard.py` (adapted from Matt Pocock's MIT-licensed git guardrails), `hooks/lead-reminder.sh`, `hooks/hooks.json`, `THIRD_PARTY_NOTICES.md`, `ROADMAP.md`, `bin/upstream-diff.sh` and `bin/check-docs.mjs`. The last follows the idea of upstream's `scripts/check-pstack-docs.mjs`, which lives outside `pstack/`, so syncs don't carry it.
 
 Kept on purpose:
 
