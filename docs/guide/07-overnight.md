@@ -107,7 +107,9 @@ One brief can carry a whole session, from research through execution:
 
 ## Let loops start themselves
 
-Every loop above still waits for you to start it. A scheduled or event-driven automation removes that step. Software maintenance splits into stages that suit this well: triage a report, reproduce it, fix it, verify the fix. Two rules keep such a line trustworthy:
+Every loop above still waits for you to start it. A scheduled or event-driven automation removes that step. In Claude Code, [`/schedule`](https://code.claude.com/docs/en/routines) creates a cloud scheduled task that runs a saved prompt on a schedule, on an API call, or on a GitHub event such as a new pull request, even with your laptop closed. Each run starts from a fresh clone of the repository, so it sees only the skills and tools that the repository and its cloud environment provide.
+
+Software maintenance splits into stages that suit this well: triage a report, reproduce it, fix it, verify the fix. Two rules keep such a line trustworthy:
 
 - Every stage can stop the line. Triage can decide the report is expected behavior, repro can fail to reproduce it, and the fixer can judge the change too risky. Each of those outcomes is useful, because it keeps bad work from reaching the next stage, where it costs more to undo.
 - Every stage hands over evidence. Repro attaches screenshots and video of the broken state, and the fix attaches before-and-after proof. A human can then check that the agent fixed the right thing before reading a line of code.

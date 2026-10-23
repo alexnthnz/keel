@@ -58,7 +58,7 @@ function loadDoc(file) {
 const proseLines = (doc) => doc.lines.filter((l) => !l.fenced);
 const finding = (doc, line, message) => ({ file: doc.file, line, message });
 
-const BUILTIN_COMMANDS = new Set(["loop", "simplify", "bg", "plugin", "hooks"]);
+const BUILTIN_COMMANDS = new Set(["loop", "simplify", "bg", "plugin", "hooks", "schedule"]);
 const PLACEHOLDERS = new Set(["name"]);
 const RENAMED = {
   "poteto-mode": "lead",
