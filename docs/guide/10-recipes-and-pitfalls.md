@@ -16,7 +16,7 @@ Mechanics first, history second. Each skill's report tells you which sources it 
 /lead read this thread. restate the underlying issue in your own words, in plain english. don't change any code yet.
 ```
 
-A misreading shows up in the restatement, where it costs one message to correct. Keep your own theory to yourself until the agent has stated its own. [`/in-your-own-words`](../../skills/in-your-own-words/SKILL.md) asks for the same playback with no prompt to write.
+A misreading shows up in the restatement, where it costs one message to correct. Keep your own theory to yourself until the agent has stated its own. `/in-your-own-words` asks for the restatement alone, with no playbook.
 
 ## Prototype before you pick
 
