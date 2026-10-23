@@ -93,7 +93,7 @@ The Claude Code column shows the port's names. The rename table above maps them 
 - `skills/make-bot-ui/` drives Cursor's bot routines (`update_state`, `SendToUser`, `api2.cursor.sh`). Removed.
 - `skills/poteto-help/` answers questions about pstack in Cursor. keel's README and guide cover the same ground. Removed.
 - `plugin.json` at the root is the Agent Plugins v1 manifest. Claude Code reads `.claude-plugin/plugin.json`, and `codex/scripts/validate-package.py` rejects a root manifest. Removed.
-- `docs/guide/` got a light pass only: install, the model file, `/simplify`, `/loop`, background sessions for cloud agents and Cursor Projects, and `.claude/skills/` paths. Its sections on Custom Modes, `/poteto-help`, `/make-bot-ui`, the benny automation pack, and the reasoning budget are cut. Its `/name` examples keep upstream spelling under a note that they run as `/keel:name`.
+- `docs/guide/` got a light pass only: install, the model file, `/simplify`, `/loop`, background sessions for cloud agents and Cursor Projects, and `.claude/skills/` paths. Its sections on Custom Modes, `/poteto-help`, `/make-bot-ui`, the benny automation pack, and the reasoning budget are cut. Its `/name` examples keep upstream spelling under a note that they run as `/keel:name`. The guide and README already carry some later upstream claim fixes, ahead of the next sync. The autopilot-full wording follows cursor/plugins@019a6a2, and the playbook list and the `/in-your-own-words` lines come from cursor/plugins@f9be7aa. The `/ketchup` passages are keel's own, written to match keel's ketchup, so the next sync keeps them over the ketchup text upstream added in f9be7aa.
 
 ## Scripts left as upstream wrote them
 

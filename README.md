@@ -27,7 +27,7 @@ claude plugin install keel@keel
 
 To try it for one session without installing, clone the repository and run `claude --plugin-dir ./keel`.
 
-Skills run as `/keel:<name>`, and the agents are `keel:ponytail` and `keel:critic`. The main session loads `lead` on its own when a task needs it, or you type `/keel:lead`. The other keel skills are user-invoked, so `lead` reads them by path when a step needs one.
+Skills run as `/keel:<name>`, and the agents are `keel:ponytail` and `keel:critic`. The main session loads `lead` on its own when a task needs it, or you type `/keel:lead`. The other keel skills are user-invoked, except `typescript-best-practices`, which loads on its own for `.ts` and `.tsx` files. `lead` reads the user-invoked ones by path when a step needs one.
 
 ### Codex
 
@@ -122,7 +122,7 @@ morning.
 | [shipping](./skills/lead/playbooks/shipping.md) | independently verify a green stack, then land the contiguous verified run bottom-up through github. |
 | [autonomous run](./skills/lead/playbooks/autonomous-run.md) | drive a long task to completion without stopping. |
 | [orchestrate](./skills/lead/playbooks/orchestrate.md) | a standing project handed to one coordinator chat: multi-day, many stacked prs, fleets of subagents. |
-| [autopilot-full](./skills/lead/playbooks/autopilot-full.md) | run independent prs to merged with one owner per pr and a root swarm verdict on each round, from the code-ready head on. |
+| [autopilot-full](./skills/lead/playbooks/autopilot-full.md) | run independent prs to merged with one owner per pr. a swarm verifies each code-ready head, and every later change to the patch gets a fresh check. |
 | [autopilot-stack](./skills/lead/playbooks/autopilot-stack.md) | build and verify one linear base-branch stack for the operator to review and land. |
 | [session pickup](./skills/lead/playbooks/session-pickup.md) | resume or take over a prior agent's in-flight work. |
 | [pause safely](./skills/lead/playbooks/pause-safely.md) | suspend in-flight work cleanly so it can be resumed later. |

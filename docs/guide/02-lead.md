@@ -23,7 +23,7 @@ flowchart TD
     J --> K
 ```
 
-The diagram shows the common routes. There are also playbooks for hillclimbing a metric, diagnosing runtime symptoms and captured traces, prototypes, visual parity, authoring and evaluating skills, autonomous runs, babysitting a PR or stack to merge-ready, shipping a verified stack, running a PR queue on autopilot, orchestrating project-scale programs, session pickup, pausing safely, multi-phase plans, and worktree cleanup. The [playbook directory](../../skills/lead/playbooks/) has the full set.
+The diagram shows the common routes. There are also playbooks for hillclimbing a metric, diagnosing runtime symptoms and captured traces, prototypes, visual parity, authoring and evaluating skills, autonomous runs, opening a PR, babysitting a PR or stack to merge-ready, shipping a verified stack, running a PR queue or a stack on autopilot, orchestrating project-scale programs, session pickup, pausing safely, multi-phase plans, and worktree cleanup. The [playbook directory](../../skills/lead/playbooks/) has the full set.
 
 ## Say the goal, not the ceremony
 
@@ -62,7 +62,7 @@ For a noisy report, such as a long thread or a vague bug, make the restatement t
 /lead read this thread. restate the underlying issue in your own words, in plain english. don't change any code yet.
 ```
 
-A misreading shows up in the restatement, before any code exists. Correct it there, and it costs you one message instead of one wrong fix.
+A misreading shows up in the restatement, before any code exists. Correct it there, and it costs you one message instead of one wrong fix. For the restatement alone, with no playbook, run [`/in-your-own-words`](../../skills/in-your-own-words/SKILL.md). It restates what the agent thinks your goals are and what problem you're trying to solve.
 
 ## Follow up short
 
@@ -100,7 +100,7 @@ If you run several agents against one repository, they will fight over the worki
 /lead new task. branch off <base> in a fresh worktree, then port the parser change there.
 ```
 
-Each task in its own branch and worktree means no agent stomps another's files. The lead gives each builder its own worktree with `isolation: "worktree"`, and work meant to run unattended can start as a background session with `claude --bg`. Worktrees cost disk and machine resources, so a laptop runs only a handful at once. The [Opening a PR playbook](../../skills/lead/playbooks/opening-a-pr.md) already works from a worktree for code changes, so mostly you only say this when a specific base or location matters.
+Each task in its own branch and worktree means no agent stomps another's files. The lead gives builders their own worktrees with `isolation: "worktree"` when two or more work in the same repo or the change must not touch your checkout, and work meant to run unattended can start as a background session with `claude --bg`. Worktrees cost disk and machine resources, so a laptop runs only a handful at once. The [Opening a PR playbook](../../skills/lead/playbooks/opening-a-pr.md) already works from a worktree for code changes, so mostly you only say this when a specific base or location matters.
 
 Worktrees accumulate. When disk gets tight, ask:
 
@@ -108,7 +108,7 @@ Worktrees accumulate. When disk gets tight, ask:
 /lead what's eating my disk? prune the worktrees that are safe to prune.
 ```
 
-The [Worktree cleanup playbook](../../skills/lead/playbooks/worktree-cleanup.md) classifies every worktree by merge state, uncommitted work, and which chats still touch it. It deletes only what that evidence clears and pauses for your call on anything holding uncommitted work.
+The [Worktree cleanup playbook](../../skills/lead/playbooks/worktree-cleanup.md) classifies every worktree by merge state, uncommitted work, and PR state. Its script cannot read Claude Code chat history, so the lead searches this project's transcripts itself for the chats that still touch each worktree. It deletes only what that evidence clears and pauses for your call on anything holding uncommitted work.
 
 ## Leave it running
 
