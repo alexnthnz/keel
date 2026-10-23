@@ -18,7 +18,7 @@ keel keeps 51 of pstack's 53 skills (its 24 principles are among them) and all 2
 
 ### Claude Code
 
-keel needs Claude Code, `git`, the GitHub CLI `gh` (signed in), `python3` for the git guard and `bun` for the playbook scripts. Optional: the Codex CLI for the cross-model review lane and `tmux` for driving interactive terminal apps.
+keel needs Claude Code, `git`, the GitHub CLI `gh` (signed in), `python3` for the git guard, `bun` for the playbook scripts and `node` for the multi-phase plan checker. Optional: the Codex CLI for the cross-model review lane and `tmux` for driving interactive terminal apps.
 
 ```bash
 claude plugin marketplace add alexnthnz/keel
