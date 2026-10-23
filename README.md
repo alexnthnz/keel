@@ -12,7 +12,7 @@ keel is an engineering loop for [Claude Code](https://code.claude.com) and Codex
 - **ponytail** ([Claude agent](./agents/ponytail.md)) owns one slice or pull request end to end: build, test, prove it on the real artifact, commit. In Codex, the lead gives that brief to a worker. A ponytail owner merges only under autopilot or when its brief says to land it.
 - **critic** ([Claude agent](./agents/critic.md)), generalized from pstack's comment-review persona, Comment Sicko, reviews a diff through one lens: comments by default, or correctness, security, simplicity, tests or user impact. Codex gives the same brief to an independent reviewer.
 
-keel keeps 51 of pstack's 53 skills (its 24 principles are among them) and all 23 playbooks. [Differences from pstack](#differences-from-pstack) lists what changed.
+keel keeps 54 of pstack's 57 skills (its 24 principles are among them) and all 23 playbooks. [Differences from pstack](#differences-from-pstack) lists what changed.
 
 ## install
 
@@ -163,10 +163,11 @@ the full rules and playbooks live in [`skills/lead/SKILL.md`](./skills/lead/SKIL
 |---|---|
 | [`/keel:lead`](./skills/lead/SKILL.md) | default entry point for any non-trivial task. the main session also loads it on its own. |
 | [`/keel:in-your-own-words`](./skills/in-your-own-words/SKILL.md) | you want the agent to play back your goal and the problem before it starts. runs only when you type `/keel:in-your-own-words`. |
+| [`/keel:sharpen`](./skills/sharpen/SKILL.md) | you want a prompt made deeper, not bigger, before you send it: what a top professional would do that you didn't ask for, the raw material they'd start from, their methods and tools, and an outside check that the result is right. hands back the rewritten prompt and leaves your choices open. doesn't do the task. runs only when you type `/keel:sharpen`. |
 | [`/keel:how`](./skills/how/SKILL.md) | you want a walkthrough of how a subsystem works. |
 | [`/keel:why`](./skills/why/SKILL.md) | you want to know why something was built this way. discovers available MCPs at run time and queries each evidence category in parallel (source control, issue tracker, long-form docs, real-time chat, infra observability, error tracking, analytics warehouse). |
 | [`/keel:recall`](./skills/recall/SKILL.md) | you're starting or resuming work and want your recent context on a topic rebuilt from your own chat history and the shared record, handed back as a tight current-state brief. |
-| [`/keel:ketchup`](./skills/ketchup/SKILL.md) | you want what changed in this chat since your last message, in a few plain sentences and small visuals, with just enough context on each action item to make the call. |
+| [`/keel:ketchup`](./skills/ketchup/SKILL.md) | you want what changed in this chat since your last message, in plain words and small visuals, with every item waiting on you listed and decidable from the reply alone, even when that makes the reply long. |
 | [`/keel:blast-radius`](./skills/blast-radius/SKILL.md) | you have a small-looking change and want to know what else it could break, with the one fact it's safe because of proven by running code, not asserted. |
 | [`/keel:architect`](./skills/architect/SKILL.md) | you're about to write code that crosses a function boundary and want the caller's usage, types, and module shape settled first. |
 | [`/keel:arena`](./skills/arena/SKILL.md) | you want N parallel attempts at the same thing, then to grab the best parts of each. |
@@ -185,6 +186,8 @@ the full rules and playbooks live in [`skills/lead/SKILL.md`](./skills/lead/SKIL
 | [`/keel:show-me-your-work`](./skills/show-me-your-work/SKILL.md) | you want a reviewable decision trail. logs decisions to a tsv you can commit. |
 | [`/keel:create-verification-skill`](./skills/create-verification-skill/SKILL.md) | your project has no scripted way to prove app behavior. generates a project-local verify skill with a feature map, for any language or platform. |
 | [`/keel:maintain-verification-skill`](./skills/maintain-verification-skill/SKILL.md) | your verify skill's feature map has drifted from the app. source wave + one live pass, at most one PR of proven corrections. |
+| [`/keel:create-formal-verification-skill`](./skills/create-formal-verification-skill/SKILL.md) | tests can't reach the case that breaks a race, retry, state machine, parser, or unsafe code. verifies one property with the tool that fits and generates a project-local skill to recheck it on every change. |
+| [`/keel:maintain-formal-verification-skill`](./skills/maintain-formal-verification-skill/SKILL.md) | code your formal verification covers has changed since it was last checked. updates the model, harness, or properties to match the code, reruns, and says whether each failure is drift in the verification or a bug in the code. |
 | [`/keel:unslop`](./skills/unslop/SKILL.md) | you're cleaning up writing. removes AI tells. |
 | [`/keel:bro`](./skills/bro/SKILL.md) | you want the last message restated in plain human language, no jargon. |
 | [`/keel:technical-writing`](./skills/technical-writing/SKILL.md) | layered doc standard (Diátaxis + Google developer style + STE + Global English) for docs, RFCs, readmes, PR descriptions, commit messages. |
@@ -254,7 +257,7 @@ twenty-four short skills, one principle each. `lead` indexes them inline and rea
 | [laziness-protocol](./skills/principle-laziness-protocol/SKILL.md) | core | Bias toward deletion and the smallest change that solves the problem. |
 | [foundational-thinking](./skills/principle-foundational-thinking/SKILL.md) | core | Apply before writing logic: choosing core types and data structures, sequencing scaffold-vs-feature work, asking what concurrent actors share. Get the data structures right so downstream code becomes obvious. |
 | [redesign-from-first-principles](./skills/principle-redesign-from-first-principles/SKILL.md) | core | Redesign as if the requirement had been a foundational assumption from day one, instead of bolting it on. |
-| [attack-the-premise](./skills/principle-attack-the-premise/SKILL.md) | core | Apply when two or more fixes that share one premise have failed the same gate. Take a census of which actors hold the imbalance before the next fix, then question the premise instead of writing another fix that assumes it. |
+| [attack-the-premise](./skills/principle-attack-the-premise/SKILL.md) | core | Apply when two or more fixes that share one premise have failed the same gate. Write the premise down and test it directly before you write another fix that assumes it. |
 | [subtract-before-you-add](./skills/principle-subtract-before-you-add/SKILL.md) | core | Remove dead weight, redundant validators, and stub references first, then build on the simpler base. |
 | [minimize-reader-load](./skills/principle-minimize-reader-load/SKILL.md) | core | Count layers between question and answer, and hidden state in the reader's head; collapse one-caller wrappers and shrink mutable scope. |
 | [outcome-oriented-execution](./skills/principle-outcome-oriented-execution/SKILL.md) | core | Apply during planned rewrites and migrations with explicit phase boundaries. Converge on the target architecture; don't preserve smooth intermediate states with throwaway compatibility code. |
@@ -263,14 +266,14 @@ twenty-four short skills, one principle each. `lead` indexes them inline and rea
 | [build-the-lever](./skills/principle-build-the-lever/SKILL.md) | core | Apply to any non-trivial work, not just bulk work: edits, migrations, analyses, checks. Build the tool that does it or proves it (codemod, script, generator, or a skill your subagents follow) instead of working by hand. The tool is the artifact a reviewer can rerun. |
 | [model-the-domain](./skills/principle-model-the-domain/SKILL.md) | architecture | Encode the domain in a structure instead of scattered conditionals. |
 | [boundary-discipline](./skills/principle-boundary-discipline/SKILL.md) | architecture | Concentrate guards at system boundaries (CLI, config, network, external APIs); trust internal types and keep business logic in pure functions. |
-| [type-system-discipline](./skills/principle-type-system-discipline/SKILL.md) | architecture | Make illegal states unrepresentable, brand semantic primitives, parse external data at boundaries, refuse to lie to the compiler, exhaust variants, derive from authoritative schemas. |
+| [type-system-discipline](./skills/principle-type-system-discipline/SKILL.md) | architecture | Make illegal states unrepresentable, brand semantic primitives, parse external data at boundaries, exhaust variants, derive from authoritative schemas. |
 | [make-operations-idempotent](./skills/principle-make-operations-idempotent/SKILL.md) | architecture | Converge to the same end state regardless of partial prior runs. |
 | [migrate-callers-then-delete-legacy-apis](./skills/principle-migrate-callers-then-delete-legacy-apis/SKILL.md) | architecture | Migrate callers and delete the old API in the same wave instead of preserving compatibility layers. |
 | [separate-before-serializing-shared-state](./skills/principle-separate-before-serializing-shared-state/SKILL.md) | architecture | Eliminate the sharing first; serialize structurally only when one shared writer is a real invariant. |
 | [prove-it-works](./skills/principle-prove-it-works/SKILL.md) | verification | Apply after completing a task, before declaring done. Verify against the real artifact (run the feature, read the actual value, inspect the diff), not a proxy, self-report, or 'it compiles'. |
-| [fix-root-causes](./skills/principle-fix-root-causes/SKILL.md) | verification | Trace each symptom to its root cause and fix it there; reproduce first, ask why until you reach it, resist nil-check guards that silence crashes. |
+| [fix-root-causes](./skills/principle-fix-root-causes/SKILL.md) | verification | Trace each symptom back to the first place the system went wrong and fix it there. A guard is a fix only when the state it handles is legitimate. |
 | [sequence-verifiable-units](./skills/principle-sequence-verifiable-units/SKILL.md) | verification | Apply to multi-step work (sweeps, migrations, runs of similar edits) and to how you stack commits and PRs. Break work into small units that each end in a verifiable state, check each before the next, and order delivery so the sequence proves itself to a reviewer. |
-| [test-behavior-not-implementation](./skills/principle-test-behavior-not-implementation/SKILL.md) | verification | Apply when you write, change, or keep a test. Call the code the way its users do and assert the result they observe against a literal expected value. If the test would still pass when every imported function returns undefined, rewrite the assertion or delete the test. |
+| [test-behavior-not-implementation](./skills/principle-test-behavior-not-implementation/SKILL.md) | verification | Apply when you write, change, or keep a test. Assert what the code's users can observe, so the test fails when that behavior breaks and keeps passing when only the internals change. |
 | [explain-the-number](./skills/principle-explain-the-number/SKILL.md) | verification | Apply before you trust, report, or act on a number you measured: a speedup, a regression, a throughput, a latency, or an eval result. Find what limits it, and rule out that it measured something other than the work you think. |
 | [guard-the-context-window](./skills/principle-guard-the-context-window/SKILL.md) | delegation | Route bulk to subagents; keep summaries in the main thread, not raw payloads. |
 | [never-block-on-the-human](./skills/principle-never-block-on-the-human/SKILL.md) | delegation | Proceed, present the result, let the human course-correct after the fact; reserve confirmation for irreversible actions. |
@@ -286,7 +289,8 @@ keel changes how pstack runs, not what it teaches.
 - **Names.** `poteto-mode`, `poteto-agent`, Comment Sicko and `setup-pstack` become `lead`, `ponytail`, `critic` and `setup`.
 - **Models.** Claude Code has no grok. Review panels use Opus, Fable and Sonnet, and `interrogate` adds a Codex lane. Subagent effort uses the Agent tool's `effort` parameter instead of model-slug suffixes, and pstack's fast mode does not carry over.
 - **Shape.** The lead is a skill loaded by the main session, because running a session as an agent replaces Claude Code's own instructions. critic is read-only, ponytail keeps memory, and keel adds the git guard and the lead reminder.
-- **Removed.** The benny Slack automation pack, the `make-bot-ui` and `poteto-help` skills, Cursor's plugin manifest and the root Agent Plugins manifest, and pstack's logo and illustrations. They are Cursor-only or pstack's own branding.
+- **Removed.** The benny Slack automation pack, the `make-bot-ui` and `poteto-help` skills, Cursor's plugin manifest and the root Agent Plugins manifest, and pstack's logo and illustrations. They are Cursor-only or pstack's own branding. pstack's `docs/harness/` notes on running its Cursor names inside Claude Code are removed too, because keel translates its own text.
+- **Not yet ported.** pstack's `statechart` skill, which draws TLA+ models as charts. It needs a TLA+ toolchain and pays off only once a project uses formal verification, so [UPSTREAM.md](./UPSTREAM.md) defers it.
 
 [`UPSTREAM.md`](./UPSTREAM.md) has the full translation and rename tables and how to pull future pstack changes.
 
@@ -306,7 +310,7 @@ pstack's Cursor model rule file does not carry over. Run `/keel:setup` once in C
 
 ## credits and license
 
-- **pstack** by Lauren Tan ([poteto](https://x.com/poteto)), from [cursor/plugins](https://github.com/cursor/plugins/tree/main/pstack) at commit `ce649c0` (pstack 0.15.23), MIT. keel's skills, playbooks, principles, references, scripts, guide and both agents are adapted from it.
+- **pstack** by Lauren Tan ([poteto](https://x.com/poteto)), from [cursor/plugins](https://github.com/cursor/plugins/tree/main/pstack) at commit `8b3326d` (pstack 0.15.30), MIT. keel's skills, playbooks, principles, references, scripts, guide and both agents are adapted from it.
 - **Git guardrails** by Matt Pocock, from [mattpocock/skills](https://github.com/mattpocock/skills), MIT. `hooks/git-guard.py` is adapted from it.
 - **keel's changes** by [alexnthnz](https://github.com/alexnthnz), MIT.
 
