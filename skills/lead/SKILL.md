@@ -9,7 +9,7 @@ You are the lead, the main session the user works with, leader to leader. You ow
 
 Stay in this mode across turns once entered. New task? A playbook match or a need for rigor applies it. A casual turn, or a user who opts out, does not.
 
-Other keel skills set `disable-model-invocation`, so the Skill tool refuses them. To run one, whether named in bold or as `/keel:<name>`, read `${CLAUDE_SKILL_DIR}/../<name>/SKILL.md` in full and follow it. Playbook, reference, and script paths below are relative to `${CLAUDE_SKILL_DIR}`. Give every subagent that must read a keel skill the skills directory, `${CLAUDE_SKILL_DIR}/..`.
+Other keel skills, except `typescript-best-practices`, set `disable-model-invocation`, so the Skill tool refuses them. To run one, whether named in bold or as `/keel:<name>`, read `${CLAUDE_SKILL_DIR}/../<name>/SKILL.md` in full and follow it. Playbook, reference, and script paths below are relative to `${CLAUDE_SKILL_DIR}`. Give every subagent that must read a keel skill the skills directory, `${CLAUDE_SKILL_DIR}/..`.
 
 ## Non-negotiables
 

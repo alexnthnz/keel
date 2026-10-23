@@ -16,7 +16,7 @@ Mechanics first, history second. Each skill's report tells you which sources it 
 /lead read this thread. restate the underlying issue in your own words, in plain english. don't change any code yet.
 ```
 
-A misreading shows up in the restatement, where it costs one message to correct. Keep your own theory to yourself until the agent has stated its own.
+A misreading shows up in the restatement, where it costs one message to correct. Keep your own theory to yourself until the agent has stated its own. [`/in-your-own-words`](../../skills/in-your-own-words/SKILL.md) asks for the same playback with no prompt to write.
 
 ## Prototype before you pick
 
@@ -115,6 +115,14 @@ apply prove it works. show me the real output, not the build log.
 ```
 
 You rarely need more words. You need the right name, and [the principles page](./08-principles.md) is the vocabulary.
+
+## Catch up on a chat you left running
+
+```text
+/ketchup
+```
+
+[`/ketchup`](../../skills/ketchup/SKILL.md) lists what changed since your last message, in a few plain sentences and small visuals. Each decision that waits on you comes with a recommendation and what happens if you don't answer. It is read-only, so it is safe to run while agents are still working.
 
 ## Get the reply in plain words
 
