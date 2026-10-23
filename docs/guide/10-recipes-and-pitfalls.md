@@ -122,7 +122,7 @@ You rarely need more words. You need the right name, and [the principles page](.
 /ketchup
 ```
 
-[`/ketchup`](../../skills/ketchup/SKILL.md) lists what changed since your last message, in a few plain sentences and small visuals. Each decision that waits on you comes with a recommendation and what happens if you don't answer. It is read-only, so it is safe to run while agents are still working.
+[`/ketchup`](../../skills/ketchup/SKILL.md) lists what changed since your last message, in a few plain sentences and small visuals. Each decision that waits on you comes with a recommendation. It is read-only, so it is safe to run while agents are still working.
 
 ## Get the reply in plain words
 
