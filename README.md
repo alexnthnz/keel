@@ -289,8 +289,8 @@ keel changes how pstack runs, not what it teaches.
 - **Names.** `poteto-mode`, `poteto-agent`, Comment Sicko and `setup-pstack` become `lead`, `ponytail`, `critic` and `setup`.
 - **Models.** Claude Code has no grok. Review panels use Opus, Fable and Sonnet, and `interrogate` adds a Codex lane. Subagent effort uses the Agent tool's `effort` parameter instead of model-slug suffixes, and pstack's fast mode does not carry over.
 - **Shape.** The lead is a skill loaded by the main session, because running a session as an agent replaces Claude Code's own instructions. critic is read-only, ponytail keeps memory, and keel adds the git guard and the lead reminder.
-- **Removed.** The benny Slack automation pack, the `make-bot-ui` and `poteto-help` skills, Cursor's plugin manifest and the root Agent Plugins manifest, and pstack's logo and illustrations. They are Cursor-only or pstack's own branding.
-- **Not yet ported.** pstack's `statechart` skill, which draws TLA+ models as charts, and `docs/harness/`, pstack's notes on running its Cursor names inside Claude Code. `statechart` needs a TLA+ toolchain and pays off only once a project uses formal verification, so [UPSTREAM.md](./UPSTREAM.md) defers it. keel translates its own text, so the harness notes do not apply.
+- **Removed.** The benny Slack automation pack, the `make-bot-ui` and `poteto-help` skills, Cursor's plugin manifest and the root Agent Plugins manifest, and pstack's logo and illustrations. They are Cursor-only or pstack's own branding. pstack's `docs/harness/` notes on running its Cursor names inside Claude Code are removed too, because keel translates its own text.
+- **Not yet ported.** pstack's `statechart` skill, which draws TLA+ models as charts. It needs a TLA+ toolchain and pays off only once a project uses formal verification, so [UPSTREAM.md](./UPSTREAM.md) defers it.
 
 [`UPSTREAM.md`](./UPSTREAM.md) has the full translation and rename tables and how to pull future pstack changes.
 
