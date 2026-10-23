@@ -95,7 +95,7 @@ function headingSlugs(abs) {
     if (!m) continue;
     const base = m[1]
       .replace(/!?\[([^\]]*)\]\([^)]*\)/g, "$1")
-      .replace(/[`*_~]|<[^>]+>/g, "")
+      .replace(/[`*~]|<[^>]+>/g, "")
       .toLowerCase()
       .replace(/[^\p{L}\p{N}\s_-]/gu, "")
       .trim()
@@ -135,11 +135,12 @@ for (const [t, tw] of TENS.entries()) {
 }
 const numberPattern = `\\d{1,2}|${[...NUMBER_WORDS.keys()].sort((a, b) => b.length - a.length).join("|")}`;
 
-// A count is a whole-set claim when a number of 10 or more, or any number after
-// "the" or "all", directly precedes a set noun (one adjective allowed) and
-// does not follow "pstack's". "short skills" means the principles.
+// A count is a whole-set claim when a number of 10 or more directly precedes a
+// set noun (one adjective allowed) and does not follow "pstack's". Smaller
+// numbers are skipped because prose names subsets ("the two skills").
+// "short skills" means the principles.
 const COUNT_CLAIM = new RegExp(
-  `(?<prefix>\\b(?:the|all)\\s+)?(?<!pstack's\\s)\\b(?<num>${numberPattern})\\s+(?:(?<adj>short)\\s+)?(?<noun>playbook|principle|skill|agent|command)s\\b`,
+  `(?<!pstack's\\s)\\b(?<num>${numberPattern})\\s+(?:(?<adj>short)\\s+)?(?<noun>playbook|principle|skill|agent|command)s\\b`,
   "gi",
 );
 
@@ -154,9 +155,9 @@ function checkCounts(tree, doc) {
   };
   for (const l of proseLines(doc)) {
     for (const m of l.text.matchAll(COUNT_CLAIM)) {
-      const { prefix, num, adj, noun } = m.groups;
+      const { num, adj, noun } = m.groups;
       const claimed = /^\d/.test(num) ? Number(num) : NUMBER_WORDS.get(num.toLowerCase());
-      if (!prefix && claimed < 10) continue;
+      if (claimed < 10) continue;
       const kind = adj && noun.toLowerCase() === "skill" ? "principle" : noun.toLowerCase();
       if (claimed !== actual[kind]) {
         out.push(finding(doc, l.n, `"${m[0].trim()}" but the tree has ${actual[kind]} ${kind}s`));
