@@ -65,7 +65,7 @@ When you're back, ask for the run in review form:
 
 Before the skill hands back its summary, it spawns a reviewer on a different model to read the trail and the transcript, and the reply ends with an Attention section listing what deserves your scrutiny. Read that section first, then the log rows it points at. You're auditing decisions, not re-reading the whole night.
 
-To catch up on a chat you left running, type [`/ketchup`](../../skills/ketchup/SKILL.md). It tells you what changed since your last message in a few plain sentences, with a small box diagram or an existing screenshot. Each decision that waits on you gets just enough context to make the call. It only reads the chat's current state, so it changes nothing.
+To catch up on a chat you left running, type [`/ketchup`](../../skills/ketchup/SKILL.md). It reads the chat's current state and changes nothing. It tells you in plain words what changed since your last message, with a small box diagram or an existing screenshot linked by its path. Then it lists every call waiting on you, such as a merge, an approval, or a choice between options. Each one carries its link, what it changes, the evidence, the risk, and a pick, so you can decide from the reply alone, even when that makes the reply long.
 
 ## When the night holds a queue, not a task
 
