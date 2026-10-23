@@ -32,6 +32,9 @@ jobs:
           python3 hooks/test_git_guard.py
           echo '{}' | sh hooks/lead-reminder.sh | python3 -m json.tool > /dev/null
 
+      - name: Check the docs
+        run: node bin/check-docs.mjs
+
       - name: Test the playbook scripts
         working-directory: skills/lead/scripts
         run: |

@@ -20,7 +20,8 @@ so a good change keeps that work recognizable and credited.
    sh -n codex/hooks/lead-reminder.sh
    python3 -m py_compile hooks/git-guard.py
    python3 hooks/test_git_guard.py
-   (cd skills/lead/scripts && bun install --frozen-lockfile && bun test orch watch-pr)
+   node bin/check-docs.mjs
+   (cd skills/lead/scripts && bun install --frozen-lockfile && bun run test)
    ```
 
 4. Open a pull request with a [Conventional Commits](https://www.conventionalcommits.org) title, such as
