@@ -27,7 +27,7 @@ Every change after the first commit applies two tables and nothing else. The tra
 | `docs/guide/02-poteto-mode.md` | same | `docs/guide/02-lead.md` |
 | interrogate adversaries on `generalPurpose` | `general-purpose` | `general-purpose` with `isolation: "worktree"`, one per configured model. `keel:critic` cannot do the job, because it has `disallowedTools: Edit, Write` and adversaries write repros. The `codex` lane has its own scratch worktree |
 | no-comments spawns Comment Sicko, which deletes comments itself | same, as `pstack:comment-sicko` | spawns `keel:critic` with the comments lens. critic only reports, and no-comments carries out the kills |
-| Orchestrate sub-coordinator as `generalPurpose` or `poteto-agent` | `general-purpose` or `pstack:poteto-agent` | `keel:ponytail`, which has the Agent tool |
+| Orchestrate sub-coordinator as `generalPurpose` or `poteto-agent` | `general-purpose` or `pstack:poteto-agent` | `keel:ponytail`, which has the Agent tool. keel also differs on landing: upstream owners merge their own PRs, while a keel owner merges only when the user's ask grants landing, and otherwise stops at merge-ready and reports |
 
 Every `~/.claude/...` path keel writes uses `${CLAUDE_CONFIG_DIR:-$HOME/.claude}`, so each Claude Code profile keeps its own model file, store, and transcripts. Project paths such as `.claude/skills/` stay as they are.
 

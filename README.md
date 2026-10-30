@@ -245,7 +245,7 @@ automate-me:       /keel:automate-me
 
 The lead delegates code-writing to [`keel:ponytail`](./agents/ponytail.md). ponytail reads `lead` in full, including its principles index, before any work, so the lead and its builders share one set of rules. It runs on the lead's model unless the lead passes another, keeps user-scope memory, may spawn its own subagents within Claude Code's depth limit, and merges its own pull request only under autopilot, after a clean review with CI green on a freshly rebased head, or when its brief says to land it. It never bypasses a review or check the forge enforces. The lead passes `isolation: "worktree"` when two or more builders share a repository.
 
-[`keel:critic`](./agents/critic.md) is the read-only reviewer, one lens per spawn. Its default comments lens keeps poteto's comment-hating persona from pstack. Use it through [`/keel:no-comments`](./skills/no-comments/SKILL.md), which carries out the deletions critic recommends, or through [`/keel:interrogate`](./skills/interrogate/SKILL.md), which spawns one critic per configured model plus the Codex lane.
+[`keel:critic`](./agents/critic.md) is the read-only reviewer, one lens per spawn. Its default comments lens keeps poteto's comment-hating persona from pstack. Use it through [`/keel:no-comments`](./skills/no-comments/SKILL.md), which carries out the deletions critic recommends. [`/keel:interrogate`](./skills/interrogate/SKILL.md) does not use critic: it runs Claude adversaries as `general-purpose` agents in their own worktrees, plus the Codex lane.
 
 ## principles
 

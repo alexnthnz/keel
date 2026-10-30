@@ -14,15 +14,15 @@ The scope is what the user names. Otherwise it is the branch diff from its merge
 
 ## Fan out
 
-Run Phase A steps 3 and 4 and Phase B of the **arena** skill, with four changes. Read the `interrogate reviewers` line in place of `arena runners`, and leave a `codex` entry for the lane below. Copy the scope's uncommitted changes into each worktree. Spawn each Claude adversary as `general-purpose` with `isolation: "worktree"`. `keel:critic` cannot do this, because adversaries write repros and `keel:critic` cannot edit or write files. In place of the arena task and rationale, give each adversary the scope, the intent, and this brief:
+Run Phase A steps 3 and 4 and Phase B of the **arena** skill, with four changes. Read the `interrogate reviewers` line in place of `arena runners`. With no such line the panel defaults to `opus, fable, sonnet, codex`. Leave a `codex` entry for the lane below. Copy the scope's uncommitted changes into each worktree. Spawn each Claude adversary as `general-purpose` with `isolation: "worktree"`. `keel:critic` cannot do this, because adversaries write repros and `keel:critic` cannot edit or write files. In place of the arena task and rationale, give each adversary the scope, the intent, and this brief:
 
 > Break this change. Prove each finding with a run against the real code, such as a failing test, a repro script, or command output that shows the wrong behavior. For a design or plan, run a prototype or probe the current tree. Keep repros in your own worktree. Report each finding with a title, the exact command, the output it printed, and the output the intent requires. Leave out anything you did not run. That covers style, naming, structure, and risks that need a future change to matter. No findings is a valid result.
 
-The `codex` entry is a cross-vendor lane, not a subagent. Run `command -v codex` first. If it fails, skip the lane and name it as skipped under Dropped. Otherwise start it in the same message as the Claude adversaries, in the background, in its own worktree under `$tmp`, a scratch directory you create with `mktemp -d`. Its `workspace-write` sandbox lets it write there, and only there. Write the brief to a file and pipe it in on stdin so every adversary gets the same brief.
+The `codex` entry is a cross-vendor lane, not a subagent. Run `command -v codex` first. If it fails, skip the lane and name it as skipped under Dropped. Otherwise start it in the same message as the Claude adversaries, in the background, in its own worktree under `$tmp`, a scratch directory you create with `mktemp -d`. Its `workspace-write` sandbox lets it write there. Write the brief to a file and pipe it in on stdin so every adversary gets the same brief.
 
 ```bash
 git worktree add --detach "$tmp/codex" HEAD
-git diff HEAD | git -C "$tmp/codex" apply
+git diff HEAD --binary | git -C "$tmp/codex" apply --allow-empty
 codex exec --sandbox workspace-write --ephemeral --cd "$tmp/codex" \
   --output-last-message "$tmp/codex-findings.md" - < "$tmp/adversary-brief.md"
 ```
