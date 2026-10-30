@@ -3,7 +3,7 @@
 keel is a fork of pstack by Lauren Tan (poteto), MIT. keel first made its own Claude Code port of pstack (the translation table below), then renamed and reorganized it (the rename table).
 
 - Upstream: <https://github.com/cursor/plugins>, directory `pstack/`.
-- Base: `cursor/plugins@8b3326d`, pstack 0.15.30. This is the last upstream commit synced into keel.
+- Base: `cursor/plugins@c742dd6`, pstack 0.15.36. This is the last upstream commit synced into keel.
 - The first commit in this repository is an unmodified copy of `pstack/` at `cursor/plugins@12d587d`, pstack 0.15.5. Everything after it is keel, including the syncs that applied later upstream changes.
 
 Removed as Cursor-only or pstack branding: `.cursor-plugin/`, `assets/` (pstack's logo), `docs/guide/images/` (pstack's illustrations), `docs/harness/` (pstack's own Claude Code install notes), `automations/benny/`, `skills/make-bot-ui/`, `skills/poteto-help/`, `skills/ketchup-video/`, and the root `plugin.json`. Also skipped, but deferred rather than Cursor-only: `skills/statechart/`. `bin/upstream-diff.sh --apply` skips all of them on every sync. [Not ported](#not-ported) gives the reasons.
@@ -63,7 +63,7 @@ The Claude Code column shows the port's names. The rename table above maps them 
 | `gpt-5.6-sol-max` (reflect tooling before pstack 0.15.15) | `sonnet` |
 | Family fallbacks for a refused slug, with `cursor-grok-*` and `composer-*` in the grok family | Dropped. Each skill names its own fallback for a rejected model |
 | Panels (arena runners, architect runners, arena cross-judge pool) | `opus, fable, sonnet`. "Different family" becomes "a different model from the parent" |
-| interrogate adversaries | `opus, fable, sonnet, codex`. `codex` runs `codex exec --sandbox workspace-write` from Bash in its own `git worktree add` under a scratch `$tmp`, with the shared adversary brief, and is skipped when `command -v codex` fails. upstream has no such lane |
+| interrogate reviewers (the adversaries) | `opus, fable, sonnet, codex`. `codex` runs `codex exec --sandbox workspace-write` from Bash in its own `git worktree add` under a scratch `$tmp`, with the shared adversary brief, and is skipped when `command -v codex` fails. upstream has no such lane |
 | `inherit-parent`, `auto` | Kept, plus `inherit`. All omit `model` |
 | Effort suffixes (`-max`, `-xhigh`, `-medium`), the budget step, and fast mode | The Agent tool's `effort` parameter (`low`, `medium`, `high`, `xhigh`, or `max`), per the lead skill's Match the effort to the job rule. keel has no budget step, so a role's usual work omits `effort`. The Agent tool has no per-subagent fast flag, so fast mode is dropped |
 | Model family prefixes (`claude-*`, `gpt-*`, `grok-*`) | The aliases `opus`, `sonnet`, `haiku`, `fable`, plus `codex` |

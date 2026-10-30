@@ -312,7 +312,7 @@ pstack's Cursor model rule file does not carry over. Run `/keel:setup` once in C
 
 ## credits and license
 
-- **pstack** by Lauren Tan ([poteto](https://x.com/poteto)), from [cursor/plugins](https://github.com/cursor/plugins/tree/main/pstack) at commit `8b3326d` (pstack 0.15.30), MIT. keel's skills, playbooks, principles, references, scripts, guide and both agents are adapted from it.
+- **pstack** by Lauren Tan ([poteto](https://x.com/poteto)), from [cursor/plugins](https://github.com/cursor/plugins/tree/main/pstack) at commit `c742dd6` (pstack 0.15.36), MIT. keel's skills, playbooks, principles, references, scripts, guide and both agents are adapted from it.
 - **Git guardrails** by Matt Pocock, from [mattpocock/skills](https://github.com/mattpocock/skills), MIT. `hooks/git-guard.py` is adapted from it.
 - **keel's changes** by [alexnthnz](https://github.com/alexnthnz), MIT.
 
