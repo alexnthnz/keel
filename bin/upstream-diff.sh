@@ -2,7 +2,7 @@
 set -euo pipefail
 
 base="${BASE:-8b3326d99fd4b993cb33a24dad8af03175c642c5}"
-removed=(.cursor-plugin assets docs/guide/images docs/harness automations/benny skills/make-bot-ui skills/poteto-help skills/statechart plugin.json)
+removed=(.cursor-plugin assets docs/guide/images docs/harness automations/benny skills/make-bot-ui skills/poteto-help skills/statechart skills/ketchup-video plugin.json)
 apply=
 if [ "${1:-}" = --apply ]; then
 	apply=1
