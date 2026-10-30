@@ -12,7 +12,7 @@ keel is an engineering loop for [Claude Code](https://code.claude.com) and Codex
 - **ponytail** ([Claude agent](./agents/ponytail.md)) owns one slice or pull request end to end: build, test, prove it on the real artifact, commit. In Codex, the lead gives that brief to a worker. A ponytail owner merges only under autopilot or when its brief says to land it.
 - **critic** ([Claude agent](./agents/critic.md)), generalized from pstack's comment-review persona, Comment Sicko, reviews a diff through one lens: comments by default, or correctness, security, simplicity, tests or user impact. Codex gives the same brief to an independent reviewer.
 
-keel keeps 54 of pstack's 57 skills (its 24 principles are among them) and all 23 playbooks. [Differences from pstack](#differences-from-pstack) lists what changed.
+keel keeps 54 of pstack's 58 skills (its 24 principles are among them) and all 23 playbooks. [Differences from pstack](#differences-from-pstack) lists what changed.
 
 ## install
 
@@ -26,6 +26,8 @@ claude plugin install keel@keel
 ```
 
 To try it for one session without installing, clone the repository and run `claude --plugin-dir ./keel`.
+
+Claude Code leaves auto-update off for third-party marketplaces, so keel stays on the version you installed. To turn it on, run `/plugin`, open the **Marketplaces** tab, select `keel`, and choose **Enable auto-update**. To update once by hand, run `claude plugin update keel@keel`.
 
 Skills run as `/keel:<name>`, and the agents are `keel:ponytail` and `keel:critic`. The main session loads `lead` on its own when a task needs it, or you type `/keel:lead`. The other keel skills are user-invoked, except `typescript-best-practices`, which loads on its own for `.ts` and `.tsx` files. `lead` reads the user-invoked ones by path when a step needs one.
 
@@ -79,7 +81,7 @@ Claude Code subagents take a model alias, not a vendor slug. keel's defaults:
 | arena runners, architect runners, arena cross-judge pool | opus / grok | `opus, fable, sonnet` |
 | interrogate reviewers | opus / grok | `opus, fable, sonnet, codex` |
 
-`codex` is not a subagent: `interrogate` runs `codex exec --sandbox read-only` from bash with the same brief as the other reviewers, and skips that lane when the Codex CLI is not installed.
+`codex` is not a subagent: `interrogate` runs `codex exec --sandbox workspace-write` from bash in its own scratch worktree with the same brief as the other adversaries, and skips that lane when the Codex CLI is not installed.
 
 ## usage
 
@@ -123,7 +125,7 @@ morning.
 | [autonomous run](./skills/lead/playbooks/autonomous-run.md) | drive a long task to completion without stopping. |
 | [orchestrate](./skills/lead/playbooks/orchestrate.md) | a standing project handed to one coordinator chat: multi-day, many stacked prs, fleets of subagents. |
 | [autopilot-full](./skills/lead/playbooks/autopilot-full.md) | run independent prs to merged with one owner per pr. a swarm verifies each code-ready head, and every later change to the patch gets a fresh check. |
-| [autopilot-stack](./skills/lead/playbooks/autopilot-stack.md) | build and verify one linear base-branch stack for the operator to review and land. |
+| [autopilot-stack](./skills/lead/playbooks/autopilot-stack.md) | autopilot-full without the merge. build and verify prs for the operator to review and land, stacking a pr only on a pr it builds on. |
 | [session pickup](./skills/lead/playbooks/session-pickup.md) | resume or take over a prior agent's in-flight work. |
 | [pause safely](./skills/lead/playbooks/pause-safely.md) | suspend in-flight work cleanly so it can be resumed later. |
 | [multi-phase plan](./skills/lead/playbooks/multi-phase-plan.md) | work that spans phases or stacked PRs. |
@@ -172,7 +174,7 @@ the full rules and playbooks live in [`skills/lead/SKILL.md`](./skills/lead/SKIL
 | [`/keel:architect`](./skills/architect/SKILL.md) | you're about to write code that crosses a function boundary and want the caller's usage, types, and module shape settled first. |
 | [`/keel:arena`](./skills/arena/SKILL.md) | you want N parallel attempts at the same thing, then to grab the best parts of each. |
 | [`/keel:swarm`](./skills/swarm/SKILL.md) | you want N parallel workers across different slices or races, then one aggregated report. |
-| [`/keel:interrogate`](./skills/interrogate/SKILL.md) | you have a diff and want different models to try to break it, including a strict code-quality lens. |
+| [`/keel:interrogate`](./skills/interrogate/SKILL.md) | you have a diff and want different models to try to break it, keeping only findings a run proves. |
 | [`/keel:automate-me`](./skills/automate-me/SKILL.md) | you want your own `-mode` skill, drafted from how you've actually worked. |
 | [`/keel:setup`](./skills/setup/SKILL.md) | you want to pick which models keel uses per role. checks for the codex cli and writes `${CLAUDE_CONFIG_DIR:-$HOME/.claude}/keel-models.md`. |
 | [`/keel:reflect`](./skills/reflect/SKILL.md) | a long task landed and you want the recipe captured as a skill edit. |
