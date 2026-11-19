@@ -122,14 +122,14 @@ A sync applies upstream's diff to keel rather than merging an import. The reposi
    KEEP=1 bin/upstream-diff.sh
    ```
 
-2. Apply the change on a branch from `main`. With `--apply`, the script diffs `pstack/` from the base to the upstream ref (`main` unless you pass one), moves renamed paths per the rename table, skips the removed paths, copies any missing base blobs into this repository, and runs `git apply --3way`. `CLONE=<dir>` reuses the kept clone. The ref must be one `git fetch` accepts: a branch, a tag, or a full SHA.
+2. Apply the change on a branch from `main`. With `--apply`, the script diffs `pstack/` from the base to the upstream ref (`main` unless you pass one), moves renamed paths per the rename table, skips the removed paths, copies any missing base blobs into this repository, removes every file the diff deletes with `git rm`, and runs `git apply --3way` on the rest. `CLONE=<dir>` reuses the kept clone. The ref must be one `git fetch` accepts: a branch, a tag, or a full SHA.
 
    ```bash
    git switch -c sync/pstack-<version> origin/main
    CLONE=<kept clone> bin/upstream-diff.sh --apply <full upstream SHA>
    ```
 
-   When upstream changed nothing outside the removed paths, the script prints `nothing to apply` and exits 0. Files that apply cleanly come out staged. A conflict leaves markers in the file, a `U <path>` line in the output, and exit status 1. If the output says `does not exist in index`, the apply wrote nothing, because the diff changes a file keel lacks. Add its path to the rename table and the script's `awk` program, or to the script's `removed` list, then run the script again.
+   When upstream changed nothing outside the removed paths, the script prints `nothing to apply` and exits 0. A `D <path> (keel had edits)` line means upstream deleted a file that keel had changed. The script has already removed it, so the resolver moves any keel-only text it must keep into another file before committing. Files that apply cleanly come out staged. A conflict leaves markers in the file, a `U <path>` line in the output, and exit status 1. If the output says `does not exist in index`, the apply wrote nothing, because the diff changes a file keel lacks. Add its path to the rename table and the script's `awk` program, or to the script's `removed` list, then run the script again.
 
 3. Resolve every conflict by re-applying the translation table, then the rename table, to the new upstream text, and `git add` the file. A new upstream file under a renamed directory already lands at its keel path.
 
