@@ -76,9 +76,9 @@ Claude Code subagents take a model alias, not a vendor slug. keel's defaults:
 |---|---|---|
 | code delegates (feature, refactoring, bug fix, perf, hillclimb), judgment, prose | `claude-opus-5-5-xhigh-fast` | `inherit` (the lead's model) |
 | swarm workers, verification, trivial mechanical edits | `claude-opus-5-5-high-fast` | `opus` (at effort `high`) |
-| arena runners | `claude-fable-5-2-high`, `claude-opus-5-5-high-fast`, `gemini-4-carbon-high` | `opus, fable, sonnet` (each at effort `high`) |
-| arena cross-judge pool | `claude-opus-5-5-high-fast`, `gemini-4-carbon-high` | `opus, sonnet` |
-| interrogate reviewers | `claude-fable-5-2-high`, `claude-opus-5-5-high-fast`, `gemini-4-carbon-high` | `opus, fable, sonnet, codex` (each at effort `high`) |
+| arena runners | `claude-fable-5-2-high`, `claude-opus-5-5-high-fast`, `gemini-4-neon-high` | `opus, fable, sonnet` (each at effort `high`) |
+| arena cross-judge pool | `claude-opus-5-5-high-fast`, `gemini-4-neon-high` | `opus, sonnet` |
+| interrogate reviewers | `claude-fable-5-2-high`, `claude-opus-5-5-high-fast`, `gemini-4-neon-high` | `opus, fable, sonnet, codex` (each at effort `high`) |
 
 No role runs above `xhigh`. Outside a review panel, Fable runs only when you name it or after two runs of the same brief on the role's model fail its check. [`/keel:setup`](./skills/setup/SKILL.md) changes any of it.
 
@@ -314,7 +314,7 @@ pstack's Cursor model rule file does not carry over. Run `/keel:setup` once in C
 
 ## credits and license
 
-- **pstack** by Lauren Tan ([poteto](https://x.com/poteto)), from [cursor/plugins](https://github.com/cursor/plugins/tree/main/pstack) at commit `35a9094` (pstack 0.15.43), MIT. keel's skills, playbooks, principles, references, scripts, guide and both agents are adapted from it.
+- **pstack** by Lauren Tan ([poteto](https://x.com/poteto)), from [cursor/plugins](https://github.com/cursor/plugins/tree/main/pstack) at commit `e58dd04` (pstack 0.15.44), MIT. keel's skills, playbooks, principles, references, scripts, guide and both agents are adapted from it.
 - **Git guardrails** by Matt Pocock, from [mattpocock/skills](https://github.com/mattpocock/skills), MIT. `hooks/git-guard.py` is adapted from it.
 - **keel's changes** by [alexnthnz](https://github.com/alexnthnz), MIT.
 
