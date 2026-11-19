@@ -18,7 +18,7 @@ keel keeps 54 of pstack's 58 skills (its 24 principles are among them) and all 2
 
 ### Claude Code
 
-keel needs Claude Code, `git`, the GitHub CLI `gh` (signed in), `python3` for the git guard, `bun` for the playbook scripts and `node` for the multi-phase plan checker. Optional: the Codex CLI for the cross-model review lane and `tmux` for driving interactive terminal apps.
+keel needs Claude Code, `git`, the GitHub CLI `gh` (signed in), `python3` for the git guard and `bun` for the playbook scripts. Optional: the Codex CLI for the cross-model review lane and `tmux` for driving interactive terminal apps.
 
 ```bash
 claude plugin marketplace add alexnthnz/keel
@@ -165,7 +165,7 @@ the full rules and playbooks live in [`skills/lead/SKILL.md`](./skills/lead/SKIL
 |---|---|
 | [`/keel:lead`](./skills/lead/SKILL.md) | default entry point for any non-trivial task. the main session also loads it on its own. |
 | [`/keel:in-your-own-words`](./skills/in-your-own-words/SKILL.md) | you want the agent to play back your goal and the problem before it starts. runs only when you type `/keel:in-your-own-words`. |
-| [`/keel:sharpen`](./skills/sharpen/SKILL.md) | you want a prompt made deeper, not bigger, before you send it: what a top professional would do that you didn't ask for, the raw material they'd start from, their methods and tools, and an outside check that the result is right. hands back the rewritten prompt, which asks the agent to prototype any choice an experiment can settle and leaves product and preference choices to you. doesn't do the task. runs only when you type `/sharpen`. |
+| [`/keel:sharpen`](./skills/sharpen/SKILL.md) | you want a prompt made deeper, not bigger, before you send it: what a top professional would do that you didn't ask for, the raw material they'd start from, their methods and tools, and an outside check that the result is right. hands back the rewritten prompt, which asks the agent to prototype any choice an experiment can settle and leaves product and preference choices to you. doesn't do the task. runs only when you type `/keel:sharpen`. |
 | [`/keel:how`](./skills/how/SKILL.md) | you want a walkthrough of how a subsystem works. |
 | [`/keel:why`](./skills/why/SKILL.md) | you want to know why something was built this way. answers from the record, not the code: the commits and pr discussions that introduced it and each later change, and other sources when that trail is thin. cites what the authors wrote, marks its own inferences, and says what the record does not answer. |
 | [`/keel:recall`](./skills/recall/SKILL.md) | you're starting or resuming work and want your recent context on a topic rebuilt from your own chat history and the shared record, handed back as a tight current-state brief. |
