@@ -62,4 +62,17 @@ awk '/^index / { split($2, ids, /\.\./); if (ids[1] !~ /^0+$/) print ids[1] }' "
 		git -C "$root" cat-file -e "$blob" 2>/dev/null ||
 			git -C "$clone" cat-file blob "$blob" | git -C "$root" hash-object -w --stdin >/dev/null
 	done
-git -C "$root" apply --3way -p0 "$patch"
+# git apply aborts the whole patch when it deletes a file whose content
+# differs from the base blob, so git rm every deletion and exclude it.
+exclude=()
+while read -r path blob; do
+	exclude+=(--exclude="$path")
+	[ -e "$root/$path" ] || continue
+	[ "$(git -C "$root" hash-object "$root/$path")" = "$blob" ] || echo "D $path (keel had edits)"
+	git -C "$root" rm -q "$path"
+done < <(awk '
+	/^diff --git / { path = $3; deleted = 0 }
+	/^deleted file mode / { deleted = 1 }
+	deleted && /^index / { split($2, ids, /\.\./); print path, ids[1] }
+' "$patch")
+git -C "$root" apply --3way -p0 ${exclude[@]+"${exclude[@]}"} "$patch"
