@@ -10,7 +10,6 @@ keel needs these tools on your machine:
 - The GitHub CLI `gh`, signed in. Opening, babysitting, and shipping a PR all go through it.
 - `python3`, which runs keel's git guard before each Bash command.
 - `bun`, which runs the playbook scripts, such as the PR watcher that Babysit and Shipping use.
-- `node`, which runs the plan checker in the Multi-phase plan playbook.
 
 Two more are optional. The OpenAI Codex CLI adds a cross-vendor reviewer to `/interrogate`, as [Pick your models](#pick-your-models) explains. `tmux` lets agents drive interactive terminal apps.
 

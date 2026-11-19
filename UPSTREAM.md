@@ -129,7 +129,7 @@ A sync applies upstream's diff to keel rather than merging an import. The reposi
    CLONE=<kept clone> bin/upstream-diff.sh --apply <full upstream SHA>
    ```
 
-   When upstream changed nothing outside the removed paths, the script prints `nothing to apply` and exits 0. A `D <path> (keel had edits)` line means upstream deleted a file that keel had changed. The script has already removed it, so the resolver moves any keel-only text it must keep into another file before committing. Files that apply cleanly come out staged. A conflict leaves markers in the file, a `U <path>` line in the output, and exit status 1. If the output says `does not exist in index`, the apply wrote nothing, because the diff changes a file keel lacks. Add its path to the rename table and the script's `awk` program, or to the script's `removed` list, then run the script again.
+   When upstream changed nothing outside the removed paths, the script prints `nothing to apply` and exits 0. A `D <path> (keel had edits)` line means upstream deleted a file that keel had changed. The script has already removed it, so the resolver moves any keel-only text it must keep into another file before committing. A rerun no longer prints a `D <path> (keel had edits)` line for a file the first run already removed, so keep the first run's `D` lines until the keel-only text is moved. Files that apply cleanly come out staged. A conflict leaves markers in the file, a `U <path>` line in the output, and exit status 1. If the output says `does not exist in index`, the apply wrote nothing, because the diff changes a file keel lacks. Add its path to the rename table and the script's `awk` program, or to the script's `removed` list, then run the script again.
 
 3. Resolve every conflict by re-applying the translation table, then the rename table, to the new upstream text, and `git add` the file. A new upstream file under a renamed directory already lands at its keel path.
 
@@ -140,12 +140,13 @@ A sync applies upstream's diff to keel rather than merging an import. The reposi
    grep -rnIE --exclude-dir=node_modules 'poteto-mode|poteto-agent|comment-sicko|setup-pstack|pstack-models|/pstack:|pstack:(poteto|comment)|~/\.claude/' skills agents docs README.md
    ```
 
-5. Validate, then record the new base: `base` in `bin/upstream-diff.sh`, the base line at the top of this file, and the source lines in `README.md` and `THIRD_PARTY_NOTICES.md`. Update the count of pstack's skills that keel keeps, near the top of `README.md`, because the docs check skips counts of pstack's skills. Bump keel's version in a separate release commit.
+5. Validate, then record the new base: `base` in `bin/upstream-diff.sh`, the base line at the top of this file, and the source lines in `README.md` and `THIRD_PARTY_NOTICES.md`. Update the count of pstack's skills that keel keeps, near the top of `README.md`, because the docs check skips counts of pstack's skills. Bump keel's version in a separate release commit, which changes the three manifests `.claude-plugin/plugin.json`, `.claude-plugin/marketplace.json` and `.codex-plugin/plugin.json`. `codex/scripts/validate-package.py` requires them to match.
 
    ```bash
    claude plugin validate .
    claude plugin validate .claude-plugin/plugin.json
    claude --plugin-dir . plugin details keel
+   node bin/check-docs.mjs
    ```
 
 Deliberate residual-scan hits. The first scan prints the model mapping table and the differences list in `README.md`, and the Origin and Cursor-path lines in `skills/lead/scripts/worktree-audit.sh`. The second prints the differences list and the make-it-yours line in `README.md`.
