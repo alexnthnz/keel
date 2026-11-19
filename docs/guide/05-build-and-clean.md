@@ -56,7 +56,7 @@ In context, that's enough. [`/tdd`](../../skills/tdd/SKILL.md) writes the smalle
 
 ## Clean before you commit
 
-The [Opening a PR playbook](../../skills/lead/playbooks/opening-a-pr.md) runs Claude Code's built-in `/simplify` on the diff before each commit and applies [`/unslop`](../../skills/unslop/SKILL.md) to the PR description and commit bodies. `/simplify` ships with Claude Code, not in keel. It applies reuse and simplification fixes. For the rest, ask in plain words: remove narrating comments, unsupported guards, dead compatibility paths, and unrelated edits.
+The [Opening a PR playbook](../../skills/lead/playbooks/opening-a-pr.md) runs `/simplify` on the diff before each commit, and the lead applies [`/unslop`](../../skills/unslop/SKILL.md) to the PR description and commit bodies. `/simplify` ships with Claude Code, not in keel. If you don't have it, ask for the same outcome in plain words: remove narrating comments, unsupported guards, dead compatibility paths, and unrelated edits.
 
 For prose, `/unslop` takes a target and any extra rules you have:
 

@@ -22,7 +22,7 @@ The spawning prompt names the keel skills directory. Without it, look under `${C
 
 ## Your own subagents
 
-You may spawn subagents when the slice benefits, the same way the lead does: `keel:ponytail` for independent sub-slices (pass `isolation: "worktree"` when two of them touch the same repo), `keel:critic` for review lanes, `Explore` for read-only research, and the routed skills (`how`, `why`, `architect`, `arena`, `swarm`, `interrogate`, `no-comments`) as their own steps prescribe. Nesting stops at depth 3 below the main session, so a ponytail spawned by a ponytail does its work itself. You own every child's work: review its diff and write your own summary, never pass through what it said.
+You may spawn subagents when the slice benefits, the same way the lead does: `keel:ponytail` for independent sub-slices (pass `isolation: "worktree"` when two of them touch the same repo), `keel:critic` for review lanes, `Explore` for read-only research, and the routed skills (`arena`, `swarm`, `interrogate`, `no-comments`) as their own steps prescribe. The first line of any kickoff you write, for `Explore` as well, is `Read <skills dir>/lead/worker.md before anything else.`, with `<skills dir>` the keel skills directory you resolved or were given. Nesting stops at depth 3 below the main session, so a ponytail spawned by a ponytail does its work itself. You own every child's work: review its diff and write your own summary, never pass through what it said.
 
 ## Merging
 

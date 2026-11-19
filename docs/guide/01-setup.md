@@ -10,7 +10,6 @@ keel needs these tools on your machine:
 - The GitHub CLI `gh`, signed in. Opening, babysitting, and shipping a PR all go through it.
 - `python3`, which runs keel's git guard before each Bash command.
 - `bun`, which runs the playbook scripts, such as the PR watcher that Babysit and Shipping use.
-- `node`, which runs the plan checker in the Multi-phase plan playbook.
 
 Two more are optional. The OpenAI Codex CLI adds a cross-vendor reviewer to `/interrogate`, as [Pick your models](#pick-your-models) explains. `tmux` lets agents drive interactive terminal apps.
 
@@ -41,6 +40,8 @@ Run:
 ```
 
 [`/keel:setup`](../../skills/setup/SKILL.md) checks whether the OpenAI Codex CLI is installed, shows you each role (code delegates, judgment, the review panels) with its model alias (`opus`, `sonnet`, `haiku`, or `fable`), and asks what you want. Answer the questions. It writes `${CLAUDE_CONFIG_DIR:-$HOME/.claude}/keel-models.md`, a small file every keel skill reads before it spawns a subagent.
+
+By default, code, prose, and judgment run on your session's model, and the review panels and swarm workers run at `high`. No role runs above `xhigh`. Outside a review panel, Fable runs only when you name it for a task or after two runs of the same brief on the role's model fail their check.
 
 You only override what you care about. A role with no line in the file keeps the skill's default. To restore a default, delete that role's line. A rerun of `/keel:setup` keeps any role whose model differs from the default. When a default changes, a file written before the change still pins the old default, so delete those role lines, or delete the file, then run `/keel:setup` again.
 
@@ -74,7 +75,7 @@ Pick something real but small, and describe it the way you'd describe it to a co
 /lead add a --json flag to this command. text output stays byte-identical. verify both.
 ```
 
-Watch the todo list. Its first items are the matched playbook's steps copied in, the Feature playbook for this prompt. If `/lead` skips a step, the step stays in the list with `skip: <reason>`, so you can see what it chose not to do.
+Watch the todo list. Its first items are the matched playbook's steps copied in, the Feature playbook for this prompt.
 
 From here you can type normal follow-ups. `/lead` is sticky. It stays on for the conversation until you opt out by saying so.
 

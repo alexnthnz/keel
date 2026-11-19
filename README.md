@@ -8,17 +8,17 @@ keel is an engineering loop for [Claude Code](https://code.claude.com) and Codex
 
 ## what it is
 
-- **The lead** is the main session. For real engineering work it loads the [Claude Code](./skills/lead/SKILL.md) or [Codex](./codex/skills/lead/SKILL.md) lead skill, routes the task to one of 23 playbooks, and owns the design, plan, review and verification. Small asks it just does.
+- **The lead** is the main session. For real engineering work it loads the [Claude Code](./skills/lead/SKILL.md) or [Codex](./codex/skills/lead/SKILL.md) lead skill, routes the task to one of 22 playbooks, and owns the design, plan, review and verification. Small asks it just does.
 - **ponytail** ([Claude agent](./agents/ponytail.md)) owns one slice or pull request end to end: build, test, prove it on the real artifact, commit. In Codex, the lead gives that brief to a worker. A ponytail owner merges only under autopilot or when its brief says to land it.
 - **critic** ([Claude agent](./agents/critic.md)), generalized from pstack's comment-review persona, Comment Sicko, reviews a diff through one lens: comments by default, or correctness, security, simplicity, tests or user impact. Codex gives the same brief to an independent reviewer.
 
-keel keeps 54 of pstack's 58 skills (its 24 principles are among them) and all 23 playbooks. [Differences from pstack](#differences-from-pstack) lists what changed.
+keel keeps 54 of pstack's 58 skills (its 24 principles are among them) and all 22 playbooks. [Differences from pstack](#differences-from-pstack) lists what changed.
 
 ## install
 
 ### Claude Code
 
-keel needs Claude Code, `git`, the GitHub CLI `gh` (signed in), `python3` for the git guard, `bun` for the playbook scripts and `node` for the multi-phase plan checker. Optional: the Codex CLI for the cross-model review lane and `tmux` for driving interactive terminal apps.
+keel needs Claude Code, `git`, the GitHub CLI `gh` (signed in), `python3` for the git guard and `bun` for the playbook scripts. Optional: the Codex CLI for the cross-model review lane and `tmux` for driving interactive terminal apps.
 
 ```bash
 claude plugin marketplace add alexnthnz/keel
@@ -48,7 +48,7 @@ Codex's workspace-write sandbox blocks the network, allows writes only in the wo
 - Writes outside the workspace, such as the first run of keel's playbook scripts, which installs their dependencies into the plugin.
 - Git writes, such as commits and `git worktree add`.
 
-To allow git writes for a whole session, start or resume Codex with `--add-dir` and the repository's `.git` directory. Sandboxed commands can then also change that repository's Git config and hooks. The Orchestrate and multi-phase plan playbooks keep their state in `keel-store/` in your Codex home (`~/.codex` by default). To let the lead write there, add `--add-dir "${CODEX_HOME:-$HOME/.codex}/keel-store"`, or add that directory's absolute path to `sandbox_workspace_write.writable_roots` in the home's `config.toml`. Otherwise the lead keeps that state in a temporary directory.
+To allow git writes for a whole session, start or resume Codex with `--add-dir` and the repository's `.git` directory. Sandboxed commands can then also change that repository's Git config and hooks. The Autopilot-full playbook keeps its state in `keel-store/` in your Codex home (`~/.codex` by default). To let the lead write there, add `--add-dir "${CODEX_HOME:-$HOME/.codex}/keel-store"`, or add that directory's absolute path to `sandbox_workspace_write.writable_roots` in the home's `config.toml`. Otherwise the lead keeps that state in a temporary directory.
 
 Codex asks you to review the lead reminder in `/hooks` before it runs. The Codex plugin does not load Claude Code's Git guard. That guard is a best-effort check of the command text, so do not rely on it as a Codex safety check.
 
@@ -74,12 +74,13 @@ Claude Code subagents take a model alias, not a vendor slug. keel's defaults:
 
 | role | pstack default (Cursor) | keel default |
 |---|---|---|
-| code delegates: feature, refactoring, bug fix, perf, hillclimb | `grok-4.7-xhigh-fast` | `inherit` (the lead's model) |
-| judgment, prose, hardest tasks | `claude-opus-5-5-xhigh` | `inherit` |
-| explorers, investigators, swarm workers, reflect tooling | `grok-4.7-xhigh-fast` | `sonnet` |
-| synthesizers, explainers, reflect's judgment and divergent reviewers | `claude-opus-5-5-xhigh` | `opus` |
-| arena runners, architect runners, arena cross-judge pool | opus / grok | `opus, fable, sonnet` |
-| interrogate reviewers | opus / grok | `opus, fable, sonnet, codex` |
+| code delegates (feature, refactoring, bug fix, perf, hillclimb), judgment, prose | `claude-opus-5-5-xhigh-fast` | `inherit` (the lead's model) |
+| swarm workers, verification, trivial mechanical edits | `claude-opus-5-5-high-fast` | `opus` (at effort `high`) |
+| arena runners | `claude-fable-5-2-high`, `claude-opus-5-5-high-fast`, `gemini-4-neon-high` | `opus, fable, sonnet` (each at effort `high`) |
+| arena cross-judge pool | `claude-opus-5-5-high-fast`, `gemini-4-neon-high` | `opus, sonnet` |
+| interrogate reviewers | `claude-fable-5-2-high`, `claude-opus-5-5-high-fast`, `gemini-4-neon-high` | `opus, fable, sonnet, codex` (each at effort `high`) |
+
+No role runs above `xhigh`. Outside a review panel, Fable runs only when you name it or after two runs of the same brief on the role's model fail its check. [`/keel:setup`](./skills/setup/SKILL.md) changes any of it.
 
 `codex` is not a subagent: `interrogate` runs `codex exec --sandbox workspace-write` from bash in its own scratch worktree with the same brief as the other adversaries, and skips that lane when the Codex CLI is not installed.
 
@@ -91,7 +92,7 @@ use [`/keel:lead`](./skills/lead/SKILL.md) at the start of a task. it reads your
 
 ### just use [`/keel:lead`](./skills/lead/SKILL.md)
 
-this skill is the main shortcut. use it whenever you need the agent to do rigorous engineering work. it comes with twenty-three playbooks:
+this skill is the main shortcut. use it whenever you need the agent to do rigorous engineering work. it comes with twenty-two playbooks:
 
 ```
 /keel:lead this pr has a subtle bug where the scroll drifts every 750ms even when idle. repro
@@ -104,7 +105,7 @@ morning.
 ```
 
 <details>
-<summary>the twenty-three playbooks</summary>
+<summary>the twenty-two playbooks</summary>
 
 | playbook | for |
 |---|---|
@@ -123,7 +124,6 @@ morning.
 | [babysit](./skills/lead/playbooks/babysit.md) | drive a pr or a stack to merge-ready: conflicts, review threads, ci. |
 | [shipping](./skills/lead/playbooks/shipping.md) | independently verify a green stack, then land the contiguous verified run bottom-up through github. |
 | [autonomous run](./skills/lead/playbooks/autonomous-run.md) | drive a long task to completion without stopping. |
-| [orchestrate](./skills/lead/playbooks/orchestrate.md) | a standing project handed to one coordinator chat: multi-day, many stacked prs, fleets of subagents. |
 | [autopilot-full](./skills/lead/playbooks/autopilot-full.md) | run independent prs to merged with one owner per pr. a swarm verifies each code-ready head, and every later change to the patch gets a fresh check. |
 | [autopilot-stack](./skills/lead/playbooks/autopilot-stack.md) | autopilot-full without the merge. build and verify prs for the operator to review and land, stacking a pr only on a pr it builds on. |
 | [session pickup](./skills/lead/playbooks/session-pickup.md) | resume or take over a prior agent's in-flight work. |
@@ -148,7 +148,7 @@ the full rules and playbooks live in [`skills/lead/SKILL.md`](./skills/lead/SKIL
 
 ## skills
 
-[`/keel:lead`](./skills/lead/SKILL.md) runs most of these for you when a step needs them (`how`, `why`, `architect`, `arena`, `swarm`, `interrogate`, `unslop`, `no-comments`, `technical-writing`, `tdd`, and the principles). the table below is for when you want one directly:
+[`/keel:lead`](./skills/lead/SKILL.md) runs most of these for you when a step needs them (`why`, `architect`, `arena`, `swarm`, `interrogate`, `unslop`, `no-comments`, `technical-writing`, `tdd`, and the principles). the table below is for when you want one directly:
 
 ```
 /keel:how do we cancel runs? do we have an n+1 when we look up every run to cancel?
@@ -165,9 +165,9 @@ the full rules and playbooks live in [`skills/lead/SKILL.md`](./skills/lead/SKIL
 |---|---|
 | [`/keel:lead`](./skills/lead/SKILL.md) | default entry point for any non-trivial task. the main session also loads it on its own. |
 | [`/keel:in-your-own-words`](./skills/in-your-own-words/SKILL.md) | you want the agent to play back your goal and the problem before it starts. runs only when you type `/keel:in-your-own-words`. |
-| [`/keel:sharpen`](./skills/sharpen/SKILL.md) | you want a prompt made deeper, not bigger, before you send it: what a top professional would do that you didn't ask for, the raw material they'd start from, their methods and tools, and an outside check that the result is right. hands back the rewritten prompt and leaves your choices open. doesn't do the task. runs only when you type `/keel:sharpen`. |
+| [`/keel:sharpen`](./skills/sharpen/SKILL.md) | you want a prompt made deeper, not bigger, before you send it: what a top professional would do that you didn't ask for, the raw material they'd start from, their methods and tools, and an outside check that the result is right. hands back the rewritten prompt, which asks the agent to prototype any choice an experiment can settle and leaves product and preference choices to you. doesn't do the task. runs only when you type `/keel:sharpen`. |
 | [`/keel:how`](./skills/how/SKILL.md) | you want a walkthrough of how a subsystem works. |
-| [`/keel:why`](./skills/why/SKILL.md) | you want to know why something was built this way. discovers available MCPs at run time and queries each evidence category in parallel (source control, issue tracker, long-form docs, real-time chat, infra observability, error tracking, analytics warehouse). |
+| [`/keel:why`](./skills/why/SKILL.md) | you want to know why something was built this way. answers from the record, not the code: the commits and pr discussions that introduced it and each later change, and other sources when that trail is thin. cites what the authors wrote, marks its own inferences, and says what the record does not answer. |
 | [`/keel:recall`](./skills/recall/SKILL.md) | you're starting or resuming work and want your recent context on a topic rebuilt from your own chat history and the shared record, handed back as a tight current-state brief. |
 | [`/keel:ketchup`](./skills/ketchup/SKILL.md) | you want what changed in this chat since your last message, in plain words and small visuals, with every item waiting on you listed and decidable from the reply alone, even when that makes the reply long. |
 | [`/keel:blast-radius`](./skills/blast-radius/SKILL.md) | you have a small-looking change and want to know what else it could break, with the one fact it's safe because of proven by running code, not asserted. |
@@ -289,7 +289,7 @@ keel changes how pstack runs, not what it teaches.
 
 - **Platform.** Cursor's tools become their Claude Code equivalents. The Task tool becomes the Agent tool, Cursor cloud agents become background subagents in worktrees, and pull request operations go through `gh`. cursor-team-kit's slop and control skills become Claude Code's `/simplify`, Bash (tmux for interactive TUIs) and the browser skills, and Cursor's `create-skill` becomes `anthropic-skills:skill-creator`.
 - **Names.** `poteto-mode`, `poteto-agent`, Comment Sicko and `setup-pstack` become `lead`, `ponytail`, `critic` and `setup`.
-- **Models.** Claude Code has no grok. Review panels use Opus, Fable and Sonnet, and `interrogate` adds a Codex lane. Subagent effort uses the Agent tool's `effort` parameter instead of model-slug suffixes, and pstack's fast mode does not carry over.
+- **Models.** Claude Code has no grok or Gemini. Review panels use Opus, Fable and Sonnet, with Sonnet in the seat that holds Gemini upstream, and `interrogate` adds a Codex lane. Swarm workers and trivial edits default to `opus` at `high`, as pstack's own Claude Code notes map them. Subagent effort uses the Agent tool's `effort` parameter instead of model-slug suffixes, and pstack's fast mode does not carry over.
 - **Shape.** The lead is a skill loaded by the main session, because running a session as an agent replaces Claude Code's own instructions. critic is read-only, ponytail keeps memory, and keel adds the git guard and the lead reminder.
 - **Removed.** The benny Slack automation pack, the `make-bot-ui` and `poteto-help` skills, Cursor's plugin manifest and the root Agent Plugins manifest, and pstack's logo and illustrations. They are Cursor-only or pstack's own branding. pstack's `docs/harness/` notes on running its Cursor names inside Claude Code are removed too, because keel translates its own text.
 - **Not yet ported.** pstack's `statechart` skill, which draws TLA+ models as charts. It needs a TLA+ toolchain and pays off only once a project uses formal verification, so [UPSTREAM.md](./UPSTREAM.md) defers it.
@@ -304,15 +304,17 @@ Claude Code already has a plan mode, and it works well with keel. pstack leaves 
 
 `lead` is adapted from poteto-mode and carries much of poteto's style. You may not want exactly that.
 
+when a default changes, a model file written before the change still pins the old default until you run `/keel:setup` again. that run drops the lines for roles keel no longer uses and keeps any other role whose model differs from the default. to drop a pin it does not recognize, delete that role's line or the file first.
+
 type [`/keel:automate-me`](./skills/automate-me/SKILL.md). it mines your recent transcripts, drafts a `<your-name>-mode` skill from how you've actually worked, and routes through keel underneath. you keep keel as the base and end up with your own routing skill alongside `lead`.
 
 models are configurable too. type [`/keel:setup`](./skills/setup/SKILL.md). it checks for the codex cli and writes `${CLAUDE_CONFIG_DIR:-$HOME/.claude}/keel-models.md`, a small file mapping each role (code, judgment, the review panels) to a model. claude code has no always-applied rule outside CLAUDE.md, so every skill that spawns a subagent reads that file itself and falls back to sensible defaults when it is absent. you override only what you want.
 
-pstack's Cursor model rule file does not carry over. Run `/keel:setup` once in Claude Code. A rerun keeps any role whose model differs from the default.
+pstack's Cursor model rule file does not carry over. Run `/keel:setup` once in Claude Code.
 
 ## credits and license
 
-- **pstack** by Lauren Tan ([poteto](https://x.com/poteto)), from [cursor/plugins](https://github.com/cursor/plugins/tree/main/pstack) at commit `c742dd6` (pstack 0.15.36), MIT. keel's skills, playbooks, principles, references, scripts, guide and both agents are adapted from it.
+- **pstack** by Lauren Tan ([poteto](https://x.com/poteto)), from [cursor/plugins](https://github.com/cursor/plugins/tree/main/pstack) at commit `e58dd04` (pstack 0.15.44), MIT. keel's skills, playbooks, principles, references, scripts, guide and both agents are adapted from it.
 - **Git guardrails** by Matt Pocock, from [mattpocock/skills](https://github.com/mattpocock/skills), MIT. `hooks/git-guard.py` is adapted from it.
 - **keel's changes** by [alexnthnz](https://github.com/alexnthnz), MIT.
 

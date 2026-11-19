@@ -7,7 +7,7 @@ cited as references are listed after them.
 ## pstack
 
 - **Author:** Lauren Tan ([poteto](https://x.com/poteto))
-- **Source:** <https://github.com/cursor/plugins/tree/main/pstack>, pstack 0.15.36 at commit `c742dd6`
+- **Source:** <https://github.com/cursor/plugins/tree/main/pstack>, pstack 0.15.44 at commit `e58dd04`
 - **Used for:** the skills, playbooks, principles, references, scripts and guide that keel adapts, and the two
   agents keel renames to `ponytail` and `critic`. keel's changes are described in [`UPSTREAM.md`](./UPSTREAM.md).
   pstack itself adapted some material from the projects below.
@@ -114,8 +114,6 @@ SOFTWARE.
   `skills/technical-writing` follow its framework; no Diátaxis text is reproduced.
 - **ASD Simplified Technical English**, ASD-STE100 Issue 9 (2025), <https://www.asd-ste100.org>.
 - **John R. Kohl**, *The Global English Style Guide* (SAS Institute, 2008).
-- **John Ousterhout**, *A Philosophy of Software Design* (Yaknyam Press, 2018), for the red flags in
-  `skills/architect/references/design-red-flags.md`.
 - **Wikipedia, "Signs of AI writing"** (WikiProject AI Cleanup), the source humanizer draws on.
 
 ## Trademarks
