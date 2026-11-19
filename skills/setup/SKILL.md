@@ -20,17 +20,17 @@ Then check the cross-vendor lane with `command -v codex`. When it succeeds, `cod
 
 ### 2. Load current state
 
-The default role-to-model mapping is the file shape shown in step 5 below. If `${CLAUDE_CONFIG_DIR:-$HOME/.claude}/keel-models.md` already exists, read it and treat its role values as the current choices. Otherwise start from those defaults. A line whose role is not in step 5, such as `how critics`, is from a retired role. Drop it. A `# budget` line is from the Cursor version. Drop it too, since Claude Code subagents have no reasoning budget to set.
+The default role-to-model mapping is the file shape shown in step 5 below. If `${CLAUDE_CONFIG_DIR:-$HOME/.claude}/keel-models.md` already exists, read it and treat its role values as the current choices. Otherwise start from those defaults. A line whose role is not in step 5, such as `hardest tasks`, `how explorer`, `how explainer`, `why investigators`, `why synthesizer`, `reflect tooling`, `reflect judgment, divergent, synthesizer`, or `architect runners`, is from a retired role. Drop it. A `# budget` or `# defaults` line is from the Cursor version. Drop it too, since Claude Code subagents have no reasoning budget to set and keel keeps no defaults marker.
 
 ### 3. Map and confirm
 
-**(a) Build the table.** Start from the skill defaults, and on a re-run keep any role the user changed. A value that is not one of the aliases in step 1 (such as a vendor slug copied from the Cursor rule) needs a choice. Suggest the default for that role.
+**(a) Build the table.** Start from the skill defaults, and on a re-run keep any role the user changed. A value that is not one of the aliases in step 1 (such as a vendor slug copied from the Cursor rule) needs a choice. Suggest the default for that role. A value may end in an effort, one of `low`, `medium`, `high`, or `xhigh`, as `swarm workers: opus high` does. No role runs above `xhigh`, so an effort of `max` needs a choice too.
 
-**(b) Show the roles and confirm.** Show every role with its model, marking any value that needs a choice. Also list each line step 2 dropped. Ask whether to accept as-is or change specific roles, offering `opus`, `sonnet`, `haiku`, `fable`, and `inherit`, plus `codex` for panel roles when step 1 found it. Prefer AskUserQuestion over free text. It takes at most four options per question and adds an "Other" choice itself, so put the four most likely values first. For panel roles (arena runners, architect runners, interrogate reviewers) the value is a list, and one reviewer runs per entry, alias entries included, so the list length sets the count. Three different Claude models give a panel its diversity. `codex` belongs only in `interrogate reviewers`, since arena and architect runners must write files through the Agent tool. `arena cross-judge pool` is also a list, but Arena runs one judge. It tries only values that name a different model from the parent's, in list order, so order it by preference. An `inherit`, `inherit-parent`, or `auto` value never judges. `swarm workers` is the default model for every worker unless a race or comparison assigns another model per arm.
+**(b) Show the roles and confirm.** Show every role with its model, marking any value that needs a choice. Also list each line step 2 dropped. Ask whether to accept as-is or change specific roles, offering `opus`, `sonnet`, `haiku`, `fable`, and `inherit`, plus `codex` for panel roles when step 1 found it. Prefer AskUserQuestion over free text. It takes at most four options per question and adds an "Other" choice itself, so put the four most likely values first. For panel roles (arena runners, interrogate reviewers) the value is a list, and one reviewer runs per entry, alias entries included, so the list length sets the count. Three different Claude models give a panel its diversity. `codex` belongs only in `interrogate reviewers`, since arena runners must write files through the Agent tool. `arena cross-judge pool` is also a list, but Arena runs one judge. It tries only values that name a different model from the parent's, in list order, so order it by preference. An `inherit`, `inherit-parent`, or `auto` value never judges. `swarm workers` is the default model for every worker unless a race or comparison assigns another model per arm.
 
 ### 4. Validate
 
-Every value written must be `opus`, `sonnet`, `haiku`, `fable`, `inherit`, `inherit-parent`, or `auto`, or `codex` inside `interrogate reviewers` when step 1 found it. If a chosen value is not valid, stop and ask again.
+Every value written must be `opus`, `sonnet`, `haiku`, `fable`, `inherit`, `inherit-parent`, or `auto`, or `codex` inside `interrogate reviewers` when step 1 found it. An alias may be followed by an effort of `low`, `medium`, `high`, or `xhigh`, and never `max`. If a chosen value is not valid, stop and ask again.
 
 ### 5. Write the file
 
@@ -38,24 +38,16 @@ Write `${CLAUDE_CONFIG_DIR:-$HOME/.claude}/keel-models.md` with one line per rol
 
 ```
 # keel model configuration. One line per role. Delete a line to fall back to the skill default.
-# Values: opus, sonnet, haiku, fable. `inherit` (or `inherit-parent`, `auto`): the role runs on the parent model (omit the Agent call's `model`). Alias entries in a panel list still count toward its fan-out.
+# Values: opus, sonnet, haiku, fable, optionally followed by an effort (low, medium, high, xhigh). No role runs above xhigh. `inherit` (or `inherit-parent`, `auto`): the role runs on the parent model (omit the Agent call's `model`). Alias entries in a panel list still count toward its fan-out.
 # `codex` (interrogate reviewers only): a cross-vendor reviewer run from Bash with the OpenAI Codex CLI.
 feature, refactoring: inherit
 bug-fix: inherit
 perf-issue: inherit
 hillclimb: inherit
 judgment and prose: inherit
-hardest tasks: inherit
-how explorer: sonnet
-how explainer: opus
-why investigators: sonnet
-why synthesizer: opus
-reflect tooling: sonnet
-reflect judgment, divergent, synthesizer: opus
 arena runners: opus, fable, sonnet
-arena cross-judge pool: opus, fable, sonnet
-swarm workers: sonnet
-architect runners: opus, fable, sonnet
+arena cross-judge pool: opus, sonnet
+swarm workers: opus high
 interrogate reviewers: opus, fable, sonnet, codex
 ```
 

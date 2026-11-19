@@ -69,7 +69,7 @@ To catch up on a chat you left running, type [`/ketchup`](../../skills/ketchup/S
 
 ## When the night holds a queue, not a task
 
-The contract above drives one task to one finish condition. Some nights hold more, a queue of independent changes or a whole program. Three playbooks scale the same trust up.
+The contract above drives one task to one finish condition. Some nights hold more, a queue of independent changes or a whole program. Two playbooks and one skill scale the same trust up.
 
 [Autopilot-full](../../skills/lead/playbooks/autopilot-full.md) runs a queue of independent PRs to merged. Each PR gets one owner agent that carries it from build through merge, and no owner merges on its own verdict. A swarm of fresh verifiers checks the owner's code-ready head. A later rebase, conflict fix, or minor fix gets one fresh verifier, and only new behavior, a redesign, or a large new diff calls the full swarm again. Only a clean verdict on the patch that merges authorizes the merge:
 
@@ -83,15 +83,15 @@ The contract above drives one task to one finish condition. Some nights hold mor
 /lead autopilot these five changes, but don't merge. i'll land them in the morning.
 ```
 
-[Orchestrate](../../skills/lead/playbooks/orchestrate.md) is for a program that outlives any single agent: multi-day, many stacked PRs, fleets of subagents under one standing coordinator chat. The coordinator decides which agent does each piece of work, checks what each one produces, and never writes code itself. If one agent could finish the work in a session, the playbook itself routes you back to the overnight contract above:
+A whole program, such as a migration across many packages, has no playbook of its own. `/lead` routes large or cross-cutting work to [`/figure-it-out`](../../skills/figure-it-out/SKILL.md), which designs one rigorous run for it:
 
 ```text
-/lead orchestrate the store migration. own it until every package is converted and merged. i'll check in twice a day.
+/lead migrate every package to the new store. own it until each one is converted and merged. i'll check in twice a day.
 ```
 
 ## Run many projects in parallel
 
-A background session started with `claude --bg "<brief>"` gives one coordinator agent its own persistent thread. The coordinator doesn't write code. It directs subagents, each in its own worktree, and the session keeps running under Claude Code's local supervisor after you close the terminal, through sleep but not shutdown. That's the shape the Orchestrate playbook expects. Start your brief to the coordinator with `/lead`, and the subagents it spawns follow the playbooks. `claude agents` lists the sessions, and `claude attach <id>` reopens one.
+A background session started with `claude --bg "<brief>"` gives one coordinator agent its own persistent thread. The coordinator doesn't write code. It directs subagents, each in its own worktree, and the session keeps running under Claude Code's local supervisor after you close the terminal, through sleep but not shutdown. Start your brief to the coordinator with `/lead`, and the subagents it spawns follow the playbooks. `claude agents` lists the sessions, and `claude attach <id>` reopens one. Each agent it starts reads [`worker.md`](../../skills/lead/worker.md) first, so workers hold to the kickoff's bar, decide reversible calls instead of asking you, and open PRs ready for review.
 
 A few habits help:
 

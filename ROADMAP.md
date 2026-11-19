@@ -5,7 +5,7 @@ own know-how (skills in `.claude/skills/`); the method, the agents and the guard
 
 ## Next
 
-- Add the Codex review lane to `arena` and `architect`, not only `interrogate`.
+- Add the Codex review lane to `arena`, not only `interrogate`.
 - Try Claude Code's `/goal` for autopilot runs, the way pstack uses it in Cursor.
 - Make `watch-pr` count review passes from any review bot, not only Bugbot, and teach `worktree-audit.sh` to read
   Claude Code transcripts instead of Cursor's.

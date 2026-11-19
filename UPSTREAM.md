@@ -3,7 +3,7 @@
 keel is a fork of pstack by Lauren Tan (poteto), MIT. keel first made its own Claude Code port of pstack (the translation table below), then renamed and reorganized it (the rename table).
 
 - Upstream: <https://github.com/cursor/plugins>, directory `pstack/`.
-- Base: `cursor/plugins@c742dd6`, pstack 0.15.36. This is the last upstream commit synced into keel.
+- Base: `cursor/plugins@35a9094`, pstack 0.15.43. This is the last upstream commit synced into keel.
 - The first commit in this repository is an unmodified copy of `pstack/` at `cursor/plugins@12d587d`, pstack 0.15.5. Everything after it is keel, including the syncs that applied later upstream changes.
 
 Removed as Cursor-only or pstack branding: `.cursor-plugin/`, `assets/` (pstack's logo), `docs/guide/images/` (pstack's illustrations), `docs/harness/` (pstack's own Claude Code install notes), `automations/benny/`, `skills/make-bot-ui/`, `skills/poteto-help/`, `skills/ketchup-video/`, and the root `plugin.json`. Also skipped, but deferred rather than Cursor-only: `skills/statechart/`. `bin/upstream-diff.sh --apply` skips all of them on every sync. [Not ported](#not-ported) gives the reasons.
@@ -16,7 +16,7 @@ Every change after the first commit applies two tables and nothing else. The tra
 |---|---|---|
 | plugin `pstack` | `pstack`, marketplace `pstack-local` | `keel`, marketplace `keel` |
 | `skills/poteto-mode/`, `name: Poteto Mode`, `/poteto-mode` | `poteto-mode`, `/pstack:poteto-mode` | `skills/lead/`, `name: lead`, `/keel:lead`. No `disable-model-invocation`, so the main session loads it with the Skill tool. Its opening makes the main session the lead. Its Subagents section adds the `isolation: "worktree"` rule, the critic rule, and the session-lifetime (`/bg`) rule |
-| `agents/poteto-agent.md` | `pstack:poteto-agent` | `agents/ponytail.md`, `keel:ponytail`. The builder and owner, with `model: inherit` and `memory: user`. It may spawn its own subagents and merges only under autopilot or when its brief says to land, plus Working method, subagent and merging sections |
+| `agents/poteto-agent.md` | `pstack:poteto-agent` | `agents/ponytail.md`, `keel:ponytail`. The builder and owner, with `model: inherit` and `memory: user`. It may spawn its own subagents, plus Working method, subagent and merging sections. keel differs from upstream on landing, because upstream owners merge their own PRs, while a keel owner merges only under autopilot or when its brief says to land it, and otherwise stops at merge-ready and reports |
 | `agents/comment-sicko.md`, `name: Comment Sicko` | `pstack:comment-sicko` | `agents/critic.md`, `keel:critic`. A read-only reviewer with a named lens and `disallowedTools: Edit, Write, NotebookEdit, Agent`. Comment Sicko's text is its default comments lens |
 | `skills/setup-pstack/`, `/setup-pstack` | `/pstack:setup-pstack` | `skills/setup/`, `/keel:setup` |
 | `~/.cursor/rules/pstack-models.mdc` | `~/.claude/pstack-models.md` | `${CLAUDE_CONFIG_DIR:-$HOME/.claude}/keel-models.md` |
@@ -27,7 +27,6 @@ Every change after the first commit applies two tables and nothing else. The tra
 | `docs/guide/02-poteto-mode.md` | same | `docs/guide/02-lead.md` |
 | interrogate adversaries on `generalPurpose` | `general-purpose` | `general-purpose` with `isolation: "worktree"`, one per configured model. `keel:critic` cannot do the job, because it has `disallowedTools: Edit, Write` and adversaries write repros. The `codex` lane has its own scratch worktree |
 | no-comments spawns Comment Sicko, which deletes comments itself | same, as `pstack:comment-sicko` | spawns `keel:critic` with the comments lens. critic only reports, and no-comments carries out the kills |
-| Orchestrate sub-coordinator as `generalPurpose` or `poteto-agent` | `general-purpose` or `pstack:poteto-agent` | `keel:ponytail`, which has the Agent tool. keel also differs on landing: upstream owners merge their own PRs, while a keel owner merges only when the user's ask grants landing, and otherwise stops at merge-ready and reports |
 
 Every `~/.claude/...` path keel writes uses `${CLAUDE_CONFIG_DIR:-$HOME/.claude}`, so each Claude Code profile keeps its own model file, store, and transcripts. Project paths such as `.claude/skills/` stay as they are.
 
@@ -56,16 +55,20 @@ The Claude Code column shows the port's names. The rename table above maps them 
 | Frontmatter `mode`, `reminder`, `icon`, `color` | Removed. The `reminder` text moved into the poteto-mode body as the stay-on rule |
 | `/poteto-mode`, `/how`, and other pstack slash references | `/pstack:poteto-mode`, `/pstack:how`, and so on |
 | pstack skill invocation | pstack skills set `disable-model-invocation`, so the Skill tool refuses them. Agents read `<pstack>/skills/<name>/SKILL.md` instead. poteto-mode names the directory through `${CLAUDE_SKILL_DIR}` |
-| `claude-opus-5-5-xhigh`, `-max` before pstack 0.15.15 (synthesizers, explainers, reflect reviewers) | `opus` |
-| `claude-opus-5-5-xhigh`, `-max` before pstack 0.15.15 (judgment, prose, hardest tasks) | `inherit` in keel (the port used `opus`) |
-| `grok-4.7-xhigh-fast` (code delegates) | `inherit` in keel (the port used `sonnet`) |
-| `grok-4.7-xhigh-fast` (explorers, investigators, swarm workers, reflect tooling) | `sonnet` |
-| `gpt-5.6-sol-max` (reflect tooling before pstack 0.15.15) | `sonnet` |
-| Family fallbacks for a refused slug, with `cursor-grok-*` and `composer-*` in the grok family | Dropped. Each skill names its own fallback for a rejected model |
-| Panels (arena runners, architect runners, arena cross-judge pool) | `opus, fable, sonnet`. "Different family" becomes "a different model from the parent" |
-| interrogate reviewers (the adversaries) | `opus, fable, sonnet, codex`. `codex` runs `codex exec --sandbox workspace-write` from Bash in its own `git worktree add` under a scratch `$tmp`, with the shared adversary brief, and is skipped when `command -v codex` fails. upstream has no such lane |
+| `claude-opus-5-5-xhigh-fast` (code delegates, prose, judgment) | `inherit` |
+| `claude-opus-5-5-high-fast` (trivial mechanical edits, swarm workers, verification) | `opus` at `effort: "high"`, which is how pstack's own Claude Code notes (`docs/harness/claude-code.md`) map the slug |
+| `claude-opus-5-5-medium-fast` (eval agents that only dispatch, poll, or pack results) | `model` omitted at `effort: "medium"` |
+| `claude-fable-5-2-high`, `claude-opus-5-5-high-fast`, `gemini-4-carbon-high` (arena runners, the diverse panels) | `opus, fable, sonnet`, each at `effort: "high"`. Sonnet takes the seat of the other-vendor Gemini, as it took Grok's. "Different vendor" becomes "a different model from the parent" |
+| `claude-opus-5-5-high-fast`, `gemini-4-carbon-high` (arena cross-judge pool) | `opus, sonnet`. Upstream's pool leaves Fable out, so keel's does too. The judge is never the parent's model |
+| interrogate reviewers (the adversaries) | `opus, fable, sonnet, codex`, each at `effort: "high"`. `codex` runs `codex exec --sandbox workspace-write` from Bash in its own `git worktree add` under a scratch `$tmp`, with the shared adversary brief, and is skipped when `command -v codex` fails. upstream has no such lane |
 | `inherit-parent`, `auto` | Kept, plus `inherit`. All omit `model` |
-| Effort suffixes (`-max`, `-xhigh`, `-medium`), the budget step, and fast mode | The Agent tool's `effort` parameter (`low`, `medium`, `high`, `xhigh`, or `max`), per the lead skill's Match the effort to the job rule. keel has no budget step, so a role's usual work omits `effort`. The Agent tool has no per-subagent fast flag, so fast mode is dropped |
+| Effort suffixes (`-xhigh`, `-high`, `-medium`), the budget step, and fast mode | The Agent tool's `effort` parameter (`low`, `medium`, `high`, or `xhigh`), per the lead skill's Match the effort to the job rule. keel has no budget step, so a role's usual work omits `effort`. The Agent tool has no per-subagent fast flag, so fast mode is dropped |
+| No role above `xhigh`. The hardest or subtlest work raises a role one step, up to `xhigh` | The same rule, with `max` removed from the lead skill's effort list and from `codex/skills/lead/SKILL.md`. keel's setup and every skill reject `max` |
+| Fable outside a panel only when the user named it or two runs of the same brief on the role's model failed their check | The same rule, as `model: "fable"`. Difficulty alone never qualifies |
+| `worker.md`, and the kickoff line `Read <path>/worker.md before anything else.` for "any agent, whether a Task subagent or a Project worker" | `skills/lead/worker.md`. The lead's kickoff line is `Read ${CLAUDE_SKILL_DIR}/worker.md before anything else.` for every agent it starts, `keel:critic` and `Explore` included. "A Task subagent or a Project worker" becomes "an Agent subagent or a `claude --bg` session". `agents/ponytail.md` tells a ponytail to put the same line, with `<skills dir>/lead/worker.md`, first in any kickoff it writes, and the Codex adapter passes the resolved absolute path |
+| The `# defaults: 3` marker in the model rule, with its Grok and budget migration | Dropped. keel never wrote Cursor slugs, and `/keel:setup` drops any role line or `# budget` or `# defaults` line it does not know |
+| Retired roles `hardest tasks`, `how explorer`, `how explainer`, `why investigators`, `why synthesizer`, `reflect tooling`, `reflect judgment, divergent, synthesizer`, and `architect runners` | Removed everywhere. `/keel:setup` drops their lines from an existing `keel-models.md` |
+| A second opinion on "another vendor's model" | "A different model from the one that did the work" |
 | Model family prefixes (`claude-*`, `gpt-*`, `grok-*`) | The aliases `opus`, `sonnet`, `haiku`, `fable`, plus `codex` |
 | `~/.cursor/rules/pstack-models.mdc` (always applied) | `~/.claude/pstack-models.md`, a plain file. Each skill says "Read `~/.claude/pstack-models.md` if it exists; use the role's line, else the default." |
 | `deslop` from `cursor-team-kit` | Claude Code's built-in `/simplify`, plus pstack's `unslop` for prose |
@@ -74,15 +77,12 @@ The Claude Code column shows the port's names. The rename table above maps them 
 | `create-skill` | `anthropic-skills:skill-creator` when available, else the Authoring a skill playbook |
 | `/visualize` charts, Mermaid diagrams, and generated images (ketchup's visuals) | A small box diagram or a text chart in a fenced code block, or a screenshot or recording that already exists, linked by its path. ketchup stays read-only and posts nothing, so it publishes no Artifact |
 | Cursor's built-in `/babysit` | Dropped. pstack's Babysit playbook is the only one |
-| `/loop` in dynamic mode, cloud-sleeper wake chain | `/loop` with no interval (self-paced), or `/loop 1h <tick prompt>` for an audit tick. The multi-phase plan template keeps the literal `/loop 1h`, because `check-plan.mjs` requires it |
+| `/loop` in dynamic mode, cloud-sleeper wake chain | `/loop` with no interval (self-paced), or `/loop 1h <tick prompt>` for an audit tick |
 | Cursor cloud agent, `environment: "cloud"`, `cloud_base_branch` | A background subagent with `isolation: "worktree"`, or a separate `claude --worktree` session. "Assume the VM dies" becomes "assume the session dies" |
 | Origin forge, `origin pr ...`, and the run's built-in PR tool | `gh` only |
 | Bugbot | Automated PR review bots (Bugbot, Claude Code review, CodeRabbit, etc.). `references/bugbot-triage.md` keeps its filename |
 | The agent's store (path in the system prompt) | `~/.claude/pstack-store/<project-slug>/`. `<project-slug>` is the directory name of the repository's main checkout, so every worktree of the repository resolves the same slug. Print it with `basename "$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")"` |
 | `agent-transcripts/` under `~/.cursor/projects/<slug>/` | `~/.claude/projects/<cwd-slug>/<session-id>.jsonl`, one event per line, subagents under `<session-id>/subagents/`. `<cwd-slug>` replaces every non-alphanumeric character of the path with `-` |
-| Orchestrate's "Project tracker (`notes.md`) and the Project store" | `notes.md` and files under `${CLAUDE_CONFIG_DIR:-$HOME/.claude}/keel-store/<project-slug>/orchestrate/` |
-| Orchestrate's PR and CI event subscriptions | Dropped. Owners watch their own PRs per `playbooks/babysit.md`, and a completion notification wakes the coordinator. The ban on polling loops and on relaying between agents stays, and only `watch-pr` counts as a script in play |
-| Orchestrate's new cloud VM (`environment: "cloud"`) and its list of exceptions | One worktree per worker that writes (`isolation: "worktree"`). Everything runs on this machine |
 | Cursor Projects, a coordinator thread whose cloud subagents keep working with the laptop closed | A background session started with `claude --bg`, whose subagents work in their own worktrees |
 | A Custom Mode (picking `/poteto-mode` from the `/` menu with Option+Enter) | Dropped. The lead skill stays on across turns by its own rule |
 | Cursor restart | Session restart or context compaction |
@@ -103,13 +103,12 @@ The Claude Code column shows the port's names. The rename table above maps them 
 
 ## Scripts left as upstream wrote them
 
-`skills/lead/scripts/` is unchanged apart from the package name. Upstream deleted `orch/`, so keel has none. Its Cursor-specific parts:
+`skills/lead/scripts/` is unchanged apart from the package name. Upstream deleted `orch/` and `check-plan.mjs`, so keel has neither. Its Cursor-specific parts:
 
 - `worktree-audit.sh` reads chat transcripts from `~/.cursor/projects/<slug>/agent-transcripts`, so its `LAST_CHAT` column is always `-` on Claude Code. The Worktree cleanup playbook tells the agent to scan `${CLAUDE_CONFIG_DIR:-$HOME/.claude}/projects/` itself and to treat every `safe` row as `verify-recent-chat` until that scan clears it.
 - `worktree-audit.sh` fills its PR column from `origin pr list` when the Origin CLI can read the repository, and from `gh` otherwise. keel uses `gh` only, so without Origin installed the script takes the `gh` path.
 - `watch-pr` treats a completed `Code Review Gate` check run whose conclusion is `ACTION_REQUIRED` as the owner-approval gate. That check name comes from Cursor's own review setup.
 - `watch-pr/github.ts` counts review passes only for Bugbot, detected by the author `bugbot` or the `cursor` app with `CURSOR_AUTOMATION_ID` markers. Other review bots show no pass count. The Babysit playbook counts their passes from review history.
-- `check-plan.mjs` requires the literal markers `git show origin/main:` and `/loop 1h` in a plan's Program checklist. The plan template keeps both.
 - The package was named `@cursor-skill/poteto-mode-tools`; keel renamed it `keel-lead-tools`.
 
 ## Sync with upstream
@@ -149,3 +148,11 @@ A sync applies upstream's diff to keel rather than merging an import. The reposi
    ```
 
 Deliberate residual-scan hits. The first scan prints the model mapping table and the differences list in `README.md`, and the Origin and Cursor-path lines in `skills/lead/scripts/worktree-audit.sh`. The second prints the differences list and the make-it-yours line in `README.md`.
+
+A third scan checks that the retired concepts are gone.
+
+```bash
+grep -rnIE --exclude-dir=node_modules 'orchestrate|check-plan|hardest tasks|how explorer|how explainer|why investigators|why synthesizer|reflect tooling|architect runners|twenty-three|23 playbooks' README.md UPSTREAM.md ROADMAP.md THIRD_PARTY_NOTICES.md docs skills agents codex hooks
+```
+
+Its deliberate hits are the history rows in this file, the retired role names that step 2 of `skills/setup/SKILL.md` tells the setup to drop, and the word `orchestrates` in `skills/automate-me/SKILL.md`, which has nothing to do with the retired playbook.

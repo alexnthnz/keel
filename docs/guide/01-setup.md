@@ -42,6 +42,8 @@ Run:
 
 [`/keel:setup`](../../skills/setup/SKILL.md) checks whether the OpenAI Codex CLI is installed, shows you each role (code delegates, judgment, the review panels) with its model alias (`opus`, `sonnet`, `haiku`, or `fable`), and asks what you want. Answer the questions. It writes `${CLAUDE_CONFIG_DIR:-$HOME/.claude}/keel-models.md`, a small file every keel skill reads before it spawns a subagent.
 
+By default, code, prose, and judgment run on your session's model, and the review panels and swarm workers run at `high`. No role runs above `xhigh`. Outside a review panel, Fable runs only when you name it for a task or after two runs of the same brief on the role's model fail their check.
+
 You only override what you care about. A role with no line in the file keeps the skill's default. To restore a default, delete that role's line. A rerun of `/keel:setup` keeps any role whose model differs from the default. When a default changes, a file written before the change still pins the old default, so delete those role lines, or delete the file, then run `/keel:setup` again.
 
 You might be wondering how to keep the model you picked for the session. Set a role to `inherit` and keel omits the subagent `model` field, so the subagent inherits your parent model. `inherit-parent` and `auto` mean the same thing. When the Codex CLI is installed, the `interrogate reviewers` panel also gets a `codex` entry, a cross-vendor reviewer that runs from Bash rather than as a subagent. For a panel role the value is a list, and one subagent runs per entry, so the list length sets the panel size. Setup also configures `swarm workers`, the default model for every `/swarm` worker unless a race names a model for each arm.
@@ -74,7 +76,7 @@ Pick something real but small, and describe it the way you'd describe it to a co
 /lead add a --json flag to this command. text output stays byte-identical. verify both.
 ```
 
-Watch the todo list. Its first items are the matched playbook's steps copied in, the Feature playbook for this prompt. If `/lead` skips a step, the step stays in the list with `skip: <reason>`, so you can see what it chose not to do.
+Watch the todo list. Its first items are the matched playbook's steps copied in, the Feature playbook for this prompt.
 
 From here you can type normal follow-ups. `/lead` is sticky. It stays on for the conversation until you opt out by saying so.
 
