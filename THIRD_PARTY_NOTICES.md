@@ -68,12 +68,14 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
 
-## Git guardrails (mattpocock/skills)
+## Planning skills (mattpocock/skills)
 
 - **Author:** Matt Pocock
-- **Source:** <https://github.com/mattpocock/skills>, the `git-guardrails-claude-code` skill
-- **Used for:** [`hooks/git-guard.py`](./hooks/git-guard.py), adapted to inspect only real git command segments
-  and to allow `--force-with-lease` onto a named branch that is not protected.
+- **Source:** <https://github.com/mattpocock/skills> at commit `6f7f783`, the `grilling`, `domain-modeling`, `wayfinder`, `to-spec` and `to-tickets` skills and the agent brief in `triage`
+- **Used for:** [`skills/grilling/SKILL.md`](./skills/grilling/SKILL.md), [`skills/domain-modeling/SKILL.md`](./skills/domain-modeling/SKILL.md),
+  [`skills/wayfinder/SKILL.md`](./skills/wayfinder/SKILL.md), [`skills/to-spec/SKILL.md`](./skills/to-spec/SKILL.md) and
+  [`skills/to-tickets/SKILL.md`](./skills/to-tickets/SKILL.md). `grilling` keeps the upstream text and adds one marked edit.
+  The other four are rewritten for arcflux-memory and Linear.
 
 ```
 MIT License
@@ -99,11 +101,12 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
 
-## Planning skills (mattpocock/skills)
+## Git guardrails (mattpocock/skills)
 
 - **Author:** Matt Pocock
-- **Source:** <https://github.com/mattpocock/skills> at commit `6f7f783`, the `to-spec` and `to-tickets` skills and the agent brief in `triage`
-- **Used for:** [`skills/to-spec/SKILL.md`](./skills/to-spec/SKILL.md) and [`skills/to-tickets/SKILL.md`](./skills/to-tickets/SKILL.md), rewritten for Linear. Each file marks its local edits.
+- **Source:** <https://github.com/mattpocock/skills>, the `git-guardrails-claude-code` skill
+- **Used for:** [`hooks/git-guard.py`](./hooks/git-guard.py), adapted to inspect only real git command segments
+  and to allow `--force-with-lease` onto a named branch that is not protected.
 
 ```
 MIT License
