@@ -46,7 +46,7 @@ Autopilot-stack and the playbooks under it were written for a different setting,
 
 ## Choosing a mode
 
-When you name an objective for the cycle, in the evening session or as work to plan overnight, the lead proposes one of three modes and you confirm it. The test is how many agent sessions it takes to hold the whole objective.
+When you name an objective in the evening session, the lead proposes one of three modes and you confirm it. The test is how many agent sessions it takes to hold the whole objective.
 
 | Mode | Test | What the night produces |
 |---|---|---|
@@ -68,7 +68,7 @@ keel adapts five planning skills from [Matt Pocock's skills](https://github.com/
 
 Start every session from the target repo, the repo that the tickets change.
 
-- **The evening session.** At 7 PM, open Claude Code and type `/keel:lead evening session for <project>`, with the Linear project's name. The lead runs the Evening session playbook.
+- **The evening session.** At 7 PM, open Claude Code and type `/keel:lead evening session for <project>`, with the Linear project's name. The lead runs the Evening session playbook. To plan something overnight, start an evening session this way, whatever the time.
 - **The night run.** You do not start it yourself. The evening session starts it as its last step, in a background session named `night-<YYYY-MM-DD>`, and gives you the two morning commands.
 - **The morning.** Read the brief with `claude logs night-<YYYY-MM-DD>`. Open the session with `claude attach night-<YYYY-MM-DD>` and type "Go". That session then runs Day build.
 - **A day build after the night session is gone.** Open a new lead session and give it the decision log path from the brief, for example `/keel:lead day build for <project> from the decision log at <path>. Go.` It reads the saved list from that log.
