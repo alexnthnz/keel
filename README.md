@@ -8,11 +8,11 @@ keel is an engineering loop for [Claude Code](https://code.claude.com) and Codex
 
 ## what it is
 
-- **The lead** is the main session. For real engineering work it loads the [Claude Code](./skills/lead/SKILL.md) or [Codex](./codex/skills/lead/SKILL.md) lead skill, routes the task to one of 22 playbooks, and owns the design, plan, review and verification. Small asks it just does.
+- **The lead** is the main session. For real engineering work it loads the [Claude Code](./skills/lead/SKILL.md) or [Codex](./codex/skills/lead/SKILL.md) lead skill, routes the task to one of 25 playbooks, and owns the design, plan, review and verification. Small asks it just does.
 - **ponytail** ([Claude agent](./agents/ponytail.md)) owns one slice or pull request end to end: build, test, prove it on the real artifact, commit. In Codex, the lead gives that brief to a worker. A ponytail owner merges only under autopilot or when its brief says to land it.
 - **critic** ([Claude agent](./agents/critic.md)), generalized from pstack's comment-review persona, Comment Sicko, reviews a diff through one lens: comments by default, or correctness, security, simplicity, tests or user impact. Codex gives the same brief to an independent reviewer.
 
-keel has 59 skills: 54 of pstack's 58 (its 24 principles are among them) and 5 planning skills adapted from Matt Pocock's. It keeps all 22 playbooks. [Differences from pstack](#differences-from-pstack) lists what changed.
+keel has 59 skills: 54 of pstack's 58 (its 24 principles are among them) and 5 planning skills adapted from Matt Pocock's. It keeps all 22 of pstack's playbooks and adds 3 of its own for the [daily cycle](./docs/guide/11-daily-cycle.md). [Differences from pstack](#differences-from-pstack) lists what changed.
 
 ## install
 
@@ -92,7 +92,7 @@ use [`/keel:lead`](./skills/lead/SKILL.md) at the start of a task. it reads your
 
 ### just use [`/keel:lead`](./skills/lead/SKILL.md)
 
-this skill is the main shortcut. use it whenever you need the agent to do rigorous engineering work. it comes with twenty-two playbooks:
+this skill is the main shortcut. use it whenever you need the agent to do rigorous engineering work. it comes with twenty-five playbooks:
 
 ```
 /keel:lead this pr has a subtle bug where the scroll drifts every 750ms even when idle. repro
@@ -105,7 +105,7 @@ morning.
 ```
 
 <details>
-<summary>the twenty-two playbooks</summary>
+<summary>the twenty-five playbooks</summary>
 
 | playbook | for |
 |---|---|
@@ -130,6 +130,9 @@ morning.
 | [pause safely](./skills/lead/playbooks/pause-safely.md) | suspend in-flight work cleanly so it can be resumed later. |
 | [multi-phase plan](./skills/lead/playbooks/multi-phase-plan.md) | work that spans phases or stacked PRs. |
 | [worktree cleanup](./skills/lead/playbooks/worktree-cleanup.md) | reclaim disk by pruning merged or abandoned worktrees and stale ios simulators, safety-gated. |
+| [evening session](./skills/lead/playbooks/evening-session.md) | the 7 pm session with you: qa the day's verified prs and land them, show `needs-alex` tickets and discovered work, pick the next objective, grill it, and start the night run. |
+| [night plan](./skills/lead/playbooks/night-plan.md) | an unattended overnight run: research, prototype, write the spec, draft day-sized tickets, and end with a one-screen brief. creates no tickets. |
+| [day build](./skills/lead/playbooks/day-build.md) | after your morning go: create the tickets, build each in its own worktree, review the day's prs in one pass, and leave verified prs for the evening. never merges. |
 | [opening a pr](./skills/lead/playbooks/opening-a-pr.md) | open a ready pr from small ordered commits with a conventional commits title and a briefing-style body. invoked at the end of every other playbook. |
 
 </details>
@@ -301,9 +304,9 @@ keel changes how pstack runs, not what it teaches.
 
 [`UPSTREAM.md`](./UPSTREAM.md) has the full translation and rename tables and how to pull future pstack changes.
 
-## why are there no planning skills?
+## the daily cycle
 
-Claude Code already has a plan mode, and it works well with keel. pstack leaves out planning skills on purpose; its README says "personally, i don't believe in planning. the best spec is code." If you do want a plan, [`/keel:lead`](./skills/lead/SKILL.md) covers it, but it's not a default.
+pstack leaves out planning skills on purpose. keel adds five, adapted from Matt Pocock's, and runs them as a daily cycle. you grill the next objective at 7 pm, agents plan overnight and draft a one-screen brief, you say "go" in the morning, and agents build and verify tickets by day. nothing merges without you. [the daily cycle](./docs/guide/11-daily-cycle.md) explains it. claude code's plan mode still works alongside it, and the cycle is optional.
 
 ## make it yours
 

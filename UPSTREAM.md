@@ -32,6 +32,19 @@ Every `~/.claude/...` path keel writes uses `${CLAUDE_CONFIG_DIR:-$HOME/.claude}
 
 keel additions with no upstream counterpart: `hooks/git-guard.py` (adapted from Matt Pocock's MIT-licensed git guardrails), `hooks/lead-reminder.sh`, `hooks/hooks.json`, `THIRD_PARTY_NOTICES.md`, `ROADMAP.md`, `bin/upstream-diff.sh` and `bin/check-docs.mjs`. The last follows the idea of upstream's `scripts/check-pstack-docs.mjs`, which lives outside `pstack/`, so syncs don't carry it.
 
+The daily cycle adds these keel-only files, which a sync never touches: `skills/lead/playbooks/evening-session.md`, `skills/lead/playbooks/night-plan.md`, `skills/lead/playbooks/day-build.md` and `docs/guide/11-daily-cycle.md`. The cycle's planning skills (`skills/grilling/`, `skills/domain-modeling/`, `skills/to-spec/`, `skills/to-tickets/`, `skills/wayfinder/`) and `skills/lead/linear.md` are keel-only too. The three playbooks override pstack rules inside each builder's kickoff instead of editing the pstack files.
+
+## keel edits to upstream text, re-apply on every sync
+
+The plan names the first three of these edits. The fourth is a count that follows from them. Each changes pstack's own text, so each can conflict with a sync. After a sync, check that each one is still present, and re-apply it if the sync reverted it.
+
+1. `skills/lead/SKILL.md`, the routing lines. The first-message bullet adds a mode proposal (Quick, Feature or Initiative). A bullet routes product and preference calls to `grilling`. The playbook paragraph routes Initiative work to Night plan with `wayfinder` and keeps `figure-it-out` for work no playbook fits. The playbook list ends with Evening session, Night plan and Day build. `codex/skills/lead/SKILL.md` carries the same routing in one paragraph under the lead loop's first step.
+2. `docs/guide/02-lead.md`, the sentence "You don't write a spec." The line now points to chapter 11.
+3. `docs/guide/04-design.md`, the sentence "keel has no planning skill, on purpose." The line now points to chapter 11.
+4. `docs/guide/02-lead.md`, line 3. The playbook count "twenty-two" is now "twenty-five", which `bin/check-docs.mjs` enforces.
+
+Also keel's: the README section "the daily cycle", which replaces "why are there no planning skills?", and the playbook counts of 25 in the README.
+
 Kept on purpose:
 
 - "pstack" and "poteto" where they credit or describe upstream: the README, `THIRD_PARTY_NOTICES.md`, the guide's credit line, source notes in a few skills and agents, and this file.
