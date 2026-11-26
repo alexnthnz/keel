@@ -21,6 +21,8 @@ Without a clear mode, use draft.
 
 ### 1. Gather context
 
+Load the team's labels with `list_issue_labels` (`team`, `includeGroups: true`) and the project's milestones with `list_milestones`. For each slice, choose the module label whose description best matches the slice's area. Put every unclear pick in the assumptions.
+
 Read the spec document (`Spec: <objective>`) from the project, or the objective itself for Quick work with no spec. If a Feature or Initiative has no `Spec:` document, stop and report it. Do not create tickets with a dead link. Read the issues already in the project with `list_issues`, so the plan reuses or edits a matching ticket instead of duplicating it.
 
 ### 2. Explore and prefactor
@@ -45,17 +47,18 @@ Present a numbered list. For each slice:
 - **Title**
 - **Outcome**: one line
 - **Blocked by**: slice numbers, or none
+- **Module**: the module label, as `linear.md` says
 
-When an existing ticket is bigger than one slice, narrow it to one slice and list the rest as new slices. Then the counts: new issues, narrowed or otherwise edited issues, and the size of the backlog afterwards. The counts show every narrowing. In draft mode, stop here and return it. In create mode, wait for "Go". Revise on any answer other than "Go". Only the lead shows the list and waits for "Go". A subagent runs create mode only when the approved list is pasted into its kickoff, and it creates exactly that list.
+When an existing ticket is bigger than one slice, narrow it to one slice and list the rest as new slices. A matched ticket that sits in Backlog is marked `promote <id> from Backlog`: it moves to Ready only if Alex approves the list. Then the counts: new issues, narrowed or otherwise edited issues, promotions from Backlog, and the size of the backlog afterwards. The counts show every narrowing. In draft mode, stop here and return it. In create mode, wait for "Go". Revise on any answer other than "Go". Only the lead shows the list and waits for "Go". A subagent runs create mode only when the approved list is pasted into its kickoff, and it creates exactly that list.
 
 ### 5. Create
 
 Only after "Go". Create tickets in dependency order, so each blocker has its identifier before the ticket it blocks.
 
 - Read the team's states with `list_issue_statuses` and find Ready by the mapping in `linear.md`. If it is missing, report that and stop.
-- Call `save_issue` with the team, the project, the Ready state, and `blockedBy` set to the blocker identifiers. When the project uses module labels or milestones, also pass `labels` (the module label) and `milestone` (the current one), as `linear.md` says. Both parameters exist on `save_issue`: `labels` replaces the full label set, so on an existing issue use `addLabels`.
+- Call `save_issue` with the team, the project, the Ready state, and `blockedBy` set to the blocker identifiers. Also pass `labels` (the module label) and, when the project has milestones, `milestone` (the current one), as `linear.md` says. Both parameters exist on `save_issue`: `labels` replaces the full label set, so on an existing issue use `addLabels`.
 - Never set `parentId`. Never apply `needs-alex`.
-- Edit a matching existing issue instead of creating a duplicate. Editing never changes an existing issue's state, so a Backlog issue stays in Backlog.
+- Edit a matching existing issue instead of creating a duplicate. Editing does not change an existing issue's state. After "Go", move exactly the issues the list marked `promote <id> from Backlog` to Ready, and no other Backlog issue.
 - Do not close or modify any other issue.
 
 Report the identifiers and the blocking edges you set.

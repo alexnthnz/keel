@@ -15,11 +15,15 @@ At the start of a run, call `list_issue_statuses` for the project's team and map
 
 If a state that a mapping needs is missing, report that to the lead and stop. Never create states.
 
-Backlog (type `backlog`) means not ready: nobody builds it. Backlog is never promoted automatically. Only Alex promotes a Backlog issue, and only in the 7 PM session. Canceled and Duplicate are closed without work.
+Backlog (type `backlog`) means not ready: nobody builds it. Backlog is never promoted automatically. A Backlog issue moves to Ready only with Alex's explicit approval: at the 7 PM session, or through his "Go" on a brief that lists the promotion (`promote <id> from Backlog`). Canceled and Duplicate are closed without work.
 
 ## Labels and milestones
 
-When the project uses module labels or milestones, each ticket carries its module label and the current milestone. Still no `parentId`.
+**Module label.** Call `list_issue_labels` for the team with `includeGroups: true`. When the team has a label group named "Module", every ticket carries exactly one of its child labels. `to-tickets` picks the module whose label description best matches the slice's area. When the pick is unclear, it lists the pick as an assumption in the brief.
+
+**Milestone.** Read the project's milestones with `list_milestones` (parameter `project`). Each milestone has `progress` (100 means done) and `sortOrder`. The current milestone is the earliest milestone, by `sortOrder`, whose `progress` is below 100. When the project has milestones, each new ticket gets the current one. When it has none, the ticket gets none, and the brief notes that.
+
+Still no `parentId`.
 
 `needs-alex` marks a ticket handed back after two fix rounds, or a question only the operator can answer. The lead creates it once per team, on Alex's go. If it is missing, report that to the lead, leave the ticket In Progress, and add a comment saying it needs Alex. No subagent ever asks a person.
 
@@ -54,7 +58,7 @@ A ticket has two layers.
 - file paths, found by reading the code at dispatch time
 - the base branch
 - the merge policy: stop at verified, never merge
-- the fix cap: two fix rounds, then label the ticket `needs-alex` and stop (if the label is missing, leave the ticket In Progress and comment that it needs Alex)
+- the fix cap: two fix rounds, then label the ticket `needs-alex` and stop (if the label is missing, leave the ticket In Progress and comment that it needs Alex). Every fix round gets a ticket comment `fix round n of 2: <reason>`, written by the lead. The count is read from those comments, so it survives a restart.
 - the discovered-work rule: report anything found outside the ticket to the lead, which appends it to the discovered-work document. Never open a PR for it.
 - a note that Linear writes on this project (claim, state moves, comments) count as part of the run, so `worker.md`'s stop before "a message to someone outside the run" does not apply to them
 
