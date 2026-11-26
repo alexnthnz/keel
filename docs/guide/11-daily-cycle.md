@@ -46,7 +46,7 @@ Autopilot-stack and the playbooks under it were written for a different setting,
 
 ## Choosing a mode
 
-When you name a new objective, the lead proposes one of three modes and you confirm it. The test is how many agent sessions it takes to hold the whole objective.
+When you name an objective for the cycle, in the evening session or as work to plan overnight, the lead proposes one of three modes and you confirm it. Work you ask for in the session you are in gets no mode proposal. The test is how many agent sessions it takes to hold the whole objective.
 
 | Mode | Test | What the night produces |
 |---|---|---|
