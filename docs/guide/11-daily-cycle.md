@@ -94,11 +94,11 @@ Initiative-sized work that you run by hand goes to [`/keel:figure-it-out`](../..
 
 Each planning skill also runs on its own:
 
-- `/keel:grilling the retry policy for the webhook sender` interviews you in rounds until every decision is settled. It needs only you, and it writes nothing. Run domain-modeling next to it to record the answers.
+- `/keel:grilling the retry policy for the webhook sender` interviews you in rounds until every decision is settled. It needs only you. It writes nothing but throwaway prototypes in a scratch directory, which settle technical forks. Run domain-modeling next to it to record the answers.
 - `/keel:domain-modeling settle what "refund" means in <project>` needs the arcflux-memory server. It writes terms to the `org/arcflux/proj/<project>` scope and decisions to `org/arcflux/proj/<project>/decisions`, and it creates no files.
 - `/keel:wayfinder chart the move to multi-region for <project>` needs a Linear project or Initiative and arcflux-memory. It grills you for the destination and the first open decisions, then writes one `Chart: <initiative>` document. It creates no tickets and no code.
-- `/keel:to-spec for <objective> in <project>` needs a Linear project and decisions that are already settled, because it asks you nothing. It writes the `Spec: <objective>` document, or updates the one that exists.
-- `/keel:to-tickets create the tickets for Spec: <objective> in <project>` needs the `Spec:` document, except for a Quick change. It shows a numbered list of slices and, only after you reply "Go", creates them as Ready tickets with their blocking links. Without "create", it drafts the list and writes nothing.
+- `/keel:to-spec for <objective> in <project>` needs decisions that are already settled, because it asks you nothing. It writes or updates the `Spec: <objective>` document on the Linear project, or on the Initiative when there is no project.
+- `/keel:to-tickets create the tickets for Spec: <objective> in <project>` needs the `Spec:` document, except for a Quick change. It shows a numbered list of slices and, only after you reply "Go", creates the new ones as Ready tickets with their blocking links. An existing ticket it edits keeps its state. Without "create", it drafts the list and writes nothing.
 
 ## Why it is shaped this way
 
