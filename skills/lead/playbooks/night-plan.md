@@ -11,7 +11,7 @@ This runs in a `claude --bg` lead session that the Evening session started. The 
 5. **Initiative only: chart or resolve.** Run **wayfinder**. If no `Chart:` document exists, chart one. Otherwise resolve every ready research item and record each result in arcflux-memory with `standing: proposed`. Never resolve a Grilling item, because it waits for the Evening session. If the chart does not clear, skip steps 6 and 7 and put the open Grilling items in the brief as blocked.
 6. **Spec.** For a Feature, or an Initiative whose chart cleared, run **to-spec**. It writes the `Spec:` document, because the tickets' links need it. A Quick objective has no spec.
 7. **Draft the tickets.** Run **to-tickets** in draft mode. It sizes the plan to one day shift and returns the numbered list and counts. Include every promoted discovered-work item from the kickoff in the draft. Each slice maps to one PR and has no parent. It creates nothing.
-8. **Write the morning brief.** Write it with **show-me-your-work** beside the decision log, and make it the session's last message, so `claude logs <id>` shows it. Alex reads it there, or after `claude attach <id>`, and types "Go" in the attached session. It fits one screen, about 25 lines, and holds only:
+8. **Write the morning brief.** Write it with **show-me-your-work** beside the decision log, and make it the session's last message, so `claude logs night-<YYYY-MM-DD>` shows it. Alex reads it there, or after `claude attach night-<YYYY-MM-DD>`, and types "Go" in the attached session. It fits one screen, about 25 lines, and holds only:
    - the outcome, in one or two sentences
    - a link to the `Spec:` document, or "no spec, Quick" for a Quick objective
    - the numbered slices, each as `1. <title>: <outcome> (blocked by: none)`, then the counts: new tickets, edited tickets, and the backlog size afterwards
@@ -20,7 +20,7 @@ This runs in a `claude --bg` lead session that the Evening session started. The 
 
    Also write the full draft list, the **to-tickets** draft output, into the decision log under `keel-store`, so it survives if this session dies. The brief names the log's path.
 
-   It ends with the line `Attach with claude attach <id> and reply Go to create these tickets.`, with the real session id filled in.
+   It ends with the line `Attach with claude attach night-<YYYY-MM-DD> and reply Go to create these tickets.`, using the session name from the kickoff.
 9. **Wait** when the brief exists. Do not exit and do not start Day build on your own. Create no ticket, add no label, change no state, and write nothing to Linear except the `Spec:` and `Chart:` documents.
 
-**Reply:** the brief, the link to the spec, and the decision log path. Day build starts only when Alex attaches with `claude attach <id>` and types "Go". This same session then runs `playbooks/day-build.md`.
+**Reply:** the brief, the link to the spec, and the decision log path. Day build starts only when Alex attaches with `claude attach night-<YYYY-MM-DD>` and types "Go". This same session then runs `playbooks/day-build.md`.
