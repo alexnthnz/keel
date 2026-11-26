@@ -15,10 +15,11 @@ This runs in a `claude --bg` lead session that the Evening session started. The 
    - the outcome, in one or two sentences
    - a link to the `Spec:` document, or "no spec, Quick" for a Quick objective
    - the numbered slices, each as `1. <title>: <outcome> (blocked by: none)`, then the counts: new tickets, edited tickets, and the backlog size afterwards
+   - the carried-over tickets, by identifier on one line: the project's tickets that are already Ready and unassigned, such as those sent back at 7 PM or reset by Alex
    - at most three assumptions, each with the answer you applied. If more than three arose, keep the three that change the plan most and record the rest in the decision log
    - anything blocked, which waits for 7 PM
 
-   Also write the full draft list, the **to-tickets** draft output, into the decision log under `keel-store`, so it survives if this session dies. The brief names the log's path.
+   Also write the full draft list, the **to-tickets** draft output, and the carried-over identifiers into the decision log under `keel-store`, so it survives if this session dies. The brief names the log's path.
 
    It ends with the line `Attach with claude attach night-<YYYY-MM-DD> and reply Go to create these tickets.`, using the session name from the kickoff.
 9. **Wait** when the brief exists. Do not exit and do not start Day build on your own. Create no ticket, add no label, change no state, and write nothing to Linear except the `Spec:` and `Chart:` documents.

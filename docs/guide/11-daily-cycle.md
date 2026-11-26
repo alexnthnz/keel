@@ -33,7 +33,7 @@ Each shift has a [playbook](../../skills/lead/playbooks/). The lead reads the pl
 
 **[Night plan](../../skills/lead/playbooks/night-plan.md).** A background lead session runs with nobody present. It researches with `Explore` subagents and writes facts to arcflux-memory. It designs the change and prototypes the technical choices. For an Initiative it charts the open decisions. It writes the spec, drafts the slice plan, and ends with the morning brief. It creates no tickets.
 
-**[Day build](../../skills/lead/playbooks/day-build.md).** After your "Go", the lead creates the tickets. It then runs the [Autopilot-stack](../../skills/lead/playbooks/autopilot-stack.md) playbook over the tickets that are Ready and not blocked. Each ticket gets its own `keel:ponytail` builder in its own worktree, and the lead claims it first. One batched `keel:critic` pass reviews all of the day's PRs together. A verified PR moves its ticket to In QA. Nothing merges.
+**[Day build](../../skills/lead/playbooks/day-build.md).** After your "Go", the lead creates the tickets. It then runs the [Autopilot-stack](../../skills/lead/playbooks/autopilot-stack.md) playbook over the brief's tickets that are Ready and not blocked. Those are the new and edited slices, the Backlog tickets you promoted, and the carried-over tickets, which were already Ready when the brief was written. A Ready ticket that the brief does not list is left alone and named in the reply. Each ticket gets its own `keel:ponytail` builder in its own worktree, and the lead claims it first. One batched `keel:critic` pass reviews all of the day's PRs together. A verified PR moves its ticket to In QA. Nothing merges.
 
 ### Overrides the day build applies
 
@@ -42,7 +42,7 @@ Autopilot-stack and the playbooks under it were written for a different setting,
 - **Discovered work goes to the lead.** A builder never opens a PR for something it finds outside its ticket. It reports the finding, and the lead alone appends it to the discovered-work document. You decide in the evening whether it becomes a ticket.
 - **Two fix rounds, then a hand-back.** A ticket gets at most two fix rounds. After that it carries `needs-alex`, because a third round on the same ticket rarely converges.
 - **Linear writes are part of the run.** Claiming a ticket, moving its state and commenting are not messages to someone outside the run.
-- **The queue is Linear.** The queue comes from the project, not from GitHub, and one critic pass covers every PR instead of one review per PR.
+- **The queue is Linear.** The queue comes from the brief's tickets in the Linear project, not from GitHub, and one critic pass covers every PR instead of one review per PR.
 
 ## Choosing a mode
 
@@ -68,7 +68,7 @@ keel adapts five planning skills from [Matt Pocock's skills](https://github.com/
 
 The cycle puts the human's attention where it is scarce. Judgment calls, such as what to build and whether the result is right, cost you the most and happen in one session. Reading code, trying options and writing tickets cost agents little and happen while you are away.
 
-The morning brief is the other design choice. It fits one screen, so a "Go" is a light decision. It holds the outcome, a link to the spec, the numbered slices, at most three assumptions and anything blocked. If the brief runs longer, the night run decided too much without you.
+The morning brief is the other design choice. It fits one screen, so a "Go" is a light decision. It holds the outcome, a link to the spec, the numbered slices, the carried-over tickets, at most three assumptions and anything blocked. If the brief runs longer, the night run decided too much without you.
 
 The two-fix-round cap, the no-PR rule for discovered work and the single "Go" gate are guesses about what keeps a day's work reviewable. The evening review is how you measure them. If a day regularly leaves more than you can QA, shrink the slice plan.
 
