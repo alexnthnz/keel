@@ -61,7 +61,7 @@ Upstream's `task` kind is dropped. Manual work that blocks a decision goes in th
 ## Charting
 
 1. **Name the destination.** Run `grilling` and `domain-modeling` with the user to pin down where the chart ends. With nobody present, take it from the objective as given and list it as an assumption.
-2. **Map the frontier.** Grill again, breadth-first: fan out across the space and surface the open decisions and the first steps that are takeable now. If no fog appears, the work needs no chart. Say so and stop.
+2. **Map the frontier.** Grill again, breadth-first: fan out across the space and surface the open decisions and the first steps that are takeable now. If no fog appears, the work needs no chart. Say so and stop. With nobody present, do not grill. Map the frontier from the objective, the code and memory, and add each product question you cannot answer as a Grilling item for the 7 PM session.
 3. **Look before you list.** Call `search_memory` with `query` and `scope: org/arcflux/proj/<project>/decisions`. A decision memory already holds goes straight to Decided.
 4. **Write the chart** as one document. Give every item a kind. A chart with a kindless item is not finished.
 5. Stop. Charting resolves nothing.
@@ -72,7 +72,7 @@ Upstream's `task` kind is dropped. Manual work that blocks a decision goes in th
 2. Pick the first item whose `Waits on` is empty or decided, unless the user named one.
 3. **Resolve at most one non-research item per session.** In a night run, resolve every ready research item.
 4. Resolve it as its kind.
-5. **Record the decision in arcflux-memory through [`domain-modeling`](../domain-modeling/SKILL.md)**, in the `/decisions` scope. Then update the chart: move the item to Decided with its gist and memory pointer, move any fog the answer made sharp into Open decisions, and rule out of scope anything the answer put beyond the destination.
+5. **Record the decision in arcflux-memory through [`domain-modeling`](../domain-modeling/SKILL.md)**, in the `/decisions` scope. Then update the chart: move the item to Decided with its gist and memory pointer, move any fog the answer made sharp into Open decisions, and rule out of scope anything the answer put beyond the destination. Store a research or prototype result with `standing: proposed` and note that no user has confirmed it yet. Grilling in the 7 PM session confirms it.
 6. Stop after one non-research item.
 
 ## Hand-off

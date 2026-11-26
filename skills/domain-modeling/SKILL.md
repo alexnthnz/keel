@@ -12,7 +12,7 @@ Actively build and sharpen the project's domain model as you design. This is the
 <!-- keel edit: storage. Upstream writes GLOSSARY.md, GLOSSARY-MAP.md and docs/adr/. keel writes arcflux-memory and creates none of those files. -->
 ## Where it lives
 
-**keel edit.** Never create `GLOSSARY.md`, `GLOSSARY-MAP.md` or ADR files. Glossary terms and decisions live in arcflux-memory. Load the tool schemas first with ToolSearch: `select:mcp__arcflux-memory__search_memory,mcp__arcflux-memory__remember,mcp__arcflux-memory__add_source`.
+**keel edit.** Never create `GLOSSARY.md`, `GLOSSARY-MAP.md` or ADR files. Glossary terms and decisions live in arcflux-memory. Load the tool schemas first with ToolSearch: `select:mcp__arcflux-memory__search_memory,mcp__arcflux-memory__remember,mcp__arcflux-memory__add_source,mcp__arcflux-memory__read_facts,mcp__arcflux-memory__read_source`.
 
 | What | Scope |
 |---|---|

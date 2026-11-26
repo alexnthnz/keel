@@ -71,10 +71,11 @@ SOFTWARE.
 ## Planning skills (mattpocock/skills)
 
 - **Author:** Matt Pocock
-- **Source:** <https://github.com/mattpocock/skills> at commit `6f7f783`, the `grilling`, `domain-modeling` and `wayfinder` skills
-- **Used for:** [`skills/grilling/SKILL.md`](./skills/grilling/SKILL.md), [`skills/domain-modeling/SKILL.md`](./skills/domain-modeling/SKILL.md)
-  and [`skills/wayfinder/SKILL.md`](./skills/wayfinder/SKILL.md). `grilling` keeps the upstream text and adds one marked edit.
-  `domain-modeling` and `wayfinder` are rewritten for arcflux-memory and Linear.
+- **Source:** <https://github.com/mattpocock/skills> at commit `6f7f783`, the `grilling`, `domain-modeling`, `wayfinder`, `to-spec` and `to-tickets` skills and the agent brief in `triage`
+- **Used for:** [`skills/grilling/SKILL.md`](./skills/grilling/SKILL.md), [`skills/domain-modeling/SKILL.md`](./skills/domain-modeling/SKILL.md),
+  [`skills/wayfinder/SKILL.md`](./skills/wayfinder/SKILL.md), [`skills/to-spec/SKILL.md`](./skills/to-spec/SKILL.md) and
+  [`skills/to-tickets/SKILL.md`](./skills/to-tickets/SKILL.md). `grilling` keeps the upstream text and adds one marked edit.
+  The other four are rewritten for arcflux-memory and Linear.
 
 ```
 MIT License
