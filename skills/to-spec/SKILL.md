@@ -14,10 +14,10 @@ Only Feature and Initiative work gets a spec. A Quick change goes straight to on
 
 ## Process
 
-1. Read the current state of the code in the area the objective touches, and use the project's vocabulary. Respect the decisions already recorded for the area.
+1. Read the current state of the code in the area the objective touches, and use the project's vocabulary. Respect the decisions already recorded for the area. If a `Chart: <objective>` document exists, read it. Resolve each Decided item's arcflux-memory pointer with `search_memory` or `read_facts`, and treat those decisions as settled.
 2. Pick the seams where a builder will prove the work. Prefer an existing seam. Use the highest one that can see the behaviour. The ideal count is one.
 3. Write the spec below. It fits one page: about 40 lines. Cut anything a builder can find by reading the code.
-4. Create the document in Linear with `save_document`, attached to the project and titled `Spec: <objective>`. First search the project with `list_documents`. If a document with that title exists, update it instead. In a **draft** run, such as the night run, or when told not to write, return the body and write nothing.
+4. Create the document in Linear with `save_document`, attached to the project and titled `Spec: <objective>`. First search the project with `list_documents`. If a document with that title exists, update it instead. Skip the write only when the caller explicitly says not to write, as in a dry-run test; then return the body and write nothing. For an Initiative with no project, attach the spec to the Initiative.
 
 ## Template
 

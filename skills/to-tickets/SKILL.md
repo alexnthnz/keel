@@ -21,7 +21,7 @@ Without a clear mode, use draft.
 
 ### 1. Gather context
 
-Read the spec document (`Spec: <objective>`) from the project, or the objective itself for Quick work with no spec. Read the issues already in the project with `list_issues`, so the plan reuses or edits a matching ticket instead of duplicating it.
+Read the spec document (`Spec: <objective>`) from the project, or the objective itself for Quick work with no spec. If a Feature or Initiative has no `Spec:` document, stop and report it. Do not create tickets with a dead link. Read the issues already in the project with `list_issues`, so the plan reuses or edits a matching ticket instead of duplicating it.
 
 ### 2. Explore and prefactor
 
@@ -46,7 +46,7 @@ Present a numbered list. For each slice:
 - **Outcome**: one line
 - **Blocked by**: slice numbers, or none
 
-Then the counts: new issues, edited issues, and the size of the backlog afterwards. In draft mode, stop here and return it. In create mode, wait for "Go". Revise on any answer other than "Go".
+Then the counts: new issues, edited issues, and the size of the backlog afterwards. In draft mode, stop here and return it. In create mode, wait for "Go". Revise on any answer other than "Go". Only the lead shows the list and waits for "Go". A subagent runs create mode only when the approved list is pasted into its kickoff, and it creates exactly that list.
 
 ### 5. Create
 

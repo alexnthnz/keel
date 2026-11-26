@@ -15,15 +15,16 @@ Shared reference for `to-spec`, `to-tickets`, and any playbook that reads or wri
 
 ## Labels
 
-`needs-alex` marks a ticket handed back after two fix rounds, or a question only the operator can answer. The label does not exist yet. Do not create it. Ask the operator to create it first.
+`needs-alex` marks a ticket handed back after two fix rounds, or a question only the operator can answer. The label does not exist yet. If it is missing, report that to the lead, leave the ticket In Progress, and add a comment saying it needs Alex. The lead creates the label on Alex's go. No subagent ever asks a person.
 
 ## Documents
 
-Documents attach to the project, never to an issue.
+Documents attach to the project or Initiative, never to an issue.
 
 | Title | Written by | Holds |
 |---|---|---|
 | `Spec: <objective>` | `to-spec` | The one-page spec for a Feature or Initiative objective. |
+| `Chart: <initiative>` | `wayfinder` | The open-decision chart for an Initiative. |
 | `Discovered work: <project>` | the lead | Findings that surfaced during a run and belong to no ticket. One document per project, appended to. |
 
 ## The claim rule
@@ -47,7 +48,7 @@ A ticket has two layers.
 - file paths, found by reading the code at dispatch time
 - the base branch
 - the merge policy: stop at verified, never merge
-- the fix cap: two fix rounds, then label the ticket `needs-alex` and stop
+- the fix cap: two fix rounds, then label the ticket `needs-alex` and stop (if the label is missing, leave the ticket In Progress and comment that it needs Alex)
 - the discovered-work rule: report anything found outside the ticket to the lead, which appends it to the discovered-work document. Never open a PR for it.
 - a note that Linear writes on this project (claim, state moves, comments) count as part of the run, so `worker.md`'s stop before "a message to someone outside the run" does not apply to them
 
