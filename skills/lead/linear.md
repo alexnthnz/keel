@@ -62,6 +62,10 @@ A ticket has two layers.
 - the discovered-work rule: report anything found outside the ticket to the lead, which appends it to the discovered-work document. Never open a PR for it.
 - a note that Linear writes on this project (claim, state moves, comments) count as part of the run, so `worker.md`'s stop before "a message to someone outside the run" does not apply to them
 
+## Reading from Linear
+
+The `list_*` tools return one page at a time, 50 items by default. Read every page by passing the returned `cursor` until `hasNextPage` is false.
+
 ## Writing to Linear
 
 Check for an existing issue or document with the same title before creating one. Send markdown with real newlines. Put long agent-only detail in a collapsible `+++ Agent notes` section at the end of the description.
