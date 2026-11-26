@@ -12,7 +12,7 @@ keel is an engineering loop for [Claude Code](https://code.claude.com) and Codex
 - **ponytail** ([Claude agent](./agents/ponytail.md)) owns one slice or pull request end to end: build, test, prove it on the real artifact, commit. In Codex, the lead gives that brief to a worker. A ponytail owner merges only under autopilot or when its brief says to land it.
 - **critic** ([Claude agent](./agents/critic.md)), generalized from pstack's comment-review persona, Comment Sicko, reviews a diff through one lens: comments by default, or correctness, security, simplicity, tests or user impact. Codex gives the same brief to an independent reviewer.
 
-keel keeps 54 of pstack's 58 skills (its 24 principles are among them) and all 22 playbooks. [Differences from pstack](#differences-from-pstack) lists what changed.
+keel has 56 skills and all 22 playbooks. 54 of the skills are pstack's (its 24 principles are among them) and 2 are Matt Pocock's planning skills. [Differences from pstack](#differences-from-pstack) lists what changed.
 
 ## install
 
@@ -184,6 +184,8 @@ the full rules and playbooks live in [`skills/lead/SKILL.md`](./skills/lead/SKIL
 | [`/keel:benchmark-checklist`](./skills/benchmark-checklist/SKILL.md) | you ran a benchmark or measured a speedup or regression. vets the number (limiter, tuning, errors, repeat runs, end-to-end relevance) before you report or act on it. |
 | [`/keel:no-comments`](./skills/no-comments/SKILL.md) | strip comments before review; spawns critic with the comments lens, carries out accepted kills, fixes accepted findings, offers encodings for claimed constraints. |
 | [`/keel:typescript-best-practices`](./skills/typescript-best-practices/SKILL.md) | you're reading or editing typescript. grounds the type-system-discipline principle in syntax. |
+| [`/keel:to-spec`](./skills/to-spec/SKILL.md) | you have a Feature or Initiative objective and want its one-page spec (outcome, out of scope, pass predicates that fail on trunk, verification surface) as a Linear document. doesn't interview you. |
+| [`/keel:to-tickets`](./skills/to-tickets/SKILL.md) | you want an objective or spec broken into day-sized Linear tickets, one pr each, ordered by blocked-by links. draft mode writes nothing. create mode waits for your "Go". |
 | [`/keel:figure-it-out`](./skills/figure-it-out/SKILL.md) | no bundled playbook fits. designs a rigorous, auditable playbook for the task. |
 | [`/keel:show-me-your-work`](./skills/show-me-your-work/SKILL.md) | you want a reviewable decision trail. logs decisions to a tsv you can commit. |
 | [`/keel:create-verification-skill`](./skills/create-verification-skill/SKILL.md) | your project has no scripted way to prove app behavior. generates a project-local verify skill with a feature map, for any language or platform. |
