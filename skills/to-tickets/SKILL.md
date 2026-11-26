@@ -46,15 +46,16 @@ Present a numbered list. For each slice:
 - **Outcome**: one line
 - **Blocked by**: slice numbers, or none
 
-Then the counts: new issues, edited issues, and the size of the backlog afterwards. In draft mode, stop here and return it. In create mode, wait for "Go". Revise on any answer other than "Go". Only the lead shows the list and waits for "Go". A subagent runs create mode only when the approved list is pasted into its kickoff, and it creates exactly that list.
+When an existing ticket is bigger than one slice, narrow it to one slice and list the rest as new slices. Then the counts: new issues, narrowed or otherwise edited issues, and the size of the backlog afterwards. The counts show every narrowing. In draft mode, stop here and return it. In create mode, wait for "Go". Revise on any answer other than "Go". Only the lead shows the list and waits for "Go". A subagent runs create mode only when the approved list is pasted into its kickoff, and it creates exactly that list.
 
 ### 5. Create
 
 Only after "Go". Create tickets in dependency order, so each blocker has its identifier before the ticket it blocks.
 
-- Call `save_issue` with the team, the project, state `Todo`, and `blockedBy` set to the blocker identifiers.
+- Read the team's states with `list_issue_statuses` and find Ready by the mapping in `linear.md`. If it is missing, report that and stop.
+- Call `save_issue` with the team, the project, the Ready state, and `blockedBy` set to the blocker identifiers. When the project uses module labels or milestones, also pass `labels` (the module label) and `milestone` (the current one), as `linear.md` says. Both parameters exist on `save_issue`: `labels` replaces the full label set, so on an existing issue use `addLabels`.
 - Never set `parentId`. Never apply `needs-alex`.
-- Edit a matching existing issue instead of creating a duplicate. A Backlog issue becomes Todo. Any other state stays.
+- Edit a matching existing issue instead of creating a duplicate. Editing never changes an existing issue's state, so a Backlog issue stays in Backlog.
 - Do not close or modify any other issue.
 
 Report the identifiers and the blocking edges you set.

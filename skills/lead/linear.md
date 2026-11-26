@@ -1,21 +1,27 @@
 # Linear conventions
 
-Shared reference for `to-spec`, `to-tickets`, and any playbook that reads or writes Linear. The conventions below apply to the On-call team, key `ARC`. Check them with `list_issue_statuses` before relying on them for another team.
+Shared reference for `to-spec`, `to-tickets`, and any playbook that reads or writes Linear. The conventions below apply to any Linear team. The team is whichever team owns the project.
 
 ## States
 
-| State | Meaning |
-|---|---|
-| Backlog | Not ready. Nobody builds it. |
-| Todo | Ready. The ticket is complete and unclaimed. |
-| In Progress | Claimed. A builder is working on it. |
-| In Review | In QA. A verified PR exists and waits for the operator. |
-| Done | The PR has landed. |
-| Canceled, Duplicate | Closed without work. |
+At the start of a run, call `list_issue_statuses` for the project's team and map the states by type and name:
 
-## Labels
+| Role | State | Meaning |
+|---|---|---|
+| Ready | the `unstarted` state (Todo) | The ticket is complete and unclaimed. |
+| In Progress | the `started` state named "In Progress" | Claimed. A builder is working on it. |
+| In QA | the `started` state named "In Review" | A verified PR exists and waits for the operator. |
+| Done | the `completed` state | The PR has landed. |
 
-`needs-alex` marks a ticket handed back after two fix rounds, or a question only the operator can answer. The label does not exist yet. If it is missing, report that to the lead, leave the ticket In Progress, and add a comment saying it needs Alex. The lead creates the label on Alex's go. No subagent ever asks a person.
+If a state that a mapping needs is missing, report that to the lead and stop. Never create states.
+
+Backlog (type `backlog`) means not ready: nobody builds it. Backlog is never promoted automatically. Only Alex promotes a Backlog issue, and only in the 7 PM session. Canceled and Duplicate are closed without work.
+
+## Labels and milestones
+
+When the project uses module labels or milestones, each ticket carries its module label and the current milestone. Still no `parentId`.
+
+`needs-alex` marks a ticket handed back after two fix rounds, or a question only the operator can answer. The lead creates it once per team, on Alex's go. If it is missing, report that to the lead, leave the ticket In Progress, and add a comment saying it needs Alex. No subagent ever asks a person.
 
 ## Documents
 
