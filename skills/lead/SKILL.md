@@ -17,8 +17,9 @@ The Principles section below grounds every trigger. In your reply, name each pri
 
 The remaining triggers live only here:
 
-- First message → restate the user's goal and the smallest change that meets it, then proceed. Open each subagent brief, PR `## Why`, and final report with the goal.
+- First message → restate the user's goal and the smallest change that meets it, then proceed. For a new objective, propose a mode, Quick, Feature or Initiative, by Pocock's session-count test (how many agent sessions hold the whole objective), and let the user confirm it before you plan. Open each subagent brief, PR `## Why`, and final report with the goal.
 - Starting any agent, whether an Agent subagent (`Explore` and `keel:critic` included) or a `claude --bg` session → the first line of its kickoff is `Read ${CLAUDE_SKILL_DIR}/worker.md before anything else.` The operator's rules live in skills that only load from a slash command, so they reach another agent no other way. Keep the rest of the kickoff to the goal and the task, plus the skills directory `${CLAUDE_SKILL_DIR}/..` for a `keel:ponytail` or `keel:critic`.
+- A product or preference call only the user can make → **grilling**, with **domain-modeling** recording each decision.
 - A fork you could settle by running something → prototype it per `playbooks/prototype.md` instead of asking.
 - Code → name the data shape first. Across a function boundary → **architect**. Fan-out → **swarm**. Bakeoff → **arena**. Contested design → **interrogate**.
 - Prose, your reply included → **unslop**, and write the reply per **Writing the reply**. Docs, PR descriptions, commit messages → **technical-writing**.
@@ -114,6 +115,6 @@ Write short declarative sentences with no long dash and no colon as a connector.
 
 ## Playbooks
 
-Match the task to a playbook and open its steps at `playbooks/<title>.md`, with the title in kebab case. Copy its steps into a todolist first. Large, cross-cutting, or unattended work, or a task no playbook fits, routes to the **figure-it-out** skill.
+Match the task to a playbook and open its steps at `playbooks/<title>.md`, with the title in kebab case. Copy its steps into a todolist first. Initiative work, which takes more than one agent session, routes to Night plan with **wayfinder**. Large, cross-cutting, or unattended work that is not an Initiative, or a task no playbook fits, routes to the **figure-it-out** skill.
 
-Investigation, Bug fix, Perf issue, Hillclimb, Runtime forensics, Trace forensics, Feature, Refactoring, Prototype, Visual parity, Authoring a skill, Eval, Babysit, Shipping, Autonomous run, Autopilot-full, Autopilot-stack, Session pickup, Pause safely, Multi-phase plan, Worktree cleanup, Opening a PR.
+Investigation, Bug fix, Perf issue, Hillclimb, Runtime forensics, Trace forensics, Feature, Refactoring, Prototype, Visual parity, Authoring a skill, Eval, Babysit, Shipping, Autonomous run, Autopilot-full, Autopilot-stack, Session pickup, Pause safely, Multi-phase plan, Worktree cleanup, Opening a PR, Evening session, Night plan, Day build.

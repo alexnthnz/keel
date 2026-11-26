@@ -1,6 +1,6 @@
 # Route work through `/lead`
 
-`/lead` is the front door. You give it a goal, it matches one of twenty-two playbooks, copies that playbook's steps into the todo list, and calls the other skills as the steps need them. In this page you learn what a good prompt looks like, and how little of one you actually need.
+`/lead` is the front door. You give it a goal, it matches one of twenty-five playbooks, copies that playbook's steps into the todo list, and calls the other skills as the steps need them. In this page you learn what a good prompt looks like, and how little of one you actually need.
 
 ## What happens to your prompt
 
@@ -27,7 +27,7 @@ The diagram shows the common routes. There are also playbooks for hillclimbing a
 
 ## Say the goal, not the ceremony
 
-You don't write a spec. You say what's wrong or what you want, plus anything you already know that saves the agent time:
+You don't write a spec for everyday work, and planned objectives use the [daily cycle](./11-daily-cycle.md). You say what's wrong or what you want, plus anything you already know that saves the agent time:
 
 ```text
 /lead users get two notifications after a retry. repro first, then fix and verify.
