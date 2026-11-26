@@ -25,6 +25,7 @@ The session starts when Alex opens it, around 7 PM. Conventions for states, labe
    Read <skills dir>/lead/SKILL.md.
    keel skills refuse the Skill tool: load each one by reading <skills dir>/<name>/SKILL.md.
    Run the Night plan playbook at <skills dir>/lead/playbooks/night-plan.md.
+   Session name: night-<YYYY-MM-DD>.
    Objective: <one line>. Mode: <Quick|Feature|Initiative>, confirmed by Alex.
    Project: <Linear project>. Repo: <path>. Memory scope: org/arcflux/proj/<project>.
    Decisions already made, with their arcflux-memory pointers: <list>.
@@ -37,4 +38,4 @@ The session starts when Alex opens it, around 7 PM. Conventions for states, labe
    Run `claude agents` and confirm the session is listed. Give Alex both commands: `claude logs night-<YYYY-MM-DD>` to read the morning brief, and `claude attach night-<YYYY-MM-DD>` to open the session and answer "Go".
 9. **Stop** when the night run has started, or when Alex ends the session. If Alex ends early, leave the discovered-work document and the ticket states as they stand, and say what the next evening must pick up.
 
-**Reply:** the PRs landed, sent to fix and handed back, the `needs-alex` tickets and what Alex decided on each, the mode and objective chosen, the decisions grilled and where they are recorded, and the night run's session id.
+**Reply:** the PRs landed, sent to fix and handed back, the `needs-alex` tickets and what Alex decided on each, the mode and objective chosen, the decisions grilled and where they are recorded, and the night run's session name.
