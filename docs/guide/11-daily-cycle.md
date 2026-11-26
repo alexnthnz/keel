@@ -21,7 +21,7 @@ You touch the cycle at three points, and nowhere else.
 
 1. **The evening session.** You decide what lands, what goes back for a fix, and what the next objective is. This is the only time agents ask you questions.
 2. **The morning "Go".** You read the brief and approve the ticket list. Nothing is created in Linear before you say it.
-3. **Promotion.** Backlog tickets are never promoted automatically. You promote them, and only in the evening session.
+3. **Promotion.** Backlog tickets are never promoted automatically. You promote them in the evening session, or with your Go on a morning brief that lists `promote <id> from Backlog`.
 
 Everything between those points runs without you. Agents that need a human decision during the night or the day do not ask. The night run applies the recommended answer and lists it as an assumption in the brief. A day builder hands the ticket back with the label `needs-alex`, and you see it at 7 PM.
 
