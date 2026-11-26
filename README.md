@@ -12,7 +12,7 @@ keel is an engineering loop for [Claude Code](https://code.claude.com) and Codex
 - **ponytail** ([Claude agent](./agents/ponytail.md)) owns one slice or pull request end to end: build, test, prove it on the real artifact, commit. In Codex, the lead gives that brief to a worker. A ponytail owner merges only under autopilot or when its brief says to land it.
 - **critic** ([Claude agent](./agents/critic.md)), generalized from pstack's comment-review persona, Comment Sicko, reviews a diff through one lens: comments by default, or correctness, security, simplicity, tests or user impact. Codex gives the same brief to an independent reviewer.
 
-keel keeps 54 of pstack's 58 skills (its 24 principles are among them) and all 22 playbooks. [Differences from pstack](#differences-from-pstack) lists what changed.
+keel has 57 skills: 54 of pstack's 58 (its 24 principles are among them) and 3 planning skills adapted from Matt Pocock's. It keeps all 22 playbooks. [Differences from pstack](#differences-from-pstack) lists what changed.
 
 ## install
 
@@ -184,6 +184,9 @@ the full rules and playbooks live in [`skills/lead/SKILL.md`](./skills/lead/SKIL
 | [`/keel:benchmark-checklist`](./skills/benchmark-checklist/SKILL.md) | you ran a benchmark or measured a speedup or regression. vets the number (limiter, tuning, errors, repeat runs, end-to-end relevance) before you report or act on it. |
 | [`/keel:no-comments`](./skills/no-comments/SKILL.md) | strip comments before review; spawns critic with the comments lens, carries out accepted kills, fixes accepted findings, offers encodings for claimed constraints. |
 | [`/keel:typescript-best-practices`](./skills/typescript-best-practices/SKILL.md) | you're reading or editing typescript. grounds the type-system-discipline principle in syntax. |
+| [`/keel:grilling`](./skills/grilling/SKILL.md) | you want your plan or decision stress-tested. asks you rounds of numbered questions, each with a recommended answer you can accept with "yes". asks only product and preference questions and sends facts to subagents. adapted from Matt Pocock's skill. |
+| [`/keel:domain-modeling`](./skills/domain-modeling/SKILL.md) | you're sharpening the project's terms or recording a hard-to-reverse decision. reads arcflux-memory first, then writes the term or decision there as an agent note. no glossary or adr files. adapted from Matt Pocock's skill. |
+| [`/keel:wayfinder`](./skills/wayfinder/SKILL.md) | an initiative is too big for one session and the route is unclear. charts the open decisions in one linear document, each marked grilling, research or prototype, resolves one per session, then hands the cleared chart to `to-spec`. plans and never builds. adapted from Matt Pocock's skill. |
 | [`/keel:figure-it-out`](./skills/figure-it-out/SKILL.md) | no bundled playbook fits. designs a rigorous, auditable playbook for the task. |
 | [`/keel:show-me-your-work`](./skills/show-me-your-work/SKILL.md) | you want a reviewable decision trail. logs decisions to a tsv you can commit. |
 | [`/keel:create-verification-skill`](./skills/create-verification-skill/SKILL.md) | your project has no scripted way to prove app behavior. generates a project-local verify skill with a feature map, for any language or platform. |
