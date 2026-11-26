@@ -35,7 +35,9 @@ Refer to every item by its name, never by a bare number.
 
 ## Decided
 
-- <item name>: <one-line gist>. Memory: <scope>, <entity name>.
+- <item name>: <one-line gist>. Memory: <scope>, <entity name>. (proposed)
+
+An item stays marked "(proposed)" until Alex confirms it in grilling. Grilling removes the marker. An item Alex decided himself is written without it.
 
 ## Not yet specified
 
@@ -72,7 +74,7 @@ Upstream's `task` kind is dropped. Manual work that blocks a decision goes in th
 2. Pick the first item whose `Waits on` is empty or decided, unless the user named one.
 3. **Resolve at most one non-research item per session.** In a night run, resolve every ready research item.
 4. Resolve it as its kind.
-5. **Record the decision in arcflux-memory through [`domain-modeling`](../domain-modeling/SKILL.md)**, in the `/decisions` scope. Then update the chart: move the item to Decided with its gist and memory pointer, move any fog the answer made sharp into Open decisions, and rule out of scope anything the answer put beyond the destination. Store a research or prototype result with `standing: proposed` and note that no user has confirmed it yet. Grilling in the 7 PM session confirms it.
+5. **Record the decision in arcflux-memory through [`domain-modeling`](../domain-modeling/SKILL.md)**, in the `/decisions` scope. Then update the chart: move the item to Decided with its gist and memory pointer, move any fog the answer made sharp into Open decisions, and rule out of scope anything the answer put beyond the destination. Store a research or prototype result with `standing: proposed` and note that no user has confirmed it yet. Mark its Decided entry "(proposed)". Grilling in the 7 PM session confirms it and removes the marker.
 6. Stop after one non-research item.
 
 ## Hand-off
