@@ -27,7 +27,7 @@ The diagram shows the common routes. There are also playbooks for hillclimbing a
 
 ## Say the goal, not the ceremony
 
-You don't write a spec. You say what's wrong or what you want, plus anything you already know that saves the agent time:
+You don't write a spec for everyday work, and planned objectives use the [daily cycle](./11-daily-cycle.md). You say what's wrong or what you want, plus anything you already know that saves the agent time:
 
 ```text
 /lead users get two notifications after a retry. repro first, then fix and verify.

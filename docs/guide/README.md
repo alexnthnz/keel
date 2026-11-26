@@ -17,6 +17,7 @@ Here's what you'll learn:
 8. [Steer with principle names](./08-principles.md). The 24 names that redirect an agent mid-task.
 9. [Make it yours](./09-make-it-yours.md). Your own mode, `/correct` for repeated mistakes, and how to test a skill change.
 10. [Recipes and pitfalls](./10-recipes-and-pitfalls.md). Prompts to copy and mistakes to skip.
+11. [The daily cycle](./11-daily-cycle.md). Plan at night, build by day, and land what is verified at 7 PM.
 
 Read the pages in order the first time. After that, each page stands alone.
 

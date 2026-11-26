@@ -92,7 +92,7 @@ Writing the tutorial first forces the caller's view. You describe the API to a h
 
 ## Plan after the design settles
 
-keel has no planning skill, on purpose. When you do want a written plan, ask for it once the design is settled:
+Planned objectives run through the [daily cycle](./11-daily-cycle.md), and for a plan outside it you ask once the design is settled:
 
 ```text
 /lead turn this design into a plan. small verifiable PRs, each with its own verification steps.
