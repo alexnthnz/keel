@@ -15,7 +15,7 @@ This runs in a `claude --bg` lead session that the Evening session started. The 
    - the outcome, in one or two sentences
    - a link to the `Spec:` document, or "no spec, Quick" for a Quick objective
    - the numbered slices, each as `1. <title>: <outcome> (blocked by: none)`, then the counts: new tickets, edited tickets, and the backlog size afterwards
-   - the carried-over tickets, by identifier on one line: the project's tickets that are already Ready and unassigned, such as those sent back at 7 PM or reset by Alex
+   - the carried-over tickets, by identifier on one line. These are the project's Ready, unassigned tickets, such as those sent back at 7 PM or reset by Alex
    - at most three assumptions, each with the answer you applied. If more than three arose, keep the three that change the plan most and record the rest in the decision log
    - anything blocked, which waits for 7 PM
 
